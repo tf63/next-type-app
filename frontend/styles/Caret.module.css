@@ -1,0 +1,21 @@
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 1.2em;
+    border-right: 0.15em solid #333;
+    animation: caret 0.8s infinite;
+}
+
+@keyframes caret {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
