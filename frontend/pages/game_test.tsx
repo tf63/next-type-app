@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import TypeSystem from '@/components/TypeSystem'
 import { LinkedButton } from '@/components/LinkedButton'
 
-const Game: NextPage = () => {
+const GameTest: NextPage = () => {
     return (
         <main>
             <TypeSystem typeList={['aaaa', 'bbbb']} prefixList={['', '']} />
@@ -11,4 +11,4 @@ const Game: NextPage = () => {
     )
 }
 
-export default Game
+export default GameTest
