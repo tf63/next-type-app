@@ -11,7 +11,7 @@ type TypeBoardProps = {
 }
 
 const TypeBoard: React.FC<TypeBoardProps> = (props) => {
-    const divRef = useRef(null)
+    const divRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
         if (divRef.current) {
             divRef.current.focus()
@@ -43,7 +43,7 @@ const TypeBoard: React.FC<TypeBoardProps> = (props) => {
     }
 
     return (
-        <div className={styles.type_board} tabIndex={0} ref={divRef} onKeyDown={props.handleKeyDown}>
+        <div className={styles.type_board} tabIndex={0} onKeyDown={props.handleKeyDown} ref={divRef}>
             <Card>
                 <ul>{typeItemList}</ul>
             </Card>

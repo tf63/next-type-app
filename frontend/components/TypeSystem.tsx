@@ -3,32 +3,6 @@ import React from 'react'
 import TypeBoard from './TypeBoard'
 import { GameState } from '@/interfaces/interfaces'
 
-// type TargetBlockState = {
-//     typeTexts: string[]
-//     index: number
-//     indexLine: number
-// }
-
-// const TypeItem: React.FC<{ item: string; typed: Boolean; prefix: string }> = ({ item, typed, prefix }) => {
-//     const itemClass = typed ? 'typed' : 'untyped'
-
-//     return (
-//         <div>
-//             <span>{prefix}</span>
-//             <span className={itemClass}>{item.replace(/ /g, '\u00A0')}</span>
-//         </div>
-//     )
-// }
-
-// const TargetItem: React.FC<{ item: string; index: number; prefix: string }> = ({ item, index, prefix }) => (
-//     <div>
-//         <span>{prefix}</span>
-//         <span className="typed">{item.substring(0, index).replace(/ /g, '\u00A0')}</span>
-//         <Caret />
-//         <span className="untyped">{item.substring(index).replace(/ /g, '\u00A0')}</span>
-//     </div>
-// )
-
 const TypeSystem: React.FC<{ typeList: string[]; prefixList: string[] }> = ({ typeList, prefixList }) => {
     const [state, setState] = useState<GameState>({
         typeList: typeList,
@@ -88,29 +62,7 @@ const TypeSystem: React.FC<{ typeList: string[]; prefixList: string[] }> = ({ ty
         console.log(key, state.indexText)
     }
 
-    // const targetItems = []
-    // for (const [i, typeText] of state.typeTexts.entries()) {
-    //     let item
-    //     if (i < state.indexLine) {
-    //         item = <TypeText item={typeText} index={-1} prefix={prefixs[i]} />
-    //     } else if (i == state.indexLine) {
-    //         item = <TypeText item={typeText} index={state.index} prefix={prefixs[i]} />
-    //     } else {
-    //         item = <TypeText item={typeText} index={state.index} prefix={prefixs[i]} />
-    //     }
-
-    //     targetItems.push(
-    //         <li key={i} className="target_item">
-    //             {item}
-    //         </li>
-    //     )
-    // }
-
-    return (
-        // <div className="card target_block" tabIndex={0} ref={divRef} onKeyDown={handleKeyDown}>
-        <TypeBoard {...{ state: state, handleKeyDown: handleKeyDown }} />
-        // </div>
-    )
+    return <TypeBoard {...{ state: state, handleKeyDown: handleKeyDown }} />
 }
 
 export default TypeSystem
