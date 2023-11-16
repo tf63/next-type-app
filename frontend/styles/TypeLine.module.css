@@ -1,0 +1,9 @@
+.typed {
+    display: inline-block;
+    color: #afafaf;
+}
+
+.untyped {
+    display: inline-block;
+    color: #888888;
+}

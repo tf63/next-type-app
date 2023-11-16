@@ -1,0 +1,33 @@
+.center_container {
+    display: flex;
+}
+
+.select_box {
+    width: 70%;
+    height: 70%;
+    padding: 1.2em;
+    margin: 30px auto;
+    border: none;
+    border-radius: .5rem;
+    color: #888888;
+    font-size: 1rem;
+    letter-spacing: .2rem;
+    text-align: center;
+    text-shadow: 1px 1px #eee;
+    transition: .2s ease-in-out;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.selected {
+    text-shadow: 1px 1px #eee;
+    transition: .2s ease-in-out;
+    box-shadow: -4px -4px 10px #FFFFFF, 4px 4px 10px rgba(102, 102, 102, 0.3);
+}
+
+.unselected {
+    width: 65%;
+    height: 65%;
+}
