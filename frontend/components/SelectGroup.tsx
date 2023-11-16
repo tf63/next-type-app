@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '../styles/SelectGroup.module.css'
 
 export const SelectGroup: React.FC<{ labelNames: string[]; setLabel: (label: string) => void }> = ({
@@ -41,6 +41,8 @@ export const SelectGroupMultiLine: React.FC<{ labelNames: string[]; setLabel: (l
         setActiveButton(buttonNumber)
         setLabel(labelNames[buttonNumber])
     }
+
+    useEffect(() => {}, [labelNames])
 
     const buttonBlock = []
     for (let j = 0; j * 4 < labelNames.length; j++) {
