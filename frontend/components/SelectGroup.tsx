@@ -1,19 +1,17 @@
 import { useEffect, useState } from 'react'
 import styles from '../styles/SelectGroup.module.css'
+import { Label } from '@/types/types'
 
-export const SelectGroup: React.FC<{ labelNames: string[]; setLabel: (label: string) => void }> = ({
-    labelNames,
-    setLabel
-}) => {
+export const SelectGroup: React.FC<{ labels: Label[]; setLabel: (label: Label) => void }> = ({ labels, setLabel }) => {
     const [activeButton, setActiveButton] = useState(0)
 
     const handleButtonClick = (buttonNumber: number) => {
         setActiveButton(buttonNumber)
-        setLabel(labelNames[buttonNumber])
+        setLabel(labels[buttonNumber])
     }
 
     const buttons = []
-    for (const [i, labelName] of labelNames.entries()) {
+    for (const [i, label] of labels.entries()) {
         const button = (
             <div
                 className={`${styles.select_box} ${styles.pointer} ${
@@ -22,7 +20,7 @@ export const SelectGroup: React.FC<{ labelNames: string[]; setLabel: (label: str
                 onClick={() => handleButtonClick(i)}
                 key={i}
             >
-                {labelName}
+                {label.name}
             </div>
         )
         buttons.push(button)
@@ -31,27 +29,27 @@ export const SelectGroup: React.FC<{ labelNames: string[]; setLabel: (label: str
     return <div className={styles.center_container}>{buttons}</div>
 }
 
-export const SelectGroupMultiLine: React.FC<{ labelNames: string[]; setLabel: (label: string) => void }> = ({
-    labelNames,
+export const SelectGroupMultiLine: React.FC<{ labels: Label[]; setLabel: (label: Label) => void }> = ({
+    labels,
     setLabel
 }) => {
     const [activeButton, setActiveButton] = useState(0)
 
     const handleButtonClick = (buttonNumber: number) => {
         setActiveButton(buttonNumber)
-        setLabel(labelNames[buttonNumber])
+        setLabel(labels[buttonNumber])
     }
 
-    useEffect(() => {}, [labelNames])
+    useEffect(() => {}, [labels])
 
     const buttonBlock = []
-    for (let j = 0; j * 4 < labelNames.length; j++) {
+    for (let j = 0; j * 4 < labels.length; j++) {
         const buttons = []
         for (let i = 0; i < 4; i++) {
             let button
             const labelIndex = i + j * 4
-            if (labelIndex < labelNames.length) {
-                const labelName = labelNames[labelIndex]
+            if (labelIndex < labels.length) {
+                const label = labels[labelIndex]
                 button = (
                     <div
                         className={`${styles.select_box} ${styles.pointer} ${
@@ -60,7 +58,7 @@ export const SelectGroupMultiLine: React.FC<{ labelNames: string[]; setLabel: (l
                         onClick={() => handleButtonClick(labelIndex)}
                         key={labelIndex}
                     >
-                        {labelName}
+                        {label.name}
                     </div>
                 )
             } else {
