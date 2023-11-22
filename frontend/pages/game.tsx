@@ -4,7 +4,7 @@ import TypeSystem from '@/components/TypeSystem'
 import { LinkedButton } from '@/components/LinkedButton'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { ProblemState } from '@/types/types'
+import { ProblemState, ResultState } from '@/types/types'
 import axios from 'axios'
 import {
     AlgorithmCodeAPIRequest,
@@ -16,13 +16,49 @@ import {
     PatternCodeAPIRequest,
     PatternCodeAPIResponse
 } from '@/interfaces/interfaces'
-import GameStateContext from '@/contexts/GameStateContext'
+import TypeContext from '@/contexts/TypeContext'
+import GameContext from '@/contexts/GameContext'
 
 const Game: NextPage = () => {
     const router = useRouter()
     const [content, setContent] = useState('')
+
+    // TypeContext
+    const [indexText, setIndexText] = useState(0)
+    const [indexLine, setIndexLine] = useState(0)
     const [typeList, setTypeList] = useState<string[]>([])
     const [prefixList, setPrefixList] = useState<string[]>([])
+
+    // GameContxt
+    const [correct, setCorrect] = useState(0)
+    const [miss, setMiss] = useState(0)
+    const [timer, setTimer] = useState(0)
+
+    const correctEvent = () => {
+        console.log('correct !!')
+        setCorrect(correct + 1)
+    }
+    const missEvent = () => {
+        console.log('incorrect !!')
+        setMiss(miss + 1)
+    }
+
+    useEffect(() => {
+        // 1秒ごとにtick関数を実行するタイマーを設定します
+        const timerId = setInterval(() => {
+            setTimer((prev) => prev + 1)
+        }, 1000)
+
+        return () => clearInterval(timerId)
+    }, [timer])
+
+    const resultState: ResultState = { correct: correct, miss: miss, timer: timer }
+    const navigateEvent = () => {
+        router.push({
+            pathname: '/result',
+            query: { state: JSON.stringify(resultState) }
+        })
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -93,10 +129,23 @@ const Game: NextPage = () => {
 
     return (
         <main>
-            <GameStateContext.Provider value={{ typeList: typeList, prefixList: prefixList }}>
-                <TypeSystem />
-            </GameStateContext.Provider>
-            <LinkedButton href="/result" text="Result" color="blue" />
+            <GameContext.Provider
+                value={{ correctEvent: correctEvent, missEvent: missEvent, navigateEvent: navigateEvent }}
+            >
+                <TypeContext.Provider
+                    value={{
+                        indexText: indexText,
+                        setIndexText: setIndexText,
+                        indexLine: indexLine,
+                        setIndexLine: setIndexLine,
+                        typeList: typeList,
+                        prefixList: prefixList
+                    }}
+                >
+                    <TypeSystem />
+                </TypeContext.Provider>
+            </GameContext.Provider>
+            {`correct: ${correct}, miss: ${miss}, time: ${timer}`}
         </main>
     )
 }

@@ -5,6 +5,7 @@ import SelectBoard from '@/components/SelectBoard'
 import styles from '../styles/Select.module.css'
 import { Label, SelectBoardProps } from '@/types/types'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 const Select: NextPage = () => {
     const [category, setCategory] = useState<Label>({ id: 0, name: '' })
@@ -21,13 +22,21 @@ const Select: NextPage = () => {
     }
 
     const state = { category: category, size: size, tag: tag, language: language }
+    const router = useRouter()
+    const navigateEvent = () => {
+        router.push({
+            pathname: '/game',
+            query: { state: JSON.stringify(state) }
+        })
+    }
+
     return (
         <main className={styles.main}>
             <Card>
                 <span>{`Language: ${language.name}, Size: ${size.name}`}</span>
                 {category.name !== 'language' && <span>{`, Tag: ${tag.name}`}</span>}
             </Card>
-            <LinkedStateButton href="/game" state={state} text="Game" color="blue" />
+            <LinkedStateButton navigateEvent={navigateEvent} text="Game" color="blue" />
             <SelectBoard {...selectBoardProps} />
         </main>
     )

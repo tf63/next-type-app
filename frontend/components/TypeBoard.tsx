@@ -1,17 +1,16 @@
 import React from 'react'
 import { useEffect, useRef } from 'react'
 import { TypeLine, TypeLineWithCaret } from './TypeLine'
-import { GameState } from '@/types/types'
+// import { TypeState } from '@/types/types'
 import Card from './Card'
 import styles from '../styles/TypeBoard.module.css'
-import { useGameStateContext } from '@/contexts/GameStateContext'
+import { useTypeContext } from '@/contexts/TypeContext'
 
 type TypeBoardProps = {
-    state: GameState
     handleKeyDown: (event: React.KeyboardEvent) => false | undefined
 }
 
-const TypeBoard: React.FC<TypeBoardProps> = (props) => {
+const TypeBoard: React.FC<TypeBoardProps> = ({ handleKeyDown }) => {
     const divRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
         if (divRef.current) {
@@ -19,20 +18,19 @@ const TypeBoard: React.FC<TypeBoardProps> = (props) => {
         }
     }, [])
 
-    const ctx = useGameStateContext()
+    const ctx = useTypeContext()
+
     const typeItemList = []
     for (const [i, typeText] of ctx.typeList.entries()) {
-        if (i < props.state.indexLine) {
+        if (i < ctx.indexLine) {
             const typeLine = <TypeLine text={typeText} prefix={ctx.prefixList[i]} isTyped={true} />
             typeItemList.push(
                 <li key={i} className={styles.type_board_item}>
                     {typeLine}
                 </li>
             )
-        } else if (i == props.state.indexLine) {
-            const typeLine = (
-                <TypeLineWithCaret text={typeText} indexCaret={props.state.indexText} prefix={ctx.prefixList[i]} />
-            )
+        } else if (i == ctx.indexLine) {
+            const typeLine = <TypeLineWithCaret text={typeText} indexCaret={ctx.indexText} prefix={ctx.prefixList[i]} />
             typeItemList.push(
                 <li key={i} className={styles.type_board_item}>
                     {typeLine}
@@ -49,7 +47,7 @@ const TypeBoard: React.FC<TypeBoardProps> = (props) => {
     }
 
     return (
-        <div className={styles.type_board} tabIndex={0} onKeyDown={props.handleKeyDown} ref={divRef}>
+        <div className={styles.type_board} tabIndex={0} onKeyDown={handleKeyDown} ref={divRef}>
             <Card>
                 <ul>{typeItemList}</ul>
             </Card>

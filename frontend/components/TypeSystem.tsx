@@ -1,23 +1,18 @@
 import { useEffect, useState } from 'react'
 import React from 'react'
 import TypeBoard from './TypeBoard'
-import { GameState } from '@/types/types'
-import { useGameStateContext } from '@/contexts/GameStateContext'
+import { ProblemState } from '@/types/types'
+import { useTypeContext } from '@/contexts/TypeContext'
+import { useGameContext } from '@/contexts/GameContext'
 
 const TypeSystem: React.FC = () => {
-    const [state, setState] = useState<GameState>({
-        // typeList: [],
-        // prefixList: [],
-        indexText: 0,
-        indexLine: 0
-    })
-
-    const ctx = useGameStateContext()
+    const typeCtx = useTypeContext()
+    const gameCtx = useGameContext()
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
         const key = event.key
-        const text = ctx.typeList[state.indexLine]
-        const indexText = state.indexText
+        const text = typeCtx.typeList[typeCtx.indexLine]
+        const indexText = typeCtx.indexText
 
         // ブラウザの動作があるキーを無効化する
         if (key == 'Tab' || key == ' ') {
@@ -36,36 +31,33 @@ const TypeSystem: React.FC = () => {
             // まだ行末に達していなかったら
             if (key == text[indexText]) {
                 // 入力が合っていたら
-                setState((prev) => ({ ...prev, indexText: prev.indexText + 1 }))
-                // gameStateContext.correct()
-                console.log('correct !!')
+                typeCtx.setIndexText(typeCtx.indexText + 1)
+                gameCtx.correctEvent()
             } else {
                 // 入力が間違っていたら
-                // gameStateContext.miss()
-                console.log('incorrect !!')
+                gameCtx.missEvent()
             }
         } else {
             // 行末に達していたら
             if (key === 'Enter') {
                 // Enterが押されたら次の行へ移動
-                setState((prev) => ({ ...prev, indexText: 0, indexLine: prev.indexLine + 1 }))
-                // gameStateContext.correct()
-                console.log('correct !!')
+                typeCtx.setIndexText(0)
+                typeCtx.setIndexLine(typeCtx.indexLine + 1)
+                gameCtx.correctEvent()
 
-                if (state.indexLine == ctx.typeList.length - 1) {
-                    // gameStateContext.navigate()
+                if (typeCtx.indexLine == typeCtx.typeList.length - 1) {
+                    gameCtx.navigateEvent()
                 }
             } else {
                 // Enter以外のキーが押されたらミスとする
-                // gameStateContext.miss()
-                console.log('incorrect !!')
+                gameCtx.missEvent()
             }
         }
 
-        console.log(key, state.indexText)
+        console.log(key, typeCtx.indexText)
     }
 
-    return <TypeBoard {...{ state: state, handleKeyDown: handleKeyDown }} />
+    return <TypeBoard handleKeyDown={handleKeyDown} />
 }
 
 export default TypeSystem
