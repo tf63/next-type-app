@@ -1,3 +1,5 @@
+import { Dispatch } from 'react'
+
 export type Color = 'blue' | 'green' | 'white' | 'none'
 // export type Category = 'language' | 'framework' | 'algorithm' | 'pattern'
 // export type ProblemSize = 'short' | 'medium' | 'long'
@@ -22,9 +24,22 @@ export type ProblemState = {
     language: Label
 }
 
-export type GameState = {
-    // typeList: string[]
-    // prefixList: string[]
+export type TypeState = {
     indexText: number
+    setIndexText: Dispatch<SetStateAction<number>>
     indexLine: number
+    setIndexLine: Dispatch<SetStateAction<number>>
+    typeList: string[]
+    prefixList: string[]
+}
+
+export type GameState = {
+    correctEvent: () => void
+    missEvent: () => void
+    navigateEvent: () => void
+}
+
+export type ResultState = {
+    correct: number
+    miss: number
 }
