@@ -21,8 +21,8 @@ import GameStateContext from '@/contexts/GameStateContext'
 const Game: NextPage = () => {
     const router = useRouter()
     const [content, setContent] = useState('')
-    const [typeList, setTypeList] = useState<string[]>(['aa', 'bb', 'cc'])
-    const [prefixList, setPrefixList] = useState<string[]>(['', '  ', '    '])
+    const [typeList, setTypeList] = useState<string[]>([])
+    const [prefixList, setPrefixList] = useState<string[]>([])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,7 +73,6 @@ const Game: NextPage = () => {
 
     useEffect(() => {
         const decomposeContent = (content: string) => {
-            console.log(content)
             const splitContent = content.split(/\r?\n/)
             const _typeList: string[] = []
             const _prefixList: string[] = []
@@ -91,11 +90,6 @@ const Game: NextPage = () => {
 
         decomposeContent(content)
     }, [content])
-
-    // useEffect(() => {
-    //     console.log(typeList)
-    //     console.log(prefixList)
-    // }, [typeList])
 
     return (
         <main>
