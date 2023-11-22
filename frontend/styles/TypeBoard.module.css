@@ -1,0 +1,8 @@
+.type_board_item {
+    list-style-type: none;
+}
+
+.type_board {
+    letter-spacing: .1rem;
+    outline: none;
+}

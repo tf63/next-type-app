@@ -11,21 +11,21 @@ services:
       - ./frontend:/app
     ports:
       - 3000:3000
-      - 5173:5173
-      - 6006:6006
-    # command: sh -c "npm install && npm run dev"
-    # env_file:
-    #   - frontend/.env.local
+      # - 5173:5173
+      # - 6006:6006
+    command: sh -c "npm install && npm run dev"
+    env_file:
+      - frontend/.env.local
     
 
-  postgres:
-    image: postgres:15.2
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    env_file:
-      - .env.development
+#   postgres:
+#     image: postgres:15.2
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     ports:
+#       - 5432:5432
+#     env_file:
+#       - .env.development
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:

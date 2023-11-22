@@ -19,13 +19,13 @@
 }
 
 .blue {
-    background: linear-gradient(296.6deg, #CDE7FF 0.36%, #f6e1ff 99.25%);
-    box-shadow: -4px -4px 10px #FFFFFF, 4px 4px 10px rgba(102, 102, 102, 0.3);
+    background: linear-gradient(296.6deg, #CDE7FF 0.36%, #F6E1FF 99.25%);
+    box-shadow: -4px -4px 10px #F4F4F4, 4px 4px 10px rgba(102, 102, 102, 0.3);
 }
 
 .green {
     background: linear-gradient(296.6deg, #BAFFDE 4.36%, #E9FFBB 94.25%);
-    box-shadow: -4px -4px 10px #FFFFFF, 4px 4px 10px rgba(102, 102, 102, 0.3);
+    box-shadow: -4px -4px 10px #F4F4F4, 4px 4px 10px rgba(102, 102, 102, 0.3);
 }
 
 .white {
