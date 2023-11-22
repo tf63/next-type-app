@@ -1,9 +1,10 @@
 import React from 'react'
 import { useEffect, useRef } from 'react'
 import { TypeLine, TypeLineWithCaret } from './TypeLine'
-import { GameState } from '../interfaces/interfaces'
+import { GameState } from '@/types/types'
 import Card from './Card'
 import styles from '../styles/TypeBoard.module.css'
+import { useGameStateContext } from '@/contexts/GameStateContext'
 
 type TypeBoardProps = {
     state: GameState
@@ -18,28 +19,33 @@ const TypeBoard: React.FC<TypeBoardProps> = (props) => {
         }
     }, [])
 
+    const ctx = useGameStateContext()
     const typeItemList = []
-    for (const [i, typeText] of props.state.typeList.entries()) {
-        let typeLine
+    for (const [i, typeText] of ctx.typeList.entries()) {
         if (i < props.state.indexLine) {
-            typeLine = <TypeLine text={typeText} prefix={props.state.prefixList[i]} isTyped={true} />
+            const typeLine = <TypeLine text={typeText} prefix={ctx.prefixList[i]} isTyped={true} />
+            typeItemList.push(
+                <li key={i} className={styles.type_board_item}>
+                    {typeLine}
+                </li>
+            )
         } else if (i == props.state.indexLine) {
-            typeLine = (
-                <TypeLineWithCaret
-                    text={typeText}
-                    indexCaret={props.state.indexText}
-                    prefix={props.state.prefixList[i]}
-                />
+            const typeLine = (
+                <TypeLineWithCaret text={typeText} indexCaret={props.state.indexText} prefix={ctx.prefixList[i]} />
+            )
+            typeItemList.push(
+                <li key={i} className={styles.type_board_item}>
+                    {typeLine}
+                </li>
             )
         } else {
-            typeLine = <TypeLine text={typeText} prefix={props.state.prefixList[i]} isTyped={false} />
+            const typeLine = <TypeLine text={typeText} prefix={ctx.prefixList[i]} isTyped={false} />
+            typeItemList.push(
+                <li key={i} className={styles.type_board_item}>
+                    {typeLine}
+                </li>
+            )
         }
-
-        typeItemList.push(
-            <li key={i} className={styles.type_board_item}>
-                {typeLine}
-            </li>
-        )
     }
 
     return (

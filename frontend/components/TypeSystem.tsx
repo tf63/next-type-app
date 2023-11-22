@@ -1,19 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import TypeBoard from './TypeBoard'
-import { GameState } from '@/interfaces/interfaces'
+import { GameState } from '@/types/types'
+import { useGameStateContext } from '@/contexts/GameStateContext'
 
-const TypeSystem: React.FC<{ typeList: string[]; prefixList: string[] }> = ({ typeList, prefixList }) => {
+const TypeSystem: React.FC = () => {
     const [state, setState] = useState<GameState>({
-        typeList: typeList,
-        prefixList: prefixList,
+        // typeList: [],
+        // prefixList: [],
         indexText: 0,
         indexLine: 0
     })
 
+    const ctx = useGameStateContext()
+
     const handleKeyDown = (event: React.KeyboardEvent) => {
         const key = event.key
-        const text = state.typeList[state.indexLine]
+        const text = ctx.typeList[state.indexLine]
         const indexText = state.indexText
 
         // ブラウザの動作があるキーを無効化する
@@ -49,7 +52,7 @@ const TypeSystem: React.FC<{ typeList: string[]; prefixList: string[] }> = ({ ty
                 // gameStateContext.correct()
                 console.log('correct !!')
 
-                if (state.indexLine == state.typeList.length - 1) {
+                if (state.indexLine == ctx.typeList.length - 1) {
                     // gameStateContext.navigate()
                 }
             } else {
