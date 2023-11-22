@@ -32,6 +32,7 @@ const Game: NextPage = () => {
     // GameContxt
     const [correct, setCorrect] = useState(0)
     const [miss, setMiss] = useState(0)
+    const [timer, setTimer] = useState(0)
 
     const correctEvent = () => {
         console.log('correct !!')
@@ -42,7 +43,16 @@ const Game: NextPage = () => {
         setMiss(miss + 1)
     }
 
-    const resultState: ResultState = { correct: correct, miss: miss }
+    useEffect(() => {
+        // 1秒ごとにtick関数を実行するタイマーを設定します
+        const timerId = setInterval(() => {
+            setTimer((prev) => prev + 1)
+        }, 1000)
+
+        return () => clearInterval(timerId)
+    }, [timer])
+
+    const resultState: ResultState = { correct: correct, miss: miss, timer: timer }
     const navigateEvent = () => {
         router.push({
             pathname: '/result',
@@ -136,7 +146,7 @@ const Game: NextPage = () => {
                 </TypeContext.Provider>
             </GameContext.Provider>
             <LinkedButton href="/result" text="Result" color="blue" />
-            {`correct: ${correct}, miss: ${miss}`}
+            {`correct: ${correct}, miss: ${miss}, time: ${timer}`}
         </main>
     )
 }

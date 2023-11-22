@@ -42,4 +42,5 @@ export type GameState = {
 export type ResultState = {
     correct: number
     miss: number
+    timer: number
 }
