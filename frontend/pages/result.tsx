@@ -17,9 +17,11 @@ const Result: NextPage = () => {
     }, [])
     return (
         <main>
-            <Card>{`correct: ${resultState.correct}, miss: ${resultState.miss}, time: ${resultState.timer}, speed: ${(
-                resultState.correct / resultState.timer
-            ).toFixed(2)}/s`}</Card>
+            <Card>{`correct: ${resultState.correct}, miss: ${resultState.miss}, time: ${resultState.timer}`}</Card>
+            <Card>{`acc: ${(100 * resultState.correct) / (resultState.correct + resultState.miss)} %, speed: ${(
+                resultState.correct /
+                (resultState.timer + 0.000001)
+            ).toFixed(2)} /s.`}</Card>
             <LinkedButton href="/" text="Home" color="blue" />
         </main>
     )

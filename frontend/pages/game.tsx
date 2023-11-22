@@ -145,7 +145,6 @@ const Game: NextPage = () => {
                     <TypeSystem />
                 </TypeContext.Provider>
             </GameContext.Provider>
-            <LinkedButton href="/result" text="Result" color="blue" />
             {`correct: ${correct}, miss: ${miss}, time: ${timer}`}
         </main>
     )
