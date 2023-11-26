@@ -1,7 +1,6 @@
 import type { NextPage } from 'next'
-import React, { createContext } from 'react'
+import React from 'react'
 import TypeSystem from '@/components/TypeSystem'
-import { LinkedButton } from '@/components/LinkedButton'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ProblemState, ResultState } from '@/types/types'
@@ -18,8 +17,9 @@ import {
 } from '@/interfaces/interfaces'
 import TypeContext from '@/contexts/TypeContext'
 import GameContext from '@/contexts/GameContext'
+import { CustomNextPage } from '@/types/custom-next-page'
 
-const Game: NextPage = () => {
+const Game: CustomNextPage = () => {
     const router = useRouter()
     const [content, setContent] = useState('')
 

@@ -6,8 +6,9 @@ import styles from '../styles/Select.module.css'
 import { Label, SelectBoardProps } from '@/types/types'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { CustomNextPage } from '@/types/custom-next-page'
 
-const Select: NextPage = () => {
+const Select: CustomNextPage = () => {
     const [category, setCategory] = useState<Label>({ id: 0, name: '' })
     const [size, setSize] = useState<Label>({ id: 0, name: '' })
     const [tag, setTag] = useState<Label>({ id: 0, name: '' })

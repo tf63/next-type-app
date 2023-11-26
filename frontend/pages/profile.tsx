@@ -1,8 +1,8 @@
-import type { NextPage } from 'next'
 import Card from '@/components/Card'
 import { LinkedButton } from '@/components/LinkedButton'
+import { CustomNextPage } from '@/types/custom-next-page'
 
-const Profile: NextPage = () => {
+const Profile: CustomNextPage = () => {
     return (
         <main>
             <Card>This is Profile Page</Card>
@@ -12,3 +12,4 @@ const Profile: NextPage = () => {
 }
 
 export default Profile
+Profile.requireAuth = true

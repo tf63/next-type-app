@@ -4,8 +4,9 @@ import { LinkedButton } from '@/components/LinkedButton'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { ResultState } from '@/types/types'
+import { CustomNextPage } from '@/types/custom-next-page'
 
-const Result: NextPage = () => {
+const Result: CustomNextPage = () => {
     const router = useRouter()
     const [resultState, setResultState] = useState<ResultState>({ correct: 0, miss: 0, timer: 0 })
 
@@ -18,10 +19,9 @@ const Result: NextPage = () => {
     return (
         <main>
             <Card>{`correct: ${resultState.correct}, miss: ${resultState.miss}, time: ${resultState.timer}`}</Card>
-            <Card>{`acc: ${(100 * resultState.correct) / (resultState.correct + resultState.miss)} %, speed: ${(
-                resultState.correct /
-                (resultState.timer + 0.000001)
-            ).toFixed(2)} /s.`}</Card>
+            <Card>{`acc: ${((100 * resultState.correct) / (resultState.correct + resultState.miss)).toFixed(
+                2
+            )} %, speed: ${(resultState.correct / (resultState.timer + 0.000001)).toFixed(2)} /s.`}</Card>
             <LinkedButton href="/" text="Home" color="blue" />
         </main>
     )
