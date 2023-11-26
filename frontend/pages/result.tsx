@@ -1,10 +1,10 @@
 import type { NextPage } from 'next'
 import Card from '@/components/Card'
-import { LinkedButton } from '@/components/LinkedButton'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { ResultState } from '@/types/types'
 import { CustomNextPage } from '@/types/custom-next-page'
+import NavigateButton from '@/components/NavigateButton'
 
 const Result: CustomNextPage = () => {
     const router = useRouter()
@@ -22,7 +22,7 @@ const Result: CustomNextPage = () => {
             <Card>{`acc: ${((100 * resultState.correct) / (resultState.correct + resultState.miss)).toFixed(
                 2
             )} %, speed: ${(resultState.correct / (resultState.timer + 0.000001)).toFixed(2)} /s.`}</Card>
-            <LinkedButton href="/" text="Home" color="blue" />
+            <NavigateButton href="/">Home</NavigateButton>
         </main>
     )
 }

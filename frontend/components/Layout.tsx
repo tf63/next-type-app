@@ -1,7 +1,6 @@
-import styles from '../styles/Theme.module.css'
-import { LinkedButton } from '@/components/LinkedButton'
 import { ReactNode } from 'react'
 import Navbar from './Navbar'
+import styles from '../styles/Theme.module.css'
 
 const Layout: React.FC<{ children: ReactNode }> = ({ children }) => {
     return (

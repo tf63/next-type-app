@@ -1,20 +1,19 @@
-import styles from '../styles/Theme.module.css'
-import navbarStyles from '../styles/Navbar.module.css'
-import { LinkedButton } from '@/components/LinkedButton'
-import React, { useEffect } from 'react'
-import { Button } from './Button'
-import UserIcon from './UserIcon'
+import React from 'react'
+import NavigateButton from '@/components/NavigateButton'
+import UserIcon, { Icon } from '@/components/UserIcon'
+import styles from '../styles/Navbar.module.css'
 
 const Navbar = () => {
     return (
-        <div className={`${navbarStyles.container} `}>
-            <div className={navbarStyles.space}>&nbsp;</div>
-            {/* <div className={navbarStyles.title}>TypeApp</div> */}
-            <LinkedButton href="/" text="Type App" color="none" />
-            <div className={`${navbarStyles.space}`}>
-                <UserIcon url="https://avatars.githubusercontent.com/u/74246282?v=4" userName="fuku" />
+        <div className={styles.container}>
+            <div className={styles.space} />
+            <NavigateButton href="/" color="none">
+                Type App
+            </NavigateButton>
+            <div className={`${styles.space}`}>
+                <UserIcon url="https://avatars.githubusercontent.com/u/108603238?v=4" userName="fuku" />
+                {/* <Icon url={'https://avatars.githubusercontent.com/u/108603238?v=4'}></Icon> */}
             </div>
-            {/* <Button text={'aa'} color={'blue'} /> */}
         </div>
     )
 }
