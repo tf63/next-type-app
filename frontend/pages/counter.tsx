@@ -1,7 +1,7 @@
-import { NextPage } from 'next'
+import { CustomNextPage } from '@/types/custom-next-page'
 import React, { useState } from 'react'
 
-const Counter: NextPage = () => {
+const Counter: CustomNextPage = () => {
     const [count, setCount] = useState(0)
 
     const increment = () => {

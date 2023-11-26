@@ -1,7 +1,6 @@
 import React from 'react'
 import { useEffect, useRef } from 'react'
 import { TypeLine, TypeLineWithCaret } from './TypeLine'
-// import { TypeState } from '@/types/types'
 import Card from './Card'
 import styles from '../styles/TypeBoard.module.css'
 import { useTypeContext } from '@/contexts/TypeContext'

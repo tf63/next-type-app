@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import styles from '../styles/SelectGroup.module.css'
 import { Label } from '@/types/types'
+import styles from '../styles/SelectGroup.module.css'
 
 export const SelectGroup: React.FC<{ labels: Label[]; setLabel: (label: Label) => void }> = ({ labels, setLabel }) => {
     const [activeButton, setActiveButton] = useState(0)

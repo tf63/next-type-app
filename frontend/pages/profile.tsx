@@ -1,14 +1,17 @@
-import type { NextPage } from 'next'
+import Button from '@/components/Button'
 import Card from '@/components/Card'
-import { LinkedButton } from '@/components/LinkedButton'
+import { CustomNextPage } from '@/types/custom-next-page'
+import { signOut, useSession } from 'next-auth/react'
 
-const Profile: NextPage = () => {
+const Profile: CustomNextPage = () => {
+    const { data, status } = useSession()
     return (
         <main>
             <Card>This is Profile Page</Card>
-            <LinkedButton href="/" text="Home" color="blue" />
+            {status === 'authenticated' && <Button onClick={() => signOut()}>LogOut</Button>}
         </main>
     )
 }
 
 export default Profile
+Profile.requireAuth = true

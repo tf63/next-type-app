@@ -1,13 +1,16 @@
-import type { NextPage } from 'next'
+import { useSession, signOut } from 'next-auth/react'
+import { CustomNextPage } from '@/types/custom-next-page'
 import Card from '@/components/Card'
-import { LinkedButton } from '@/components/LinkedButton'
+import NavigateButton from '@/components/NavigateButton'
+import Button from '@/components/Button'
 
-const Home: NextPage = () => {
+const Home: CustomNextPage = () => {
+    const { data, status } = useSession()
     return (
         <main>
             <Card>This is Home Page</Card>
-            <LinkedButton href="/select" text="Select" color="blue" />
-            <LinkedButton href="/profile" text="Profile" color="blue" />
+            <NavigateButton href="/select">Select</NavigateButton>
+            <NavigateButton href="/profile">Profile</NavigateButton>
         </main>
     )
 }
