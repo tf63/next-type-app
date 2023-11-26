@@ -1,22 +1,38 @@
 import { AppProps } from 'next/app'
 import '../styles/Global.css'
-import styles from '../styles/Theme.module.css'
-import { LinkedButton } from '@/components/LinkedButton'
-import Head from 'next/head'
+import { NextComponentType } from 'next'
+import { Session } from 'next-auth'
+import { SessionProvider } from 'next-auth/react'
+// import styles from '../styles/Theme.module.css'
+// import { LinkedButton } from '@/components/LinkedButton'
+// import Head from 'next/head'
+import MyHead from '@/components/Head'
+import Layout from '@/components/Layout'
+import AuthGuard from '@/components/AuthGuard'
 
-export default function App({ Component, pageProps }: AppProps) {
+export type CustomAppProps = AppProps<{ session: Session }> & {
+    Component: NextComponentType & { requireAuth?: boolean }
+}
+
+export default function App({ Component, pageProps: { session, ...pageProps } }: CustomAppProps) {
     return (
         <>
-            <Head>
-                <meta charSet="UTF-8" />
-                <link rel="icon" type="image/svg+xml" href="/next.svg" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>TypeApp</title>
-            </Head>
-            <div className={styles.page_container}>
+            <SessionProvider>
+                <MyHead />
+                <Layout>
+                    {Component.requireAuth ? (
+                        <AuthGuard>
+                            <Component {...pageProps} />
+                        </AuthGuard>
+                    ) : (
+                        <Component {...pageProps} />
+                    )}
+                </Layout>
+                {/* <div className={styles.page_container}>
                 <LinkedButton href="/" text="Type App" color="none" />
                 <Component {...pageProps} />
-            </div>
+            </div> */}
+            </SessionProvider>
         </>
     )
 }
