@@ -1,6 +1,6 @@
 import { Dispatch } from 'react'
 
-export type Color = 'blue' | 'green' | 'white' | 'none'
+export type Color = 'blue' | 'green' | 'white' | 'github' | 'none'
 // export type Category = 'language' | 'framework' | 'algorithm' | 'pattern'
 // export type ProblemSize = 'short' | 'medium' | 'long'
 

@@ -1,21 +1,38 @@
-import React from 'react'
-import styles from '../styles/Button.module.css'
+import React, { ReactNode } from 'react'
 import { Color } from '../types/types'
+import styles from '../styles/Button.module.css'
 
 type ButtonProps = {
-    text: string
-    color: Color
+    children: ReactNode
+    onClick: () => void
+    color?: Color
 }
 
-export const Button: React.FC<ButtonProps> = ({ text, color }) => {
+const Button: React.FC<ButtonProps> = ({ children, onClick, color = 'blue' }) => {
+    let className = `${styles.button} ${styles.button_container}`
+
     switch (color) {
         case 'blue':
-            return <div className={`${styles.button} ${styles.blue}`}>{text}</div>
+            className += ` ${styles.blue}`
+            break
         case 'green':
-            return <div className={`${styles.button} ${styles.green}`}>{text}</div>
-        case 'white':
-            return <div className={`${styles.button}`}>{text}</div>
+            className += ` ${styles.green}`
+            break
+        case 'github':
+            className += ` ${styles.github}`
+            break
         case 'none':
-            return <div className={`${styles.button}`}>{text}</div>
+            break
+        default:
+            className += ` ${styles.blue}`
+            break
     }
+
+    return (
+        <div className={className} onClick={onClick}>
+            {children}
+        </div>
+    )
 }
+
+export default Button
