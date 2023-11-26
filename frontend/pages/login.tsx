@@ -7,7 +7,6 @@ const SignIn = ({ providers }: InferGetServerSidePropsType<typeof getServerSideP
     return (
         <>
             <main>
-                <Card>This is Login Page</Card>
                 {providers &&
                     Object.values(providers).map((provider) => {
                         return (

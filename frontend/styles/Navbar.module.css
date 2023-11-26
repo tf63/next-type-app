@@ -27,3 +27,8 @@
     /* padding: 0 20%; */
     /* background-color: #000; */
 }
+
+.user_status>* {
+    margin-left: auto;
+    margin-right: 0px;
+}

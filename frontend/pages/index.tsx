@@ -11,8 +11,6 @@ const Home: CustomNextPage = () => {
             <Card>This is Home Page</Card>
             <NavigateButton href="/select">Select</NavigateButton>
             <NavigateButton href="/profile">Profile</NavigateButton>
-            {status === 'unauthenticated' && <NavigateButton href="/login">Sign In</NavigateButton>}
-            {status === 'authenticated' && <Button onClick={() => signOut()}>Sign Out</Button>}
         </main>
     )
 }
