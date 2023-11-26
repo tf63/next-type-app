@@ -1,14 +1,13 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { SelectGroup, SelectGroupMultiLine } from './SelectGroup'
-import Card from './Card'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
+import Accordion from './Accordion'
+import { SelectGroup, SelectGroupMultiLine } from './SelectGroup'
 import {
     AlgorithmAPIResponse,
     LanguageAPIResponse,
     PatternAPIResponse,
     FrameworkAPIResponse
 } from '@/interfaces/interfaces'
-import { Accordion } from './Accordion'
 import { Label, SelectBoardProps } from '@/types/types'
 
 const SelectBoard: React.FC<SelectBoardProps> = (props) => {

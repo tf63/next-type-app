@@ -1,4 +1,4 @@
-import { Caret } from './Caret'
+import Caret from './Caret'
 import styles from '../styles/TypeLine.module.css'
 
 export const TypeLineWithCaret: React.FC<{ text: string; prefix: string; indexCaret: number }> = ({
