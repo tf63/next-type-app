@@ -1,9 +1,9 @@
 import { getProviders } from 'next-auth/react'
 import { InferGetServerSidePropsType } from 'next'
 import Card from '@/components/Card'
-import SignInButton from '@/components/LoginButton'
+import LoginButton from '@/components/LoginButton'
 
-const SignIn = ({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Login = ({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     return (
         <>
             <main>
@@ -11,7 +11,7 @@ const SignIn = ({ providers }: InferGetServerSidePropsType<typeof getServerSideP
                     Object.values(providers).map((provider) => {
                         return (
                             <div key={provider.id}>
-                                <SignInButton provider={provider} />
+                                <LoginButton provider={provider} />
                             </div>
                         )
                     })}
@@ -20,7 +20,7 @@ const SignIn = ({ providers }: InferGetServerSidePropsType<typeof getServerSideP
     )
 }
 
-export default SignIn
+export default Login
 
 export const getServerSideProps = async () => {
     // ここで、認証の方法を取得しています
