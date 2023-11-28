@@ -3,7 +3,7 @@ import React from 'react'
 import TypeSystem from '@/components/TypeSystem'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { ProblemState, ResultState } from '@/types/types'
+import { Category, ProblemState, ResultState } from '@/types/types'
 import axios from 'axios'
 import {
     AlgorithmCodeAPIRequest,
@@ -22,6 +22,8 @@ import { CustomNextPage } from '@/types/custom-next-page'
 const Game: CustomNextPage = () => {
     const router = useRouter()
     const [content, setContent] = useState('')
+    const [problemId, setProblemId] = useState(0)
+    const [category, setCategory] = useState('language')
 
     // TypeContext
     const [indexText, setIndexText] = useState(0)
@@ -29,7 +31,7 @@ const Game: CustomNextPage = () => {
     const [typeList, setTypeList] = useState<string[]>([])
     const [prefixList, setPrefixList] = useState<string[]>([])
 
-    // GameContxt
+    // GameContext
     const [correct, setCorrect] = useState(0)
     const [miss, setMiss] = useState(0)
     const [timer, setTimer] = useState(0)
@@ -44,68 +46,63 @@ const Game: CustomNextPage = () => {
     }
 
     useEffect(() => {
-        // 1秒ごとにtick関数を実行するタイマーを設定します
+        const fetchData = async () => {
+            if (!router.query.state) {
+                return
+            }
+
+            const problemState: ProblemState = JSON.parse(router.query.state as string)
+            console.log('aaaa')
+            console.log(problemState)
+            const commonData = {
+                language_id: problemState.language.id,
+                size: problemState.size.name
+            }
+
+            let endpoint: string
+            let requestData: any
+
+            switch (problemState.category.name) {
+                case 'language':
+                    endpoint = '/api/language/code'
+                    requestData = { ...commonData }
+                    break
+                case 'framework':
+                    endpoint = '/api/framework/code'
+                    requestData = { tool_id: problemState.tag.id, ...commonData }
+                    break
+                case 'algorithm':
+                    endpoint = '/api/algorithm/code'
+                    requestData = { algorithm_id: problemState.tag.id, ...commonData }
+                    break
+                case 'pattern':
+                    endpoint = '/api/pattern/code'
+                    requestData = { pattern_id: problemState.tag.id, ...commonData }
+                    break
+                default:
+                    // handle the default case or do nothing
+
+                    return
+            }
+
+            const response = await axios.post(endpoint, requestData)
+            const result = await response.data
+            setProblemId(result.id)
+            setContent(result.content)
+            setCategory(problemState.category.name)
+        }
+
+        fetchData()
+        console.log('bb')
+    }, [])
+
+    useEffect(() => {
         const timerId = setInterval(() => {
             setTimer((prev) => prev + 1)
         }, 1000)
 
         return () => clearInterval(timerId)
     }, [timer])
-
-    const resultState: ResultState = { correct: correct, miss: miss, timer: timer }
-    const navigateEvent = () => {
-        router.push({
-            pathname: '/result',
-            query: { state: JSON.stringify(resultState) }
-        })
-    }
-
-    useEffect(() => {
-        const fetchData = async () => {
-            if (router.query.state) {
-                const problemState: ProblemState = JSON.parse(router.query.state as string)
-                if (problemState.category.name === 'language') {
-                    const data: LanguageCodeAPIRequest = {
-                        language_id: problemState.language.id,
-                        size: problemState.size.name
-                    }
-                    const response = await axios.post('/api/language/code', data)
-                    const result: LanguageCodeAPIResponse = await response.data
-                    setContent(result.content)
-                } else if (problemState.category.name === 'framework') {
-                    const data: FrameworkCodeAPIRequest = {
-                        tool_id: problemState.tag.id,
-                        size: problemState.size.name
-                    }
-                    const response = await axios.post('/api/framework/code', data)
-                    const result: FrameworkCodeAPIResponse = await response.data
-                    setContent(result.content)
-                } else if (problemState.category.name === 'algorithm') {
-                    const data: AlgorithmCodeAPIRequest = {
-                        language_id: problemState.language.id,
-                        algorithm_id: problemState.tag.id,
-                        size: problemState.size.name
-                    }
-                    const response = await axios.post('/api/algorithm/code', data)
-                    const result: AlgorithmCodeAPIResponse = await response.data
-                    setContent(result.content)
-                } else if (problemState.category.name === 'pattern') {
-                    const data: PatternCodeAPIRequest = {
-                        language_id: problemState.language.id,
-                        pattern_id: problemState.tag.id,
-                        size: problemState.size.name
-                    }
-                    const response = await axios.post('/api/pattern/code', data)
-                    const result: PatternCodeAPIResponse = await response.data
-                    setContent(result.content)
-                } else {
-                    // pass
-                }
-            }
-        }
-
-        fetchData()
-    }, [])
 
     useEffect(() => {
         const decomposeContent = (content: string) => {
@@ -126,6 +123,20 @@ const Game: CustomNextPage = () => {
 
         decomposeContent(content)
     }, [content])
+
+    const resultState: ResultState = {
+        category: category as Category,
+        problemId: problemId,
+        correct: correct,
+        miss: miss,
+        timer: timer
+    }
+    const navigateEvent = () => {
+        router.push({
+            pathname: '/result',
+            query: { state: JSON.stringify(resultState) }
+        })
+    }
 
     return (
         <main>

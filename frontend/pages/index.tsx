@@ -5,7 +5,6 @@ import NavigateButton from '@/components/NavigateButton'
 import Button from '@/components/Button'
 
 const Home: CustomNextPage = () => {
-    const { data, status } = useSession()
     return (
         <main>
             <Card>This is Home Page</Card>
