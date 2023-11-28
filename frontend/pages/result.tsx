@@ -5,10 +5,21 @@ import { useRouter } from 'next/router'
 import { ResultState } from '@/types/types'
 import { CustomNextPage } from '@/types/custom-next-page'
 import NavigateButton from '@/components/NavigateButton'
+import { useSession } from 'next-auth/react'
+import { GameFinishAPIRequest } from '@/interfaces/interfaces'
+import axios from 'axios'
 
 const Result: CustomNextPage = () => {
     const router = useRouter()
-    const [resultState, setResultState] = useState<ResultState>({ correct: 0, miss: 0, timer: 0 })
+    const { data, status } = useSession()
+    const [posted, setPosted] = useState(false)
+    const [resultState, setResultState] = useState<ResultState>({
+        category: 'language',
+        problemId: 0,
+        correct: 0,
+        miss: 0,
+        timer: 0
+    })
 
     useEffect(() => {
         if (router.query.state) {
@@ -16,6 +27,25 @@ const Result: CustomNextPage = () => {
             setResultState(state)
         }
     }, [])
+
+    useEffect(() => {
+        if (resultState.problemId === 0 || posted) {
+            console.log('return')
+            return
+        }
+
+        const postData = async () => {
+            const userLog: GameFinishAPIRequest = { userId: data?.user?.id!, ...resultState }
+            console.log('post data')
+            const _ = await axios.post('/api/game/finish', userLog)
+            setPosted(true)
+        }
+
+        if (status === 'authenticated') {
+            postData()
+        }
+    }, [resultState])
+
     return (
         <main>
             <Card>{`correct: ${resultState.correct}, miss: ${resultState.miss}, time: ${resultState.timer}`}</Card>
