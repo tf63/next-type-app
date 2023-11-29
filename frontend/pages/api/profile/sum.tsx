@@ -19,7 +19,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     // }
     const { data, error } = await supabase.rpc('get_user_log_summary', { user_id_input: body.userId }).select(`*`)
 
-    if (error == null) {
+    if (error != null) {
         res.status(503).json({ error: error })
     } else {
         res.status(200).json(data)

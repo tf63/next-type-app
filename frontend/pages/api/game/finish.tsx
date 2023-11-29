@@ -30,7 +30,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         speed: speed
     })
 
-    if (error == null) {
+    if (error != null) {
         res.status(503).json({ error: error })
     } else {
         res.status(200).json({})

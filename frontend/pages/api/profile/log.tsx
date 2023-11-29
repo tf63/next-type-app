@@ -20,7 +20,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         .range(body.offset, body.offset + body.num - 1)
         .returns<Database['public']['Tables']['user_log_problem']['Row']>()
 
-    if (error == null) {
+    if (error != null) {
         res.status(503).json({ error: error })
     } else {
         res.status(200).json(data)
