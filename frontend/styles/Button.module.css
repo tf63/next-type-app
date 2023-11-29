@@ -1,7 +1,8 @@
 .button {
     /* max-width: 300px; */
     text-decoration: none;
-    width: 300px;
+    max-width: 300px;
+    margin: 20px auto;
     padding: 2em;
     border: none;
     border-radius: .5rem;
@@ -14,8 +15,8 @@
     transition: .2s ease-in-out;
 }
 
-.button_container {
-    margin: 50px auto
+.flex_button {
+    width: 100%;
 }
 
 .blue {
