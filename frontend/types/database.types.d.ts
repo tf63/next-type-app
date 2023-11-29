@@ -477,7 +477,27 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_log_summaray: {
+        Args: {
+          user_id_input: string
+        }
+        Returns: {
+          month: string
+          miss: number
+          speed: number
+        }[]
+      }
+      get_user_log_summary: {
+        Args: {
+          user_id_input: string
+        }
+        Returns: {
+          month: string
+          correct: number
+          miss: number
+          speed: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
