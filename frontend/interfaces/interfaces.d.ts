@@ -76,8 +76,8 @@ export interface ProfileSumAPIRequest {
 }
 
 export interface ProfileSumAPIResponse {
+    month: string
     correct: number
     miss: number
-    accuracy: number
     speed: number
 }

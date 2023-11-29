@@ -20,7 +20,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             category_id = 4
             break
     }
-    const speed = (body.correct / (body.timer + 0.000001)).toFixed(2)
+    const speed = body.correct / (body.timer + 0.000001)
     const { error } = await supabase.from('user_log_problem').insert({
         user_id: body.userId,
         category_id: category_id,
