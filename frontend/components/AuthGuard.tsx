@@ -7,8 +7,8 @@ const AuthGuard = ({ children }: { children: React.ReactNode }): any => {
     const { status } = useSession()
     const router = useRouter()
     useEffect(() => {
-        if (status === 'unauthenticated' && router.pathname != '/auth/signin')
-            // status が unauthenticated の場合でも、現在のパス名が「/auth/signin」だった場合、リダイレクトは行いません
+        if (status === 'unauthenticated' && router.pathname != '/login')
+            // status が unauthenticated の場合でも、現在のパス名が「/login」だった場合、リダイレクトは行いません
             router.push('/login')
     }, [router, status])
     if (status === 'loading') return <p>Loading...</p>

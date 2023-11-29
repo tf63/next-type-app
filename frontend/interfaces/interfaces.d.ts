@@ -2,23 +2,23 @@
 
 import { Category } from '@/types/types'
 
-export interface Language {
+interface Language {
     language_id: number
 }
 
-export interface Framework {
+interface Framework {
     tool_id: number
 }
 
-export interface Algorithm {
+interface Algorithm {
     algorithm_id: number
 }
 
-export interface Pattern {
+interface Pattern {
     pattern_id: number
 }
 
-export interface TagAPI {
+interface TagAPI {
     name: string
 }
 
@@ -37,6 +37,7 @@ export interface AlgorithmCodeAPIRequest extends ProblemCodeAPIRequest, Language
 export interface PatternCodeAPIRequest extends ProblemCodeAPIRequest, Language, Pattern {}
 
 export interface ProblemCodeAPIResponse {
+    id: number
     nrow: number
     content: string
 }
@@ -45,3 +46,38 @@ export interface LanguageCodeAPIResponse extends ProblemCodeAPIResponse, Languag
 export interface FrameworkCodeAPIResponse extends ProblemCodeAPIResponse, Framework {}
 export interface AlgorithmCodeAPIResponse extends ProblemCodeAPIResponse, Language, Algorithm {}
 export interface PatternCodeAPIResponse extends ProblemCodeAPIResponse, Language, Pattern {}
+
+export interface GameFinishAPIRequest {
+    category: Category
+    problemId: number
+    userId: string
+    correct: number
+    miss: number
+    timer: number
+}
+
+export interface ProfileLogAPIRequest {
+    userId: string
+    offset: number
+    num: number
+}
+
+export interface ProfileLogAPIResponse {
+    created_at?: string
+    category_id?: number
+    problem_id?: number
+    correct?: number
+    miss?: number
+    speed?: number
+}
+
+export interface ProfileSumAPIRequest {
+    userId: string
+}
+
+export interface ProfileSumAPIResponse {
+    month: string
+    correct: number
+    miss: number
+    speed: number
+}

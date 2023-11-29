@@ -1,8 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Label } from '@/types/types'
 import styles from '../styles/SelectGroup.module.css'
+import FlexContainer from './FlexContainer'
+import SmallHeight from './SmallHeight'
 
-export const SelectGroup: React.FC<{ labels: Label[]; setLabel: (label: Label) => void }> = ({ labels, setLabel }) => {
+type SelectGroupProps = {
+    labels: Label[]
+    setLabel: (label: Label) => void
+    mode?: 'card' | 'dent'
+}
+
+export const SelectGroup: React.FC<SelectGroupProps> = ({ labels, setLabel, mode = 'card' }) => {
     const [activeButton, setActiveButton] = useState(0)
 
     const handleButtonClick = (buttonNumber: number) => {
@@ -10,12 +18,14 @@ export const SelectGroup: React.FC<{ labels: Label[]; setLabel: (label: Label) =
         setLabel(labels[buttonNumber])
     }
 
+    const selectClassName = mode === 'card' ? styles.selected_card : styles.selected_dent
+
     const buttons = []
     for (const [i, label] of labels.entries()) {
         const button = (
             <div
                 className={`${styles.select_box} ${styles.pointer} ${
-                    activeButton === i ? styles.selected : styles.unselected
+                    activeButton === i ? selectClassName : styles.unselected
                 }`}
                 onClick={() => handleButtonClick(i)}
                 key={i}
@@ -26,13 +36,10 @@ export const SelectGroup: React.FC<{ labels: Label[]; setLabel: (label: Label) =
         buttons.push(button)
     }
 
-    return <div className={styles.center_container}>{buttons}</div>
+    return <FlexContainer position="center">{buttons}</FlexContainer>
 }
 
-export const SelectGroupMultiLine: React.FC<{ labels: Label[]; setLabel: (label: Label) => void }> = ({
-    labels,
-    setLabel
-}) => {
+export const SelectGroupMultiLine: React.FC<SelectGroupProps> = ({ labels, setLabel, mode = 'card' }) => {
     const [activeButton, setActiveButton] = useState(0)
 
     const handleButtonClick = (buttonNumber: number) => {
@@ -40,11 +47,11 @@ export const SelectGroupMultiLine: React.FC<{ labels: Label[]; setLabel: (label:
         setLabel(labels[buttonNumber])
     }
 
-    useEffect(() => {}, [labels])
+    const selectClassName = mode === 'card' ? styles.selected_card : styles.selected_dent
 
-    const buttonBlock = []
+    const buttonMat = []
     for (let j = 0; j * 4 < labels.length; j++) {
-        const buttons = []
+        const buttonVec = []
         for (let i = 0; i < 4; i++) {
             let button
             const labelIndex = i + j * 4
@@ -53,7 +60,7 @@ export const SelectGroupMultiLine: React.FC<{ labels: Label[]; setLabel: (label:
                 button = (
                     <div
                         className={`${styles.select_box} ${styles.pointer} ${
-                            activeButton === labelIndex ? styles.selected : styles.unselected
+                            activeButton === labelIndex ? selectClassName : styles.unselected
                         }`}
                         onClick={() => handleButtonClick(labelIndex)}
                         key={labelIndex}
@@ -62,18 +69,19 @@ export const SelectGroupMultiLine: React.FC<{ labels: Label[]; setLabel: (label:
                     </div>
                 )
             } else {
+                // 空白埋め
                 button = <div className={`${styles.select_box} ${styles.unselected}`} key={labelIndex} />
             }
-            buttons.push(button)
+            buttonVec.push(button)
         }
-        buttonBlock.push(buttons)
+        buttonMat.push(buttonVec)
     }
 
     return (
         <>
-            {buttonBlock.map((buttons, index) => (
-                <div className={styles.center_container} key={index}>
-                    {buttons}
+            {buttonMat.map((buttonVec, index) => (
+                <div key={index} style={{ marginTop: '20px' }}>
+                    <FlexContainer position="center">{buttonVec}</FlexContainer>
                 </div>
             ))}
         </>

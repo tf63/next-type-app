@@ -1,0 +1,19 @@
+.lt {
+    width: 7px;
+    height: 7px;
+    cursor: 'pointer';
+    -webkit-transform: rotate(225deg);
+    transform: rotate(225deg);
+    border-top: 1px solid #888888;
+    border-right: 1px solid #888888;
+}
+
+.gt {
+    width: 7px;
+    height: 7px;
+    cursor: 'pointer';
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    border-top: 1px solid #888888;
+    border-right: 1px solid #888888;
+}

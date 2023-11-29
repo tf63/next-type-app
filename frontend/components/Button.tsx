@@ -2,14 +2,15 @@ import React, { ReactNode } from 'react'
 import { Color } from '../types/types'
 import styles from '../styles/Button.module.css'
 
-type ButtonProps = {
+export type ButtonProps = {
     children: ReactNode
     onClick: () => void
     color?: Color
+    flex?: boolean
 }
 
-const Button: React.FC<ButtonProps> = ({ children, onClick, color = 'blue' }) => {
-    let className = `${styles.button} ${styles.button_container}`
+const Button: React.FC<ButtonProps> = ({ children, onClick, color = 'blue', flex = false }) => {
+    let className = `${styles.button}`
 
     switch (color) {
         case 'blue':
@@ -26,6 +27,10 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, color = 'blue' }) =>
         default:
             className += ` ${styles.blue}`
             break
+    }
+
+    if (flex) {
+        className += ` ${styles.flex_button}`
     }
 
     return (

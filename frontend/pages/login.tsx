@@ -5,18 +5,16 @@ import LoginButton from '@/components/LoginButton'
 
 const Login = ({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     return (
-        <>
-            <main>
-                {providers &&
-                    Object.values(providers).map((provider) => {
-                        return (
-                            <div key={provider.id}>
-                                <LoginButton provider={provider} />
-                            </div>
-                        )
-                    })}
-            </main>
-        </>
+        <main>
+            {providers &&
+                Object.values(providers).map((provider) => {
+                    return (
+                        <div key={provider.id}>
+                            <LoginButton provider={provider} />
+                        </div>
+                    )
+                })}
+        </main>
     )
 }
 

@@ -9,6 +9,7 @@ import {
     FrameworkAPIResponse
 } from '@/interfaces/interfaces'
 import { Label, SelectBoardProps } from '@/types/types'
+import SmallHeight from './SmallHeight'
 
 const SelectBoard: React.FC<SelectBoardProps> = (props) => {
     const categoryLabels: Label[] = [
@@ -84,9 +85,12 @@ const SelectBoard: React.FC<SelectBoardProps> = (props) => {
         <>
             <p>Problem Category</p>
             <SelectGroup {...{ labels: categoryLabels, setLabel: props.setCategory }} />
+
+            <SmallHeight />
             <p>Problem Size</p>
             <SelectGroup {...{ labels: sizeLabels, setLabel: props.setSize }} />
 
+            <SmallHeight />
             {props.category.name !== 'framework' && (
                 <Accordion summary={'Programming Language'}>
                     <SelectGroupMultiLine {...{ labels: languageLabels, setLabel: props.setLanguage }} />
@@ -99,6 +103,7 @@ const SelectBoard: React.FC<SelectBoardProps> = (props) => {
                 </Accordion>
             )}
 
+            <SmallHeight />
             {(props.category.name === 'algorithm' || props.category.name === 'pattern') && (
                 <Accordion summary={'Problem Tag'}>
                     <SelectGroupMultiLine {...{ labels: tagLabels, setLabel: props.setTag }} />
