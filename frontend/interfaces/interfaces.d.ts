@@ -58,6 +58,8 @@ export interface GameFinishAPIRequest {
 
 export interface ProfileLogAPIRequest {
     userId: string
+    offset: number
+    num: number
 }
 
 export interface ProfileLogAPIResponse {
@@ -67,4 +69,15 @@ export interface ProfileLogAPIResponse {
     correct?: number
     miss?: number
     speed?: number
+}
+
+export interface ProfileSumAPIRequest {
+    userId: string
+}
+
+export interface ProfileSumAPIResponse {
+    correct: number
+    miss: number
+    accuracy: number
+    speed: number
 }

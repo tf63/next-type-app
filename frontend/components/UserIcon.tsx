@@ -1,25 +1,18 @@
 import React from 'react'
-import theme from '../styles/Theme.module.css'
 import styles from '../styles/Icon.module.css'
+import FlexContainer from './FlexContainer'
+import Icon, { IconProps } from './Icon'
 
-interface IconProps {
-    url: string
-}
-
-interface UserIconProps extends IconProps {
+type UserIconProps = IconProps & {
     userName: string
 }
 
-export const Icon: React.FC<IconProps> = ({ url }) => {
-    return <img src={url} className={styles.icon} />
-}
-
-const UserIcon: React.FC<UserIconProps> = ({ url, userName }) => {
+const UserIcon: React.FC<UserIconProps> = ({ url, userName, alt = '' }) => {
     return (
-        <div className={theme.center_container}>
-            <Icon url={url} />
+        <FlexContainer position="center">
+            <Icon url={url} alt={alt} />
             <div className={styles.user_name}>{userName}</div>
-        </div>
+        </FlexContainer>
     )
 }
 

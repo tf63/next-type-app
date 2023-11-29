@@ -1,16 +1,13 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 
-import Button from './Button'
-import { Color } from '../types/types'
+import Button, { ButtonProps } from './Button'
 
-type NavigateButtonProps = {
-    children: ReactNode
+type NavigateButtonProps = Omit<ButtonProps, `onClick`> & {
     href: string
-    color?: Color
 }
 
-const NavigateButton: React.FC<NavigateButtonProps> = ({ children, href, color = 'blue' }) => {
+const NavigateButton: React.FC<NavigateButtonProps> = ({ children, href, color = 'blue', flex = false }) => {
     const router = useRouter()
 
     const handleClick = () => {
@@ -18,7 +15,7 @@ const NavigateButton: React.FC<NavigateButtonProps> = ({ children, href, color =
     }
 
     return (
-        <Button color={color} onClick={handleClick}>
+        <Button color={color} flex={flex} onClick={handleClick}>
             {children}
         </Button>
     )

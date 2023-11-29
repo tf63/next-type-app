@@ -8,6 +8,7 @@ import NavigateButton from '@/components/NavigateButton'
 import { useSession } from 'next-auth/react'
 import { GameFinishAPIRequest } from '@/interfaces/interfaces'
 import axios from 'axios'
+import FlexContainer from '@/components/FlexContainer'
 
 const Result: CustomNextPage = () => {
     const router = useRouter()
@@ -52,6 +53,7 @@ const Result: CustomNextPage = () => {
             <Card>{`acc: ${((100 * resultState.correct) / (resultState.correct + resultState.miss)).toFixed(
                 2
             )} %, speed: ${(resultState.correct / (resultState.timer + 0.000001)).toFixed(2)} /s.`}</Card>
+
             <NavigateButton href="/">Home</NavigateButton>
         </main>
     )

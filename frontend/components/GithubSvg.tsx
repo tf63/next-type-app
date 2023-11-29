@@ -1,6 +1,6 @@
-import styles from '../styles/Icon.module.css'
+import styles from '../styles/GithubSvg.module.css'
 
-const GithubIcon = () => {
+const GithubSvg = () => {
     return (
         <svg
             className={styles.github}
@@ -20,4 +20,4 @@ const GithubIcon = () => {
     )
 }
 
-export default GithubIcon
+export default GithubSvg
