@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     const body: GameFinishAPIRequest = req.body
 
-    let category_id
+    let category_id: number
     switch (body.category) {
         case 'language':
             category_id = 1
@@ -30,7 +30,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         speed: speed
     })
 
-    if (error) {
+    if (error == null) {
         res.status(503).json({ error: error })
     } else {
         res.status(200).json({})

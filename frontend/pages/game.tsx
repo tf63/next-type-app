@@ -47,12 +47,11 @@ const Game: CustomNextPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!router.query.state) {
+            if (router.query.state == null) {
                 return
             }
 
             const problemState: ProblemState = JSON.parse(router.query.state as string)
-            console.log('aaaa')
             console.log(problemState)
             const commonData = {
                 language_id: problemState.language.id,
@@ -80,8 +79,6 @@ const Game: CustomNextPage = () => {
                     requestData = { pattern_id: problemState.tag.id, ...commonData }
                     break
                 default:
-                    // handle the default case or do nothing
-
                     return
             }
 
@@ -93,7 +90,6 @@ const Game: CustomNextPage = () => {
         }
 
         fetchData()
-        console.log('bb')
     }, [])
 
     useEffect(() => {
@@ -111,7 +107,7 @@ const Game: CustomNextPage = () => {
             const _prefixList: string[] = []
             for (let s of splitContent) {
                 const result = s.match(/^(\s*)(.*)/)
-                if (result) {
+                if (result != null) {
                     _prefixList.push(result[1])
                     _typeList.push(result[2])
                 }

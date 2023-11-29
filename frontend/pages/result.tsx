@@ -23,7 +23,7 @@ const Result: CustomNextPage = () => {
     })
 
     useEffect(() => {
-        if (router.query.state) {
+        if (router.query.state != null) {
             const state: ResultState = JSON.parse(router.query.state as string)
             setResultState(state)
         }
@@ -37,7 +37,6 @@ const Result: CustomNextPage = () => {
 
         const postData = async () => {
             const userLog: GameFinishAPIRequest = { userId: data?.user?.id!, ...resultState }
-            console.log('post data')
             const _ = await axios.post('/api/game/finish', userLog)
             setPosted(true)
         }

@@ -81,7 +81,7 @@ const Profile: CustomNextPage = () => {
     }, [page])
 
     const getSpeed = (speed: number | undefined) => {
-        if (speed) {
+        if (speed != null) {
             return speed.toFixed(2)
         } else {
             return 0
@@ -89,8 +89,8 @@ const Profile: CustomNextPage = () => {
     }
 
     const getAccuracy = (correct: number | undefined, miss: number | undefined) => {
-        if (correct && miss) {
-            return ((100 * correct) / (correct + miss + 0.000001)).toFixed(2)
+        if (correct != null && miss != null) {
+            return ((correct / (correct + miss + 0.000001)) * 100).toFixed(2)
         } else {
             return 0
         }
@@ -102,8 +102,7 @@ const Profile: CustomNextPage = () => {
             <SmallHeight />
             <p>Dashboard</p>
             <Card>
-                <div style={{ marginBottom: '20px' }}>Your Results in the last </div>
-                {/* {idToMonth.get(month.id)} */}
+                <div style={{ marginBottom: '20px' }}>Your Results in</div>
                 <SelectGroupMultiLine {...{ labels: monthLabels, setLabel: setMonth, mode: 'dent' }} />
                 <FlexContainer position="left" align="top">
                     <div style={{ width: '50%' }}>
@@ -129,7 +128,9 @@ const Profile: CustomNextPage = () => {
                 return (
                     <Card key={index}>{`[${getDateStr(
                         log.created_at!
-                    )}] correct: ${log.correct!} miss: ${log.miss!} speed: ${log.speed!}`}</Card>
+                    )}] correct: ${log.correct!} miss: ${log.miss!} speed: ${getSpeed(
+                        log.speed!
+                    )} accuracy: ${getAccuracy(log.correct!, log.miss!)}`}</Card>
                 )
             })}
         </main>
