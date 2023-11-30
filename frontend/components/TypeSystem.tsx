@@ -15,13 +15,13 @@ const TypeSystem: React.FC = () => {
         const indexText = typeCtx.indexText
 
         // ブラウザの動作があるキーを無効化する
-        if (key == 'Tab' || key == ' ') {
+        if (key === 'Tab' || key === ' ') {
             event.preventDefault()
             console.log('prevent default')
         }
 
         // 一部のキーはエスケープする
-        if (key == 'Shift' || key == 'Control' || key == 'CapsLock' || key == 'Meta' || key == 'Alt') {
+        if (key === 'Shift' || key === 'Control' || key === 'CapsLock' || key === 'Meta' || key === 'Alt') {
             console.log('disable key')
             return false
         }
@@ -29,13 +29,13 @@ const TypeSystem: React.FC = () => {
         // 正誤判定
         if (indexText !== text.length) {
             // まだ行末に達していなかったら
-            if (key == text[indexText]) {
+            if (key === text[indexText]) {
                 // 入力が合っていたら
                 typeCtx.setIndexText(typeCtx.indexText + 1)
-                gameCtx.correctEvent()
+                gameCtx.correctEvent(key)
             } else {
                 // 入力が間違っていたら
-                gameCtx.missEvent()
+                gameCtx.missEvent(key)
             }
         } else {
             // 行末に達していたら
@@ -43,14 +43,14 @@ const TypeSystem: React.FC = () => {
                 // Enterが押されたら次の行へ移動
                 typeCtx.setIndexText(0)
                 typeCtx.setIndexLine(typeCtx.indexLine + 1)
-                gameCtx.correctEvent()
+                gameCtx.correctEvent(key)
 
-                if (typeCtx.indexLine == typeCtx.typeList.length - 1) {
+                if (typeCtx.indexLine === typeCtx.typeList.length - 1) {
                     gameCtx.navigateEvent()
                 }
             } else {
                 // Enter以外のキーが押されたらミスとする
-                gameCtx.missEvent()
+                gameCtx.missEvent(key)
             }
         }
 

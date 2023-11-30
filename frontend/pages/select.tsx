@@ -34,14 +34,15 @@ const Select: CustomNextPage = () => {
 
     return (
         <main style={{ height: '1300px' }}>
-            <Card>
-                <span>{`Language: ${language.name}, Size: ${size.name}`}</span>
-                {category.name !== 'language' && <span>{`, Tag: ${tag.name}`}</span>}
-            </Card>
-            <SmallHeight />
+            <FlexContainer>
+                <p style={{ marginBottom: '50px' }}>
+                    <span>{`Language: ${language.name}, Size: ${size.name}`}</span>
+                    {category.name !== 'language' && <span>{`, Tag: ${tag.name}`}</span>}
+                </p>
+            </FlexContainer>
             <FlexContainer>
                 <Button onClick={navigateEvent} flex={true}>
-                    Game
+                    Start
                 </Button>
             </FlexContainer>
             <SmallHeight />

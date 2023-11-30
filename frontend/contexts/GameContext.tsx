@@ -2,8 +2,8 @@ import { GameState } from '@/types/types'
 import { createContext, useContext } from 'react'
 
 const GameContext = createContext<GameState>({
-    correctEvent: () => {},
-    missEvent: () => {},
+    correctEvent: (_) => {},
+    missEvent: (_) => {},
     navigateEvent: () => {}
 })
 

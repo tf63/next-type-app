@@ -11,7 +11,8 @@ export type IconProps = {
 
 const PageBar: React.FC<IconProps> = ({ datas, page, setPage, pageSize }) => {
     const incrementPage = () => {
-        if (datas.length == pageSize + 1) {
+        if (datas.length === pageSize + 1) {
+            console.log(datas.length, pageSize + 1)
             setPage(page + 1)
         }
     }

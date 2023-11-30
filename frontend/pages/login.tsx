@@ -2,6 +2,9 @@ import { getProviders } from 'next-auth/react'
 import { InferGetServerSidePropsType } from 'next'
 import Card from '@/components/Card'
 import LoginButton from '@/components/LoginButton'
+import NavigateButton from '@/components/NavigateButton'
+import SmallHeight from '@/components/SmallHeight'
+import FlexContainer from '@/components/FlexContainer'
 
 const Login = ({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     return (
@@ -14,6 +17,11 @@ const Login = ({ providers }: InferGetServerSidePropsType<typeof getServerSidePr
                         </div>
                     )
                 })}
+            <SmallHeight />
+            <FlexContainer>
+                <p>⬇ ログインせずに動作確認できます</p>
+            </FlexContainer>
+            <NavigateButton href="/profile_sample">Sample Profile Page</NavigateButton>
         </main>
     )
 }
