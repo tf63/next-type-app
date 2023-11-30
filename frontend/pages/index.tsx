@@ -42,7 +42,7 @@ const Home: CustomNextPage = () => {
                         <div style={{ width: '50%' }}>
                             <FlexContainer position="left" align="top">
                                 <div style={{ marginLeft: '40px' }}>
-                                    <p>You're not Logged in</p>
+                                    <p>You are not Logged in</p>
                                 </div>
                             </FlexContainer>
                         </div>
