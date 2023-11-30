@@ -6,6 +6,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     console.log(requestBody)
 
     const code: LanguageCodeAPIResponse = {
+        id: 1,
         nrow: 17,
         language_id: 3,
         content:

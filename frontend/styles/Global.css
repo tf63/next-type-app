@@ -3,4 +3,11 @@ body {
     background-color: #efefef;
     color: #888888;
     letter-spacing: .15rem;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }

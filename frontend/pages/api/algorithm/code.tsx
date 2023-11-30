@@ -6,6 +6,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     console.log(requestBody)
 
     const code: AlgorithmCodeAPIResponse = {
+        id: 1,
         nrow: 43,
         language_id: 8,
         algorithm_id: 13,

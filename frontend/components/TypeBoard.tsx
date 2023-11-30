@@ -12,7 +12,7 @@ type TypeBoardProps = {
 const TypeBoard: React.FC<TypeBoardProps> = ({ handleKeyDown }) => {
     const divRef = useRef<HTMLDivElement>(null)
     useEffect(() => {
-        if (divRef.current) {
+        if (divRef.current != null) {
             divRef.current.focus()
         }
     }, [])

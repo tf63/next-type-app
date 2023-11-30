@@ -1,0 +1,55 @@
+.keyboard {}
+
+.key {
+    width: 30px;
+    height: 30px;
+    padding: .7em;
+    border: none;
+    border-radius: .5rem;
+    color: #888888;
+    font-size: 1rem;
+    text-align: left;
+    vertical-align: top;
+    /* テキストを上寄せに設定 */
+    text-shadow: 1px 1px #eee;
+    outline: none;
+    transition: .2s ease-in-out;
+    box-shadow: -4px -4px 10px #FFFFFF, 4px 4px 10px rgba(102, 102, 102, 0.3);
+}
+
+.ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.li {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+.li:hover {
+    background-color: #eee;
+}
+
+.li[data-key="A"] {
+    background-color: #ffcccb;
+    /* 色を変更 */
+}
+
+.li[data-key="B"] {
+    background-color: #aee7ff;
+    /* 色を変更 */
+}
+
+.li[data-key="C"] {
+    background-color: #c9ffb0;
+    /* 色を変更 */
+}
+
+/* 他のキーに対するスタイルを追加 */

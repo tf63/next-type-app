@@ -15,9 +15,10 @@ import FlexContainer from '@/components/FlexContainer'
 import PageBar from '@/components/PageBar'
 import { Label } from '@/types/types'
 import { SelectGroup, SelectGroupMultiLine } from '@/components/SelectGroup'
+import Button from '@/components/Button'
+import Icon from '@/components/Icon'
 
-const Profile: CustomNextPage = () => {
-    const { data, status } = useSession()
+const ProfileSample: CustomNextPage = () => {
     const [page, setPage] = useState(0)
     const [monthToSummary, setMonthToSummary] =
         useState<Map<string, { correct: number; miss: number; speed: number }>>()
@@ -42,12 +43,14 @@ const Profile: CustomNextPage = () => {
     }
 
     useEffect(() => {
-        const fetchSum = async () => {
-            const requestBody: ProfileSumAPIRequest = {
-                userId: data?.user?.id!
-            }
-            const response = await axios.post('/api/profile/sum', requestBody)
-            const responseData: ProfileSumAPIResponse[] = response.data
+        const fetchSum = () => {
+            const responseData: ProfileSumAPIResponse[] = [
+                { month: '2023-11-01T00:00:00', correct: 119, miss: 62, speed: 0.814814080247612 },
+                { month: '2023-10-01T00:00:00', correct: 1242, miss: 31, speed: 0.51324080247612 },
+                { month: '2023-09-01T00:00:00', correct: 23, miss: 2, speed: 0.1424080247612 },
+                { month: '2023-08-01T00:00:00', correct: 232, miss: 51, speed: 0.45151080247612 }
+            ]
+
             const labels: Label[] = []
             const map = new Map<string, { correct: number; miss: number; speed: number }>()
             responseData.forEach((response, index) => {
@@ -67,14 +70,49 @@ const Profile: CustomNextPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const requestBody: ProfileLogAPIRequest = {
-                userId: data?.user?.id!,
-                offset: page * PAGE_SIZE,
-                num: PAGE_SIZE + 1
-            }
-
-            const response = await axios.post('/api/profile/log', requestBody)
-            setLogs(response.data)
+            const response = [
+                {
+                    category_id: 4,
+                    correct: 1,
+                    created_at: '2023-11-30T11:24:42.018+00:00',
+                    miss: 4,
+                    problem_id: 1,
+                    speed: 0.999999000001
+                },
+                {
+                    category_id: 4,
+                    correct: 1,
+                    created_at: '2023-11-30T11:24:42.018+00:00',
+                    miss: 4,
+                    problem_id: 1,
+                    speed: 0.999999000001
+                },
+                {
+                    category_id: 4,
+                    correct: 1,
+                    created_at: '2023-11-30T11:24:42.018+00:00',
+                    miss: 4,
+                    problem_id: 1,
+                    speed: 0.999999000001
+                },
+                {
+                    category_id: 4,
+                    correct: 1,
+                    created_at: '2023-11-30T11:24:42.018+00:00',
+                    miss: 4,
+                    problem_id: 1,
+                    speed: 0.999999000001
+                },
+                {
+                    category_id: 4,
+                    correct: 1,
+                    created_at: '2023-11-30T11:24:42.018+00:00',
+                    miss: 4,
+                    problem_id: 1,
+                    speed: 0.999999000001
+                }
+            ]
+            setLogs(response)
         }
 
         fetchData()
@@ -99,7 +137,20 @@ const Profile: CustomNextPage = () => {
     return (
         <main style={{ height: '1300px' }}>
             <Card>
-                <ProfileBoard data={data} status={status} />
+                <FlexContainer position="left">
+                    <div style={{ width: '50%' }}>
+                        <FlexContainer position="left" align="top">
+                            <Icon width={100} url={'https://avatars.githubusercontent.com/u/74246282?v=4'} />
+                            <div style={{ marginLeft: '40px' }}>
+                                <p>Profile</p>
+                                {'sample name'}
+                            </div>
+                        </FlexContainer>
+                    </div>
+                    <div style={{ width: '50%' }}>
+                        <Button onClick={() => {}}>LogOut</Button>
+                    </div>
+                </FlexContainer>
             </Card>
             <SmallHeight />
             <p>Dashboard</p>
@@ -139,5 +190,4 @@ const Profile: CustomNextPage = () => {
     )
 }
 
-export default Profile
-Profile.requireAuth = true
+export default ProfileSample

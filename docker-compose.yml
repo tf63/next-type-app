@@ -18,23 +18,23 @@ services:
       - supabase_network_next-type-app
     
 
-  postgres:
-    image: postgres:15.2
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_NAME: postgres 
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_PORT: 5432
-    networks:
-      - supabase_network_next-type-app
+#   postgres:
+#     image: postgres:15.2
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     ports:
+#       - 5432:5432
+#     environment:
+#       POSTGRES_HOST: postgres
+#       POSTGRES_NAME: postgres 
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: postgres
+#       POSTGRES_PORT: 5432
+#     networks:
+#       - supabase_network_next-type-app
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:
 
 networks:
   supabase_network_next-type-app:

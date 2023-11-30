@@ -1,0 +1,8 @@
+.github {
+    color: #fff;
+    height: 50px;
+    margin: 0 20px 0 0;
+    border-radius: 50%;
+    background-position: 54% 36%;
+    transition: .2s ease-in-out;
+}

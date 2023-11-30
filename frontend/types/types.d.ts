@@ -1,7 +1,7 @@
 import { Dispatch } from 'react'
 
 export type Color = 'blue' | 'green' | 'white' | 'github' | 'none'
-// export type Category = 'language' | 'framework' | 'algorithm' | 'pattern'
+export type Category = 'language' | 'framework' | 'algorithm' | 'pattern'
 // export type ProblemSize = 'short' | 'medium' | 'long'
 
 export type Label = {
@@ -34,13 +34,16 @@ export type TypeState = {
 }
 
 export type GameState = {
-    correctEvent: () => void
-    missEvent: () => void
+    correctEvent: (key: string) => void
+    missEvent: (key: string) => void
     navigateEvent: () => void
 }
 
 export type ResultState = {
+    category: Category
+    problemId: number
     correct: number
     miss: number
     timer: number
+    missPerType: number[]
 }

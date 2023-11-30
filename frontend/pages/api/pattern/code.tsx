@@ -14,6 +14,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     // }
 
     const code: PatternCodeAPIResponse = {
+        id: 1,
         nrow: 1,
         language_id: 1,
         pattern_id: 1,
