@@ -9,6 +9,9 @@ import { useSession } from 'next-auth/react'
 import { GameFinishAPIRequest } from '@/interfaces/interfaces'
 import axios from 'axios'
 import FlexContainer from '@/components/FlexContainer'
+import ListVisualizer from '@/components/ListVisualizer'
+import KeyBoard from '@/components/KeyBoard'
+import SmallHeight from '@/components/SmallHeight'
 
 const Result: CustomNextPage = () => {
     const router = useRouter()
@@ -19,12 +22,14 @@ const Result: CustomNextPage = () => {
         problemId: 0,
         correct: 0,
         miss: 0,
-        timer: 0
+        timer: 0,
+        missPerType: Array.from({ length: 96 }, () => 0)
     })
 
     useEffect(() => {
         if (router.query.state != null) {
             const state: ResultState = JSON.parse(router.query.state as string)
+            console.log(state)
             setResultState(state)
         }
     }, [])
@@ -48,11 +53,19 @@ const Result: CustomNextPage = () => {
 
     return (
         <main>
-            <Card>{`correct: ${resultState.correct}, miss: ${resultState.miss}, time: ${resultState.timer}`}</Card>
-            <Card>{`acc: ${((100 * resultState.correct) / (resultState.correct + resultState.miss)).toFixed(
-                2
-            )} %, speed: ${(resultState.correct / (resultState.timer + 0.000001)).toFixed(2)} /s.`}</Card>
-
+            <p style={{ padding: '20px' }}>Your Typo</p>
+            <KeyBoard list={resultState.missPerType} />
+            <FlexContainer>
+                <p style={{ opacity: '70%' }}>press the shift key and toggle the keyboard</p>
+            </FlexContainer>
+            <SmallHeight />
+            <p style={{ paddingLeft: '20px', paddingRight: '20px' }}>Your Result</p>
+            <FlexContainer>
+                <p>{`correct: ${resultState.correct}, miss: ${resultState.miss}, time: ${resultState.timer}, acc: ${(
+                    (100 * resultState.correct) /
+                    (resultState.correct + resultState.miss)
+                ).toFixed(2)} %, speed: ${(resultState.correct / (resultState.timer + 0.000001)).toFixed(2)} /s.`}</p>
+            </FlexContainer>
             <NavigateButton href="/">Home</NavigateButton>
         </main>
     )

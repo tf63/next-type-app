@@ -18,6 +18,7 @@ import {
 import TypeContext from '@/contexts/TypeContext'
 import GameContext from '@/contexts/GameContext'
 import { CustomNextPage } from '@/types/custom-next-page'
+import { KEY_TO_IDX } from '@/lib/const'
 
 const Game: CustomNextPage = () => {
     const router = useRouter()
@@ -35,13 +36,26 @@ const Game: CustomNextPage = () => {
     const [correct, setCorrect] = useState(0)
     const [miss, setMiss] = useState(0)
     const [timer, setTimer] = useState(0)
+    const [missPerType, setMissPerType] = useState<number[]>(Array.from({ length: 96 }, () => 0))
 
-    const correctEvent = () => {
-        console.log('correct !!')
+    const correctEvent = (key: string) => {
+        console.log(`correct key ${key}!!`)
         setCorrect(correct + 1)
     }
-    const missEvent = () => {
-        console.log('incorrect !!')
+
+    const missEvent = (key: string) => {
+        console.log(`incorrect key ${key}!!`)
+        const idx = KEY_TO_IDX.get(key)
+
+        // 存在しないキーだったらundefined
+        if (idx != null) {
+            setMissPerType((prev) => {
+                const _missPerType = prev
+                _missPerType[idx] += 1
+                return _missPerType
+            })
+        }
+
         setMiss(miss + 1)
     }
 
@@ -52,7 +66,6 @@ const Game: CustomNextPage = () => {
             }
 
             const problemState: ProblemState = JSON.parse(router.query.state as string)
-            console.log(problemState)
             const commonData = {
                 language_id: problemState.language.id,
                 size: problemState.size.name
@@ -125,7 +138,8 @@ const Game: CustomNextPage = () => {
         problemId: problemId,
         correct: correct,
         miss: miss,
-        timer: timer
+        timer: timer,
+        missPerType: missPerType
     }
     const navigateEvent = () => {
         router.push({

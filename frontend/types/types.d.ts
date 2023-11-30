@@ -34,8 +34,8 @@ export type TypeState = {
 }
 
 export type GameState = {
-    correctEvent: () => void
-    missEvent: () => void
+    correctEvent: (key: string) => void
+    missEvent: (key: string) => void
     navigateEvent: () => void
 }
 
@@ -45,4 +45,5 @@ export type ResultState = {
     correct: number
     miss: number
     timer: number
+    missPerType: number[]
 }
