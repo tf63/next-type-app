@@ -96,9 +96,7 @@ const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
         const [opacityListsUnshift, opacityListsShift] = decomposeOpacitys(opacitys)
         setOpacityListsUnshift(opacityListsUnshift)
         setOpacityListsShift(opacityListsShift)
-
         setOpacityLists(opacityListsUnshift)
-        console.log('list', list)
     }, [list])
 
     const keyListPaddings = ['0px', '20px', '40px', '60px']
@@ -131,7 +129,7 @@ const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
                 <div>
                     {keyBoardIdxs.map((keyIdxs, index) => {
                         return (
-                            <div style={{ marginLeft: keyListPaddings[index], marginBottom: '20px' }}>
+                            <div key={index} style={{ marginLeft: keyListPaddings[index], marginBottom: '20px' }}>
                                 <KeyList opacitys={opacityLists[index]} keyIdxs={keyIdxs} />
                             </div>
                         )

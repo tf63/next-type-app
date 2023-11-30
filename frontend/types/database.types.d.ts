@@ -429,6 +429,31 @@ export interface Database {
           }
         ]
       }
+      user_log_miss_per_type: {
+        Row: {
+          miss_per_type: number[]
+          month: string
+          user_id: string
+        }
+        Insert: {
+          miss_per_type: number[]
+          month?: string
+          user_id: string
+        }
+        Update: {
+          miss_per_type?: number[]
+          month?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_log_miss_per_type_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       user_log_problem: {
         Row: {
           category_id: number
@@ -477,16 +502,6 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      get_user_log_summaray: {
-        Args: {
-          user_id_input: string
-        }
-        Returns: {
-          month: string
-          miss: number
-          speed: number
-        }[]
-      }
       get_user_log_summary: {
         Args: {
           user_id_input: string

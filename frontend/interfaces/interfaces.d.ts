@@ -54,6 +54,7 @@ export interface GameFinishAPIRequest {
     correct: number
     miss: number
     timer: number
+    missPerType: number[]
 }
 
 export interface ProfileLogAPIRequest {

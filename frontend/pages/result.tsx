@@ -29,20 +29,19 @@ const Result: CustomNextPage = () => {
     useEffect(() => {
         if (router.query.state != null) {
             const state: ResultState = JSON.parse(router.query.state as string)
-            console.log(state)
             setResultState(state)
         }
     }, [])
 
     useEffect(() => {
         if (resultState.problemId === 0 || posted) {
-            console.log('return')
             return
         }
 
         const postData = async () => {
             const userLog: GameFinishAPIRequest = { userId: data?.user?.id!, ...resultState }
-            const _ = await axios.post('/api/game/finish', userLog)
+            const error = await axios.post('/api/game/finish', userLog)
+            console.log('error', error)
             setPosted(true)
         }
 
@@ -53,13 +52,13 @@ const Result: CustomNextPage = () => {
 
     return (
         <main>
-            <p style={{ padding: '20px' }}>Your Typo</p>
+            <p style={{ padding: '0px 20px 20px 20px' }}>Your Typo</p>
             <KeyBoard list={resultState.missPerType} />
             <FlexContainer>
                 <p style={{ opacity: '70%' }}>press the shift key and toggle the keyboard</p>
             </FlexContainer>
             <SmallHeight />
-            <p style={{ paddingLeft: '20px', paddingRight: '20px' }}>Your Result</p>
+            <p style={{ padding: '0px 20px 0px 20px' }}>Your Result</p>
             <FlexContainer>
                 <p>{`correct: ${resultState.correct}, miss: ${resultState.miss}, time: ${resultState.timer}, acc: ${(
                     (100 * resultState.correct) /

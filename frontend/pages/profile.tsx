@@ -48,7 +48,6 @@ const Profile: CustomNextPage = () => {
             }
             const response = await axios.post('/api/profile/sum', requestBody)
             const responseData: ProfileSumAPIResponse[] = response.data
-
             const labels: Label[] = []
             const map = new Map<string, { correct: number; miss: number; speed: number }>()
             responseData.forEach((response, index) => {
@@ -73,6 +72,7 @@ const Profile: CustomNextPage = () => {
                 offset: page * PAGE_SIZE,
                 num: PAGE_SIZE + 1
             }
+
             const response = await axios.post('/api/profile/log', requestBody)
             setLogs(response.data)
         }
@@ -98,7 +98,9 @@ const Profile: CustomNextPage = () => {
 
     return (
         <main style={{ height: '1300px' }}>
-            <ProfileBoard data={data} status={status} />
+            <Card>
+                <ProfileBoard data={data} status={status} />
+            </Card>
             <SmallHeight />
             <p>Dashboard</p>
             <Card>

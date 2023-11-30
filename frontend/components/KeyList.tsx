@@ -10,7 +10,6 @@ export type KeyListProps = {
 }
 
 const KeyList: React.FC<KeyListProps> = ({ keyIdxs, opacitys }) => {
-    console.log(opacitys)
     const displayWrapper = (idx: number) => {
         const key = IDX_TO_KEY.get(idx)
         if (idx != null) {
