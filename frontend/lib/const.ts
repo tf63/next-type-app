@@ -58,7 +58,7 @@ export const KEY_TO_IDX = new Map<string, number>([
     [`'`, 54],
     ['(', 55],
     [')', 56],
-    [' ', 57],
+    ['s0', 57],
     ['=', 58],
     ['~', 59],
     ['|', 60],
@@ -96,7 +96,8 @@ export const KEY_TO_IDX = new Map<string, number>([
     ['<', 92],
     ['>', 93],
     ['?', 94],
-    ['_', 95]
+    ['_', 95],
+    [' ', 96]
 ])
 
 export const IDX_TO_KEY = new Map<number, string>([
@@ -157,7 +158,7 @@ export const IDX_TO_KEY = new Map<number, string>([
     [54, `'`],
     [55, '('],
     [56, ')'],
-    [57, ' '],
+    [57, 's0'],
     [58, '='],
     [59, '~'],
     [60, '|'],
@@ -195,5 +196,6 @@ export const IDX_TO_KEY = new Map<number, string>([
     [92, '<'],
     [93, '>'],
     [94, '?'],
-    [95, '_']
+    [95, '_'],
+    [96, ' ']
 ])
