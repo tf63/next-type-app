@@ -4,7 +4,6 @@ import styles from '../styles/KeyBoard.module.css'
 import KeyList from './KeyList'
 import FlexContainer from './FlexContainer'
 import { KEY_TO_IDX } from '@/lib/const'
-
 export type KeyBoardProps = {
     list: number[]
 }
@@ -12,8 +11,10 @@ export type KeyBoardProps = {
 const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
     const getOpacitys = (list: number[]) => {
         const maxValue = Math.max(...list)
+
+        console.log(maxValue)
         const opacitys = list.map((value) => {
-            if (maxValue > 1) {
+            if (maxValue >= 1) {
                 const opacity = 30 + (80 * value) / maxValue
                 return `${Math.min(opacity, 100).toFixed(0)}%`
             } else {
@@ -29,14 +30,14 @@ const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
             opacitys.slice(0, 13),
             opacitys.slice(13, 25),
             opacitys.slice(25, 37),
-            opacitys.slice(37, 48)
+            opacitys.slice(37, 48).concat([opacitys[opacitys.length - 1]])
         ]
-
+        console.log(opacityListsUnshift)
         const opacityListsShift = [
             opacitys.slice(48, 61),
             opacitys.slice(61, 73),
             opacitys.slice(73, 85),
-            opacitys.slice(85, 96)
+            opacitys.slice(85, 97)
         ]
 
         return [opacityListsUnshift, opacityListsShift]
@@ -46,14 +47,14 @@ const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
         ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '^', '¥'],
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '@', '['],
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', ':', ']'],
-        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', '\\']
+        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', '\\', ' ']
     ]
 
     const keyBoardCharsShift = [
         ['!', '"', '#', '$', '%', '&', `'`, '(', ')', ' ', '=', '~', '|'],
         ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '`', '{'],
         ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+', '*', '}'],
-        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '_']
+        ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '_', ' ']
     ]
 
     const keyBoardIdxsShift = keyBoardCharsShift.map((keyListChars) => {
@@ -78,7 +79,7 @@ const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
         })
     })
 
-    const [initOpacityList, _] = decomposeOpacitys(Array.from({ length: 96 }, () => '100%'))
+    const [initOpacityList, _] = decomposeOpacitys(Array.from({ length: KEY_TO_IDX.size }, () => ''))
     const [opacityLists, setOpacityLists] = useState(initOpacityList)
     const [opacityListsUnshift, setOpacityListsUnshift] = useState(initOpacityList)
     const [opacityListsShift, setOpacityListsShift] = useState(initOpacityList)
@@ -93,7 +94,7 @@ const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
 
     useEffect(() => {
         const opacitys = getOpacitys(list)
-        const [opacityListsUnshift, opacityListsShift] = decomposeOpacitys(opacitys)
+        const [opacityListsUnshift, opacityListsShift, opacitySpace] = decomposeOpacitys(opacitys)
         setOpacityListsUnshift(opacityListsUnshift)
         setOpacityListsShift(opacityListsShift)
         setOpacityLists(opacityListsUnshift)

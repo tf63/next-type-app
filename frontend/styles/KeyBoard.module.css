@@ -1,5 +1,3 @@
-.keyboard {}
-
 .key {
     width: 30px;
     height: 30px;
@@ -15,6 +13,10 @@
     outline: none;
     transition: .2s ease-in-out;
     box-shadow: -4px -4px 10px #FFFFFF, 4px 4px 10px rgba(102, 102, 102, 0.3);
+}
+
+.space {
+    width: 250px;
 }
 
 .ul {

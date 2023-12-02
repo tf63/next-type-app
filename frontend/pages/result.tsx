@@ -12,6 +12,7 @@ import FlexContainer from '@/components/FlexContainer'
 import ListVisualizer from '@/components/ListVisualizer'
 import KeyBoard from '@/components/KeyBoard'
 import SmallHeight from '@/components/SmallHeight'
+import { KEY_TO_IDX } from '@/lib/const'
 
 const Result: CustomNextPage = () => {
     const router = useRouter()
@@ -23,7 +24,7 @@ const Result: CustomNextPage = () => {
         correct: 0,
         miss: 0,
         timer: 0,
-        missPerType: Array.from({ length: 96 }, () => 0)
+        missPerType: Array.from({ length: KEY_TO_IDX.size }, () => 0)
     })
 
     useEffect(() => {

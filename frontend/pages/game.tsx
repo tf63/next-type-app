@@ -25,7 +25,7 @@ const Game: CustomNextPage = () => {
     const [correct, setCorrect] = useState(0)
     const [miss, setMiss] = useState(0)
     const [timer, setTimer] = useState(0)
-    const [missPerType, setMissPerType] = useState<number[]>(Array.from({ length: 96 }, () => 0))
+    const [missPerType, setMissPerType] = useState<number[]>(Array.from({ length: KEY_TO_IDX.size }, () => 0))
 
     const correctEvent = (key: string) => {
         console.log(`correct key ${key}!!`)
