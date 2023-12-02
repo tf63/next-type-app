@@ -40,10 +40,13 @@ const Result: CustomNextPage = () => {
         }
 
         const postData = async () => {
-            const userLog: GameFinishAPIRequest = { userId: data?.user?.id!, ...resultState }
-            const error = await axios.post('/api/game/finish', userLog)
-            console.log('error', error)
-            setPosted(true)
+            try {
+                const userLog: GameFinishAPIRequest = { userId: data?.user?.id!, ...resultState }
+                const _ = await axios.post('/api/game/finish', userLog)
+                setPosted(true)
+            } catch (error) {
+                console.error('Error posting data:', error)
+            }
         }
 
         if (status === 'authenticated') {

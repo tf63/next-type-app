@@ -12,6 +12,7 @@ import { KEY_TO_IDX } from '@/lib/const'
 
 const Home: CustomNextPage = () => {
     const { data, status } = useSession()
+
     return (
         <main>
             <FlexContainer>

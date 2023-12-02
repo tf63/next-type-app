@@ -1,7 +1,11 @@
 import React from 'react'
 
-const SmallHeight: React.FC = () => {
-    return <div style={{ marginTop: '50px' }} />
+type SmallHeightProps = {
+    height?: string
+}
+
+const SmallHeight: React.FC<SmallHeightProps> = ({ height = '50px' }) => {
+    return <div style={{ marginTop: height }} />
 }
 
 export default SmallHeight
