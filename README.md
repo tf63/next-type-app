@@ -6,12 +6,15 @@
 ![Postgres](https://img.shields.io/badge/Postgres-16.1-4169E1?logo=postgresql)
 <!-- ![Next CI](https://github.com/tf63/grapescript/actions/workflows/next.yml/badge.svg) -->
 
+### 概要
+
+
+
 https://next-type-app-delta.vercel.app/
 
  <img src="https://skillicons.dev/icons?i=ts,next,vercel,supabase,postgres,docker">
 <img width="999" alt="main_scs" src="https://github.com/tf63/next-type-app/assets/74246282/272287a3-b398-481e-a492-c0057448379c">
 
-### 概要
 
 ### 技術選定
 | 技術 | 役割 |
@@ -85,16 +88,21 @@ Supabase周り
 ### 重要なリンク
 
 next authのsupabase adapter
+
 https://authjs.dev/reference/adapter/supabase
 
 ローカルのsupabaseの導入
+
 https://supabase.com/docs/guides/cli/local-development
 
 sql -> supabase
+
 https://supabase.com/docs/guides/database/sql-to-api
 
 supabaseのtsクライアント
+
 https://supabase.com/docs/reference/javascript
 
 nextからsupabase
+
 https://supabase.com/docs/guides/getting-started/quickstarts/nextjs

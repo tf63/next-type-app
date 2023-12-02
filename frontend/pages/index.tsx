@@ -11,6 +11,7 @@ import Button from '@/components/Button'
 
 const Home: CustomNextPage = () => {
     const { data, status } = useSession()
+
     return (
         <main>
             <FlexContainer>

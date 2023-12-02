@@ -78,7 +78,7 @@ const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
         })
     })
 
-    const [initOpacityList, _] = decomposeOpacitys(Array.from({ length: 96 }, () => ''))
+    const [initOpacityList, _] = decomposeOpacitys(Array.from({ length: 96 }, () => '100%'))
     const [opacityLists, setOpacityLists] = useState(initOpacityList)
     const [opacityListsUnshift, setOpacityListsUnshift] = useState(initOpacityList)
     const [opacityListsShift, setOpacityListsShift] = useState(initOpacityList)
