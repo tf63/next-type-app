@@ -14,10 +14,11 @@ import ProfileBoard from '@/components/ProfileBoard'
 import FlexContainer from '@/components/FlexContainer'
 import PageBar from '@/components/PageBar'
 import { Label } from '@/types/types'
-import { SelectGroup, SelectGroupMultiLine } from '@/components/SelectGroup'
+import { SelectGroupMultiLine } from '@/components/SelectGroup'
 
 const Profile: CustomNextPage = () => {
     const { data, status } = useSession()
+
     const [page, setPage] = useState(0)
     const [monthToSummary, setMonthToSummary] =
         useState<Map<string, { correct: number; miss: number; speed: number }>>()
@@ -43,23 +44,27 @@ const Profile: CustomNextPage = () => {
 
     useEffect(() => {
         const fetchSum = async () => {
-            const requestBody: ProfileSumAPIRequest = {
-                userId: data?.user?.id!
-            }
-            const response = await axios.post('/api/profile/sum', requestBody)
-            const responseData: ProfileSumAPIResponse[] = response.data
-            const labels: Label[] = []
-            const map = new Map<string, { correct: number; miss: number; speed: number }>()
-            responseData.forEach((response, index) => {
-                const { month, correct, miss, speed } = response
-                const label = getYearMonth(month)
-                map.set(label, { correct, miss, speed })
-                labels.push({ id: index, name: label })
-            })
+            try {
+                const requestBody: ProfileSumAPIRequest = {
+                    userId: data?.user?.id!
+                }
+                const response = await axios.post('/api/profile/sum', requestBody)
+                const responseData: ProfileSumAPIResponse[] = response.data
+                const labels: Label[] = []
+                const map = new Map<string, { correct: number; miss: number; speed: number }>()
+                responseData.forEach((response, index) => {
+                    const { month, correct, miss, speed } = response
+                    const label = getYearMonth(month)
+                    map.set(label, { correct, miss, speed })
+                    labels.push({ id: index, name: label })
+                })
 
-            setMonth(labels[0])
-            setMonthLabels(labels)
-            setMonthToSummary(map)
+                setMonth(labels[0])
+                setMonthLabels(labels)
+                setMonthToSummary(map)
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
         }
 
         fetchSum()
@@ -67,14 +72,18 @@ const Profile: CustomNextPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const requestBody: ProfileLogAPIRequest = {
-                userId: data?.user?.id!,
-                offset: page * PAGE_SIZE,
-                num: PAGE_SIZE + 1
-            }
+            try {
+                const requestBody: ProfileLogAPIRequest = {
+                    userId: data?.user?.id!,
+                    offset: page * PAGE_SIZE,
+                    num: PAGE_SIZE + 1
+                }
 
-            const response = await axios.post('/api/profile/log', requestBody)
-            setLogs(response.data)
+                const response = await axios.post('/api/profile/log', requestBody)
+                setLogs(response.data)
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
         }
 
         fetchData()
@@ -109,17 +118,22 @@ const Profile: CustomNextPage = () => {
                 <FlexContainer position="left" align="top">
                     <div style={{ width: '50%' }}>
                         <div style={{ marginTop: '20px' }}>Total</div>
-                        <p style={{ marginLeft: '20px' }}>correct: {monthToSummary?.get(month.name)?.correct!}</p>
-                        <p style={{ marginLeft: '20px' }}>miss: {monthToSummary?.get(month.name)?.miss!} </p>
+                        <p style={{ marginLeft: '20px' }}>
+                            correct: {monthToSummary != null && monthToSummary?.get(month.name)?.correct!}
+                        </p>
+                        <p style={{ marginLeft: '20px' }}>
+                            miss: {monthToSummary != null && monthToSummary?.get(month.name)?.miss!}{' '}
+                        </p>
                     </div>
                     <div style={{ width: '50%' }}>
                         <div style={{ marginTop: '20px' }}>mean</div>
                         <p style={{ marginLeft: '20px' }}>
                             accuracy:{' '}
-                            {getAccuracy(
-                                monthToSummary?.get(month.name)?.correct!,
-                                monthToSummary?.get(month.name)?.miss!
-                            )}
+                            {monthToSummary != null &&
+                                getAccuracy(
+                                    monthToSummary?.get(month.name)?.correct!,
+                                    monthToSummary?.get(month.name)?.miss!
+                                )}
                         </p>
                         <p style={{ marginLeft: '20px' }}>speed: {getSpeed(monthToSummary?.get(month.name)?.speed!)}</p>
                     </div>

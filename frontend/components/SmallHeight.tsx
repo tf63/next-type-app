@@ -1,7 +1,7 @@
 import React from 'react'
 
 type SmallHeightProps = {
-    height?: 'string'
+    height?: string
 }
 
 const SmallHeight: React.FC<SmallHeightProps> = ({ height = '50px' }) => {

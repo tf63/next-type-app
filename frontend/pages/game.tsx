@@ -1,20 +1,9 @@
-import type { NextPage } from 'next'
 import React from 'react'
 import TypeSystem from '@/components/TypeSystem'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Category, ProblemState, ResultState } from '@/types/types'
 import axios from 'axios'
-import {
-    AlgorithmCodeAPIRequest,
-    AlgorithmCodeAPIResponse,
-    FrameworkCodeAPIRequest,
-    FrameworkCodeAPIResponse,
-    LanguageCodeAPIRequest,
-    LanguageCodeAPIResponse,
-    PatternCodeAPIRequest,
-    PatternCodeAPIResponse
-} from '@/interfaces/interfaces'
 import TypeContext from '@/contexts/TypeContext'
 import GameContext from '@/contexts/GameContext'
 import { CustomNextPage } from '@/types/custom-next-page'
@@ -60,46 +49,50 @@ const Game: CustomNextPage = () => {
     }
 
     useEffect(() => {
+        if (router.query.state == null) {
+            return
+        }
+
         const fetchData = async () => {
-            if (router.query.state == null) {
-                return
+            try {
+                const problemState: ProblemState = JSON.parse(router.query.state as string)
+                const commonData = {
+                    language_id: problemState.language.id,
+                    size: problemState.size.name
+                }
+
+                let endpoint: string
+                let requestData: any
+
+                switch (problemState.category.name) {
+                    case 'language':
+                        endpoint = '/api/language/code'
+                        requestData = { ...commonData }
+                        break
+                    case 'framework':
+                        endpoint = '/api/framework/code'
+                        requestData = { tool_id: problemState.tag.id, ...commonData }
+                        break
+                    case 'algorithm':
+                        endpoint = '/api/algorithm/code'
+                        requestData = { algorithm_id: problemState.tag.id, ...commonData }
+                        break
+                    case 'pattern':
+                        endpoint = '/api/pattern/code'
+                        requestData = { pattern_id: problemState.tag.id, ...commonData }
+                        break
+                    default:
+                        return
+                }
+
+                const response = await axios.post(endpoint, requestData)
+                const result = await response.data
+                setProblemId(result.id)
+                setContent(result.content)
+                setCategory(problemState.category.name)
+            } catch (error) {
+                console.error('Error fetching data:', error)
             }
-
-            const problemState: ProblemState = JSON.parse(router.query.state as string)
-            const commonData = {
-                language_id: problemState.language.id,
-                size: problemState.size.name
-            }
-
-            let endpoint: string
-            let requestData: any
-
-            switch (problemState.category.name) {
-                case 'language':
-                    endpoint = '/api/language/code'
-                    requestData = { ...commonData }
-                    break
-                case 'framework':
-                    endpoint = '/api/framework/code'
-                    requestData = { tool_id: problemState.tag.id, ...commonData }
-                    break
-                case 'algorithm':
-                    endpoint = '/api/algorithm/code'
-                    requestData = { algorithm_id: problemState.tag.id, ...commonData }
-                    break
-                case 'pattern':
-                    endpoint = '/api/pattern/code'
-                    requestData = { pattern_id: problemState.tag.id, ...commonData }
-                    break
-                default:
-                    return
-            }
-
-            const response = await axios.post(endpoint, requestData)
-            const result = await response.data
-            setProblemId(result.id)
-            setContent(result.content)
-            setCategory(problemState.category.name)
         }
 
         fetchData()

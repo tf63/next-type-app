@@ -19,8 +19,6 @@ const KeyList: React.FC<KeyListProps> = ({ keyIdxs, opacitys }) => {
         }
     }
 
-    console.log(opacitys)
-
     return (
         <FlexContainer position="left">
             {keyIdxs.map((keyIdx, index) => {

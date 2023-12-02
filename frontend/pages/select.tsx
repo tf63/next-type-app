@@ -27,9 +27,12 @@ import {
 const Select: CustomNextPage = () => {
     const [state, dispatch] = useReducer(selectReducer, initialSelectState)
 
+    // ページ読み込み時
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // カテゴリデータを取得する
+                // ----------------------------------------------------------------
                 let response = await axios.get('/api/language')
                 const languages: LanguageAPIResponse[] = await response.data
                 const languageLabels: Label[] = languages.map((obj) => ({ id: obj.language_id, name: obj.name }))
@@ -46,16 +49,18 @@ const Select: CustomNextPage = () => {
                 const patterns: PatternAPIResponse[] = await response.data
                 const patternLabels: Label[] = patterns.map((obj) => ({ id: obj.pattern_id, name: obj.name }))
 
+                // problemのメタデータ (tag) を事前準備しておく
                 const categoryToTagLabels = new Map<Category, Label[]>([
                     ['language', languageLabels],
                     ['framework', frameworkLabels],
                     ['algorithm', algorithmLabels],
                     ['pattern', patternLabels]
                 ])
-
+                // 取得したデータを登録する
                 const externalState: ExternalSelectState = {
                     categoryToTagLabels: categoryToTagLabels
                 }
+                // 初期データを登録する
                 const updateState: UpdateSelectState = {
                     category: state.categoryLabels[0],
                     size: state.sizeLabels[0],
@@ -74,20 +79,27 @@ const Select: CustomNextPage = () => {
     }, [])
 
     useEffect(() => {
-        const tagName: Label = state.categoryToTagLabels.get(state.category.name as Category)![0]
-        const updateState: UpdateSelectState = {
-            tag: tagName
+        try {
+            // カテゴリが変化したらtagを更新する
+            const tagName: Label = state.categoryToTagLabels.get(state.category.name as Category)![0]
+            const updateState: UpdateSelectState = {
+                tag: tagName
+            }
+            dispatch({ type: 'UPDATE_STATE', data: updateState })
+        } catch (error) {
+            // エラー時は何もしない
+            console.error('Error change state:', error)
         }
-        dispatch({ type: 'UPDATE_STATE', data: updateState })
     }, [state.category])
 
-    const resultState = { category: state.category, size: state.size, tag: state.tag, language: state.language }
+    const problemState = { category: state.category, size: state.size, tag: state.tag, language: state.language } // 遷移時に渡すオブジェクト
 
+    // Select -> Gameに遷移
     const router = useRouter()
     const navigateEvent = () => {
         router.push({
             pathname: '/game',
-            query: { state: JSON.stringify(resultState) }
+            query: { state: JSON.stringify(problemState) }
         })
     }
 
