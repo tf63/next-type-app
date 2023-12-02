@@ -10,7 +10,7 @@ const TypeSystem: React.FC = () => {
     const gameCtx = useGameContext()
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
-        const key = event.key
+        let key = event.key
         const text = typeCtx.typeList[typeCtx.indexLine]
         const indexText = typeCtx.indexText
 
@@ -24,6 +24,11 @@ const TypeSystem: React.FC = () => {
         if (key === 'Shift' || key === 'Control' || key === 'CapsLock' || key === 'Meta' || key === 'Alt') {
             console.log('disable key')
             return false
+        }
+
+        // mapper
+        if (key === '0' && event.shiftKey) {
+            key = 's0'
         }
 
         // 正誤判定
