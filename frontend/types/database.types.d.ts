@@ -454,6 +454,31 @@ export interface Database {
           }
         ]
       }
+      user_log_miss_prev_per_type: {
+        Row: {
+          miss_prev_per_type: number[]
+          month: string
+          user_id: string
+        }
+        Insert: {
+          miss_prev_per_type: number[]
+          month?: string
+          user_id: string
+        }
+        Update: {
+          miss_prev_per_type?: number[]
+          month?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_log_miss_prev_per_type_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       user_log_problem: {
         Row: {
           category_id: number
@@ -502,6 +527,12 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      count_user_log_miss_prev_per_type: {
+        Args: {
+          user_id_input: string
+        }
+        Returns: number
+      }
       get_user_log_summary: {
         Args: {
           user_id_input: string
@@ -512,6 +543,20 @@ export interface Database {
           miss: number
           speed: number
         }[]
+      }
+      update_miss_prev_per_type: {
+        Args: {
+          vec: number[]
+          user_id_input: string
+        }
+        Returns: undefined
+      }
+      vec_add: {
+        Args: {
+          vec1: number[]
+          vec2: number[]
+        }
+        Returns: unknown
       }
     }
     Enums: {

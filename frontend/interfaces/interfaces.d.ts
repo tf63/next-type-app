@@ -76,6 +76,11 @@ export interface ProfileSumAPIRequest {
     userId: string
 }
 
+export interface ProfileMonthAPIRequest {
+    userId: string
+    missPrevPerType: number[]
+}
+
 export interface ProfileSumAPIResponse {
     month: string
     correct: number
