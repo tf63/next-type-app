@@ -11,11 +11,9 @@ export type KeyBoardProps = {
 const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
     const getOpacitys = (list: number[]) => {
         const maxValue = Math.max(...list)
-
-        console.log(maxValue)
         const opacitys = list.map((value) => {
-            if (maxValue >= 1) {
-                const opacity = 30 + (80 * value) / maxValue
+            if (maxValue > 0.0001) {
+                const opacity = 20 + (125 * value) / maxValue
                 return `${Math.min(opacity, 100).toFixed(0)}%`
             } else {
                 return `100%`
@@ -32,7 +30,7 @@ const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
             opacitys.slice(25, 37),
             opacitys.slice(37, 48).concat([opacitys[opacitys.length - 1]])
         ]
-        console.log(opacityListsUnshift)
+
         const opacityListsShift = [
             opacitys.slice(48, 61),
             opacitys.slice(61, 73),
@@ -79,7 +77,7 @@ const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
         })
     })
 
-    const [initOpacityList, _] = decomposeOpacitys(Array.from({ length: KEY_TO_IDX.size }, () => ''))
+    const [initOpacityList, _] = decomposeOpacitys(Array.from({ length: KEY_TO_IDX.size }, () => '100px'))
     const [opacityLists, setOpacityLists] = useState(initOpacityList)
     const [opacityListsUnshift, setOpacityListsUnshift] = useState(initOpacityList)
     const [opacityListsShift, setOpacityListsShift] = useState(initOpacityList)

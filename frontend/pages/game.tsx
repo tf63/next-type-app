@@ -25,27 +25,39 @@ const Game: CustomNextPage = () => {
     const [correct, setCorrect] = useState(0)
     const [miss, setMiss] = useState(0)
     const [timer, setTimer] = useState(0)
-    const [missPerType, setMissPerType] = useState<number[]>(Array.from({ length: KEY_TO_IDX.size }, () => 0))
+    const [correctTypes, setCorrectTypes] = useState<number[]>(Array.from({ length: KEY_TO_IDX.size }, () => 0))
+    const [missTypes, setMissTypes] = useState<number[]>(Array.from({ length: KEY_TO_IDX.size }, () => 0))
 
     const correctEvent = (key: string) => {
-        console.log(`correct key ${key}!!`)
-        setCorrect(correct + 1)
-    }
-
-    const missEvent = (key: string) => {
-        console.log(`incorrect key ${key}!!`)
-        const idx = KEY_TO_IDX.get(key)
+        const keyIdx = KEY_TO_IDX.get(key)
 
         // 存在しないキーだったらundefined
-        if (idx != null) {
-            setMissPerType((prev) => {
-                const _missPerType = prev
-                _missPerType[idx] += 1
-                return _missPerType
+        if (keyIdx != null) {
+            setCorrectTypes((prev) => {
+                const _correctTypes = prev
+                _correctTypes[keyIdx] += 1
+                return _correctTypes
+            })
+        }
+
+        setCorrect(correct + 1)
+        console.log(`correct key ${key}!!`)
+    }
+
+    const missEvent = (key: string, actual: string) => {
+        const actualIdx = KEY_TO_IDX.get(actual)
+
+        // 存在しないキーだったらundefined
+        if (actualIdx != null) {
+            setMissTypes((prev) => {
+                const _missTypes = prev
+                _missTypes[actualIdx] += 1
+                return _missTypes
             })
         }
 
         setMiss(miss + 1)
+        console.log(`incorrect key ${key}!! actual: ${actual}`)
     }
 
     useEffect(() => {
@@ -126,15 +138,29 @@ const Game: CustomNextPage = () => {
         decomposeContent(content)
     }, [content])
 
-    const resultState: ResultState = {
-        category: category as Category,
-        problemId: problemId,
-        correct: correct,
-        miss: miss,
-        timer: timer,
-        missPerType: missPerType
+    const getMissPerType = () => {
+        const missPerType: number[] = []
+        for (let i = 0; i < correctTypes.length; i++) {
+            if (correctTypes[i] === 0) {
+                missPerType.push(0)
+            } else {
+                const value = Math.ceil((100 * missTypes[i]) / correctTypes[i]) / 100
+                // const value = missTypes[i] / correctTypes[i]
+                missPerType.push(value)
+            }
+        }
+
+        return missPerType
     }
     const navigateEvent = () => {
+        const resultState: ResultState = {
+            category: category as Category,
+            problemId: problemId,
+            correct: correct,
+            miss: miss,
+            timer: timer,
+            missPerType: getMissPerType()
+        }
         router.push({
             pathname: '/result',
             query: { state: JSON.stringify(resultState) }
