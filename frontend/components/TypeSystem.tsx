@@ -40,7 +40,7 @@ const TypeSystem: React.FC = () => {
                 gameCtx.correctEvent(key)
             } else {
                 // 入力が間違っていたら
-                gameCtx.missEvent(key)
+                gameCtx.missEvent(key, text[indexText])
             }
         } else {
             // 行末に達していたら
@@ -55,7 +55,7 @@ const TypeSystem: React.FC = () => {
                 }
             } else {
                 // Enter以外のキーが押されたらミスとする
-                gameCtx.missEvent(key)
+                gameCtx.missEvent(key, text[indexText])
             }
         }
 

@@ -1,3 +1,4 @@
+import { SetStateAction, createContext, useContext } from 'react'
 import { Dispatch } from 'react'
 
 export type Color = 'blue' | 'green' | 'white' | 'github' | 'none'
@@ -22,21 +23,6 @@ export type ProblemState = {
     size: Label
     tag: Label
     language: Label
-}
-
-export type TypeState = {
-    indexText: number
-    setIndexText: Dispatch<SetStateAction<number>>
-    indexLine: number
-    setIndexLine: Dispatch<SetStateAction<number>>
-    typeList: string[]
-    prefixList: string[]
-}
-
-export type GameState = {
-    correctEvent: (key: string) => void
-    missEvent: (key: string) => void
-    navigateEvent: () => void
 }
 
 export type ResultState = {

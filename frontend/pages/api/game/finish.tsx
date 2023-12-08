@@ -1,7 +1,7 @@
 import { GameFinishAPIRequest } from '@/interfaces/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { supabase } from '@/lib/supabase'
-import { PostgrestError, PostgrestSingleResponse } from '@supabase/supabase-js'
+import { PostgrestSingleResponse } from '@supabase/supabase-js'
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     const body: GameFinishAPIRequest = req.body
