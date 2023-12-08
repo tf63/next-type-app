@@ -1,5 +1,10 @@
-import { GameState } from '@/types/types'
 import { createContext, useContext } from 'react'
+
+export type GameState = {
+    correctEvent: (key: string) => void
+    missEvent: (key: string, actual: string) => void
+    navigateEvent: () => void
+}
 
 const GameContext = createContext<GameState>({
     correctEvent: (_) => {},
