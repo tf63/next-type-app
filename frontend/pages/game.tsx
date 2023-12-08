@@ -40,7 +40,7 @@ const Game: CustomNextPage = () => {
             })
         }
 
-        setCorrect(correct + 1)
+        setCorrect((prev) => prev + 1)
         console.log(`correct key ${key}!!`)
     }
 
@@ -56,7 +56,7 @@ const Game: CustomNextPage = () => {
             })
         }
 
-        setMiss(miss + 1)
+        setMiss((prev) => prev + 1)
         console.log(`incorrect key ${key}!! actual: ${actual}`)
     }
 
@@ -144,8 +144,8 @@ const Game: CustomNextPage = () => {
             if (correctTypes[i] === 0) {
                 missPerType.push(0)
             } else {
-                const value = Math.ceil((100 * missTypes[i]) / correctTypes[i]) / 100
-                // const value = missTypes[i] / correctTypes[i]
+                // キー1つに対するミスタイプの回数を少数第二位まで
+                const value = Math.ceil((100 * missTypes[i]) / correctTypes[i])
                 missPerType.push(value)
             }
         }
