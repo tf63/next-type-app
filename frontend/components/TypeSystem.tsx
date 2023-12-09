@@ -39,8 +39,9 @@ const TypeSystem: React.FC = () => {
                 typeCtx.setIndexText(typeCtx.indexText + 1)
                 gameCtx.correctEvent(key)
             } else {
+                const prevKey = indexText == 0 ? '' : text[indexText - 1]
                 // 入力が間違っていたら
-                gameCtx.missEvent(key, text[indexText])
+                gameCtx.missEvent(key, text[indexText], prevKey)
             }
         } else {
             // 行末に達していたら
@@ -55,7 +56,8 @@ const TypeSystem: React.FC = () => {
                 }
             } else {
                 // Enter以外のキーが押されたらミスとする
-                gameCtx.missEvent(key, text[indexText])
+                const prevKey = indexText == 0 ? '' : text[indexText - 1]
+                gameCtx.missEvent(key, text[indexText], prevKey)
             }
         }
 

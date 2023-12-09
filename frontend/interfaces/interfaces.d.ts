@@ -76,9 +76,25 @@ export interface ProfileSumAPIRequest {
     userId: string
 }
 
+export interface GameMonthAPIRequest {
+    userId: string
+    missPrevPerType: number[]
+}
+
 export interface ProfileSumAPIResponse {
     month: string
     correct: number
     miss: number
     speed: number
+}
+
+export interface ProfileMonthAPIRequest {
+    userId: string
+    offset: number
+    num: number
+}
+
+export interface ProfileMonthAPIResponse {
+    month: string
+    miss_prev_per_type: number[]
 }

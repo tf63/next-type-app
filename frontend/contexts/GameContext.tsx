@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react'
 
 export type GameState = {
     correctEvent: (key: string) => void
-    missEvent: (key: string, actual: string) => void
+    missEvent: (key: string, actual: string, prev: string) => void
     navigateEvent: () => void
 }
 

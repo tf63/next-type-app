@@ -8,8 +8,11 @@ import TypeContext from '@/contexts/TypeContext'
 import GameContext from '@/contexts/GameContext'
 import { CustomNextPage } from '@/types/custom-next-page'
 import { KEY_TO_IDX } from '@/lib/const'
+import { GameMonthAPIRequest } from '@/interfaces/interfaces'
+import { useSession } from 'next-auth/react'
 
 const Game: CustomNextPage = () => {
+    const { data, status } = useSession()
     const router = useRouter()
     const [content, setContent] = useState('')
     const [problemId, setProblemId] = useState(0)
@@ -27,11 +30,14 @@ const Game: CustomNextPage = () => {
     const [timer, setTimer] = useState(0)
     const [correctTypes, setCorrectTypes] = useState<number[]>(Array.from({ length: KEY_TO_IDX.size }, () => 0))
     const [missTypes, setMissTypes] = useState<number[]>(Array.from({ length: KEY_TO_IDX.size }, () => 0))
+    const [missPrevTypes, setMissPrevTypes] = useState<number[]>(
+        Array.from({ length: KEY_TO_IDX.size * KEY_TO_IDX.size }, () => 0)
+    )
 
     const correctEvent = (key: string) => {
         const keyIdx = KEY_TO_IDX.get(key)
 
-        // 存在しないキーだったらundefined
+        // 入力キーが定義済みのキーであったら
         if (keyIdx != null) {
             setCorrectTypes((prev) => {
                 const _correctTypes = prev
@@ -40,14 +46,15 @@ const Game: CustomNextPage = () => {
             })
         }
 
-        setCorrect(correct + 1)
+        setCorrect((prev) => prev + 1)
         console.log(`correct key ${key}!!`)
     }
 
-    const missEvent = (key: string, actual: string) => {
+    const missEvent = (key: string, actual: string, prev: string) => {
         const actualIdx = KEY_TO_IDX.get(actual)
+        const prevIdx = KEY_TO_IDX.get(prev)
 
-        // 存在しないキーだったらundefined
+        // 正解のキーが定義済みのキーであったら
         if (actualIdx != null) {
             setMissTypes((prev) => {
                 const _missTypes = prev
@@ -56,8 +63,21 @@ const Game: CustomNextPage = () => {
             })
         }
 
-        setMiss(miss + 1)
-        console.log(`incorrect key ${key}!! actual: ${actual}`)
+        console.log('prev', prevIdx)
+        console.log('actual', actualIdx)
+
+        // 正解のキーと一つ前のキーがが定義済みのキーであったら
+        if (actualIdx != null && prevIdx != null) {
+            console.log('prev')
+            setMissPrevTypes((prev) => {
+                const _missPrevTypes = prev
+                _missPrevTypes[actualIdx * KEY_TO_IDX.size + prevIdx] += 1
+                return _missPrevTypes
+            })
+        }
+
+        setMiss((prev) => prev + 1)
+        console.log(`incorrect key ${key}!! actual: ${actual}, prev: ${prev}`)
     }
 
     useEffect(() => {
@@ -140,19 +160,60 @@ const Game: CustomNextPage = () => {
 
     const getMissPerType = () => {
         const missPerType: number[] = []
-        for (let i = 0; i < correctTypes.length; i++) {
+        for (let i = 0; i < KEY_TO_IDX.size; i++) {
             if (correctTypes[i] === 0) {
                 missPerType.push(0)
             } else {
-                const value = Math.ceil((100 * missTypes[i]) / correctTypes[i]) / 100
-                // const value = missTypes[i] / correctTypes[i]
+                // キー1つに対するミスタイプの回数を少数第二位まで
+                const value = Math.ceil((100 * missTypes[i]) / correctTypes[i])
                 missPerType.push(value)
             }
         }
 
         return missPerType
     }
+
+    const getMissPrevPerType = () => {
+        const missPrevPerType: number[] = []
+        for (let i = 0; i < KEY_TO_IDX.size; i++) {
+            for (let j = 0; j < KEY_TO_IDX.size; j++) {
+                if (correctTypes[i] === 0) {
+                    missPrevPerType.push(0)
+                } else {
+                    // キー1つに対するミスタイプの回数を少数第二位まで
+                    const value = Math.ceil((100 * missPrevTypes[i * KEY_TO_IDX.size + j]) / correctTypes[i])
+                    missPrevPerType.push(value)
+                }
+            }
+        }
+
+        return missPrevPerType
+    }
+
+    const postLogs = () => {
+        const missPrevPerType = getMissPrevPerType()
+
+        console.log(
+            missPrevPerType.slice(KEY_TO_IDX.size * KEY_TO_IDX.get('a')!, KEY_TO_IDX.size * (KEY_TO_IDX.get('a')! + 1))
+        )
+        console.log('a a', missPrevPerType[KEY_TO_IDX.size * KEY_TO_IDX.get('a')! + KEY_TO_IDX.get('a')!])
+        console.log('b a', missPrevPerType[KEY_TO_IDX.size * KEY_TO_IDX.get('b')! + KEY_TO_IDX.get('a')!])
+
+        const postData = async () => {
+            try {
+                const req: GameMonthAPIRequest = { userId: data?.user?.id!, missPrevPerType: missPrevPerType }
+                const _ = await axios.post('/api/game/month', req)
+            } catch (error) {
+                console.error('Error posting data:', error)
+            }
+        }
+
+        postData()
+    }
+
     const navigateEvent = () => {
+        postLogs()
+
         const resultState: ResultState = {
             category: category as Category,
             problemId: problemId,
