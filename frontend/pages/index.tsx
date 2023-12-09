@@ -19,7 +19,7 @@ const Home: CustomNextPage = () => {
                 <p>A Type App using program code as prompts</p>
             </FlexContainer>
             <SmallHeight />
-            <KeyBoard list={Array.from({ length: KEY_TO_IDX.size }, () => 0)} />
+            <KeyBoard list={Array.from({ length: KEY_TO_IDX.size }, () => 100)} />
             <FlexContainer>
                 <NavigateButton href="/select" flex={true}>
                     Game
