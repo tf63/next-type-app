@@ -8,7 +8,7 @@ import TypeContext from '@/contexts/TypeContext'
 import GameContext from '@/contexts/GameContext'
 import { CustomNextPage } from '@/types/custom-next-page'
 import { KEY_TO_IDX } from '@/lib/const'
-import { ProfileLogAPIRequest, ProfileMonthAPIRequest, ProfileSumAPIRequest } from '@/interfaces/interfaces'
+import { GameMonthAPIRequest } from '@/interfaces/interfaces'
 import { useSession } from 'next-auth/react'
 
 const Game: CustomNextPage = () => {
@@ -201,8 +201,8 @@ const Game: CustomNextPage = () => {
 
         const postData = async () => {
             try {
-                const req: ProfileMonthAPIRequest = { userId: data?.user?.id!, missPrevPerType: missPrevPerType }
-                const _ = await axios.post('/api/profile/month', req)
+                const req: GameMonthAPIRequest = { userId: data?.user?.id!, missPrevPerType: missPrevPerType }
+                const _ = await axios.post('/api/game/month', req)
             } catch (error) {
                 console.error('Error posting data:', error)
             }

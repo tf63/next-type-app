@@ -2,19 +2,23 @@ import Card from '@/components/Card'
 import {
     ProfileLogAPIRequest,
     ProfileLogAPIResponse,
+    ProfileMonthAPIRequest,
+    ProfileMonthAPIResponse,
     ProfileSumAPIRequest,
     ProfileSumAPIResponse
 } from '@/interfaces/interfaces'
 import { CustomNextPage } from '@/types/custom-next-page'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SmallHeight from '@/components/SmallHeight'
 import ProfileBoard from '@/components/ProfileBoard'
 import FlexContainer from '@/components/FlexContainer'
 import PageBar from '@/components/PageBar'
 import { Label } from '@/types/types'
 import { SelectGroupMultiLine } from '@/components/SelectGroup'
+import KeyBoard from '@/components/KeyBoard'
+import { KEY_TO_IDX } from '@/lib/const'
 
 const Profile: CustomNextPage = () => {
     const { data, status } = useSession()
@@ -42,6 +46,10 @@ const Profile: CustomNextPage = () => {
         return dateStr
     }
 
+    const [missPrevPerTypes, setMissPrevPerTypes] = useState([
+        Array.from({ length: KEY_TO_IDX.size * KEY_TO_IDX.size }, () => 0)
+    ])
+
     useEffect(() => {
         const fetchSum = async () => {
             try {
@@ -67,7 +75,26 @@ const Profile: CustomNextPage = () => {
             }
         }
 
+        const fetchLog = async () => {
+            try {
+                const requestBody: ProfileMonthAPIRequest = {
+                    userId: data?.user?.id!,
+                    offset: 0,
+                    num: 1
+                }
+                const response = await axios.post('/api/profile/month/', requestBody)
+                const responseData: ProfileMonthAPIResponse[] = response.data
+                if (responseData.length > 0) {
+                    const datas = responseData.map((data, index) => data.miss_prev_per_type)
+                    setMissPrevPerTypes(datas)
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
+
         fetchSum()
+        fetchLog()
     }, [])
 
     useEffect(() => {
@@ -105,6 +132,46 @@ const Profile: CustomNextPage = () => {
         }
     }
 
+    const divRef = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        if (divRef.current != null) {
+            divRef.current.focus()
+        }
+    }, [])
+
+    const [opacitys, setOpacitys] = useState(Array.from({ length: KEY_TO_IDX.size }, () => 0))
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        let key = event.key
+        // ブラウザの動作があるキーを無効化する
+        if (key === 'Tab' || key === ' ') {
+            event.preventDefault()
+            console.log('prevent default')
+        }
+
+        // 一部のキーはエスケープする
+        if (key === 'Shift' || key === 'Control' || key === 'CapsLock' || key === 'Meta' || key === 'Alt') {
+            console.log('disable key')
+            return false
+        }
+
+        // mapper
+        if (key === '0' && event.shiftKey) {
+            key = 's0'
+        }
+
+        const idx = KEY_TO_IDX.get(key)
+        if (idx != null) {
+            const op = missPrevPerTypes[0].slice(idx * KEY_TO_IDX.size, (idx + 1) * KEY_TO_IDX.size)
+            console.log('op', op)
+            setOpacitys(op)
+            console.log('key: ', key, 'idx: ', idx)
+        }
+    }
+
+    const handleKeyUp = (event: React.KeyboardEvent) => {
+        setOpacitys(Array.from({ length: KEY_TO_IDX.size }, () => 0))
+    }
+
     return (
         <main style={{ height: '1300px' }}>
             <Card>
@@ -139,6 +206,13 @@ const Profile: CustomNextPage = () => {
                     </div>
                 </FlexContainer>
             </Card>
+
+            <SmallHeight />
+            <p>Key Log</p>
+            <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} ref={divRef}>
+                <KeyBoard list={opacitys} />
+            </div>
+
             <PageBar datas={logs} page={page} setPage={setPage} pageSize={PAGE_SIZE} />
             {logs.slice(0, PAGE_SIZE).map((log, index) => {
                 return (
