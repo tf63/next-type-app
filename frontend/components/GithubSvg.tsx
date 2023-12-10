@@ -1,5 +1,9 @@
 import styles from '../styles/GithubSvg.module.css'
 
+/**
+ *
+ * @returns GithubのSVGアイコン
+ */
 const GithubSvg = () => {
     return (
         <svg

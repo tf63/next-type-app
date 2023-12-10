@@ -5,6 +5,11 @@ type CardProps = {
     children: ReactNode
 }
 
+/**
+ *
+ * @param param0 children
+ * @returns カード
+ */
 const Card: React.FC<CardProps> = ({ children }) => {
     return <div className={styles.card}>{children}</div>
 }

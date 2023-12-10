@@ -1,5 +1,9 @@
 import Head from 'next/head'
 
+/**
+ * 全ページ共通のHeadコンポーネント
+ * @returns Head
+ */
 const MyHead: React.FC = () => {
     return (
         <Head>

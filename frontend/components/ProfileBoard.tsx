@@ -1,8 +1,6 @@
 import Button from '@/components/Button'
-import Card from '@/components/Card'
 import { signOut } from 'next-auth/react'
 import FlexContainer from '@/components/FlexContainer'
-import Icon from '@/components/Icon'
 import { Session } from 'next-auth'
 import UserData from './UserData'
 
@@ -11,6 +9,12 @@ type ProfileBoardProps = {
     status: 'authenticated' | 'loading' | 'unauthenticated'
 }
 
+/**
+ * ユーザー情報をまとめたボード
+ * @param param0 data ユーザーのSession
+ * @param param0 status ユーザーのstatus
+ * @returns
+ */
 const ProfileBoard: React.FC<ProfileBoardProps> = ({ data, status }) => {
     return (
         <FlexContainer position="left">

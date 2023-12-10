@@ -2,11 +2,16 @@ import FlexContainer from '@/components/FlexContainer'
 import Icon from '@/components/Icon'
 import { Session } from 'next-auth'
 
-type ProfileBoardProps = {
+type UserDataProps = {
     data: Session | null
 }
 
-const UserData: React.FC<ProfileBoardProps> = ({ data }) => {
+/**
+ * ユーザーのアイコンをまとめたボード
+ * @param param0 data ユーザーのSession
+ * @returns
+ */
+const UserData: React.FC<UserDataProps> = ({ data }) => {
     return (
         <FlexContainer position="left" align="top">
             <Icon width={100} url={data?.user?.image!} />
