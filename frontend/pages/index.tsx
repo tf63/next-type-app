@@ -5,13 +5,11 @@ import NavigateButton from '@/components/NavigateButton'
 import FlexContainer from '@/components/FlexContainer'
 import SmallHeight from '@/components/SmallHeight'
 import KeyBoard from '@/components/KeyBoard'
-import ProfileBoard from '@/components/ProfileBoard'
 import UserData from '@/components/UserData'
-import Button from '@/components/Button'
 import { KEY_TO_IDX } from '@/lib/const'
 
 const Home: CustomNextPage = () => {
-    const { data, status } = useSession()
+    const { status } = useSession()
 
     return (
         <main>
@@ -19,7 +17,7 @@ const Home: CustomNextPage = () => {
                 <p>A Type App using program code as prompts</p>
             </FlexContainer>
             <SmallHeight />
-            <KeyBoard list={Array.from({ length: KEY_TO_IDX.size }, () => 0)} />
+            <KeyBoard list={Array.from({ length: KEY_TO_IDX.size }, () => 100)} />
             <FlexContainer>
                 <NavigateButton href="/select" flex={true}>
                     Game
@@ -30,7 +28,7 @@ const Home: CustomNextPage = () => {
                 {status === 'authenticated' && (
                     <FlexContainer position="left">
                         <div style={{ width: '50%' }}>
-                            <UserData data={data} />
+                            <UserData />
                         </div>
                         <div style={{ width: '50%' }}>
                             <NavigateButton href="/profile" flex={true}>

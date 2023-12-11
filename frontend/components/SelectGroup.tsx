@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Label } from '@/types/types'
 import styles from '../styles/SelectGroup.module.css'
 import FlexContainer from './FlexContainer'
-import SmallHeight from './SmallHeight'
 
 type SelectGroupProps = {
     labels: Label[]

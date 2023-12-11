@@ -8,8 +8,6 @@
 
 ### 概要
 
-
-
 https://next-type-app-delta.vercel.app/
 
  <img src="https://skillicons.dev/icons?i=ts,next,vercel,supabase,postgres,docker">

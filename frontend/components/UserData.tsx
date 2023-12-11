@@ -1,20 +1,35 @@
 import FlexContainer from '@/components/FlexContainer'
 import Icon from '@/components/Icon'
-import { Session } from 'next-auth'
+import { useSession } from 'next-auth/react'
 
-type ProfileBoardProps = {
-    data: Session | null
-}
-
-const UserData: React.FC<ProfileBoardProps> = ({ data }) => {
+/**
+ * ユーザーのアイコンをまとめたボード
+ * @returns
+ */
+const UserData: React.FC = () => {
+    const { data, status } = useSession()
     return (
-        <FlexContainer position="left" align="top">
-            <Icon width={100} url={data?.user?.image!} />
-            <div style={{ marginLeft: '40px' }}>
-                <p>Profile</p>
-                {data?.user?.name!}
-            </div>
-        </FlexContainer>
+        <>
+            {status === 'authenticated' && (
+                <FlexContainer position="left" align="top">
+                    <Icon width={100} url={data?.user?.image!} />
+                    <div style={{ marginLeft: '40px' }}>
+                        <p>Profile</p>
+                        {data?.user?.name!}
+                    </div>
+                </FlexContainer>
+            )}
+
+            {status === 'unauthenticated' && (
+                <FlexContainer position="left" align="top">
+                    <div style={{ paddingLeft: '100px' }} />
+                    <div style={{ marginLeft: '40px' }}>
+                        <p>Profile</p>
+                        <p>You are not authenticated</p>
+                    </div>
+                </FlexContainer>
+            )}
+        </>
     )
 }
 

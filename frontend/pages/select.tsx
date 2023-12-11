@@ -1,21 +1,13 @@
-import Card from '@/components/Card'
 import SelectBoard from '@/components/SelectBoard'
-import { Category, Label, SelectBoardProps } from '@/types/types'
-import { useEffect, useReducer, useState } from 'react'
+import { Category, Label } from '@/types/types'
+import { useEffect, useReducer } from 'react'
 import { useRouter } from 'next/router'
 import { CustomNextPage } from '@/types/custom-next-page'
 import Button from '@/components/Button'
 import SmallHeight from '@/components/SmallHeight'
-import NavigateButton from '@/components/NavigateButton'
 import FlexContainer from '@/components/FlexContainer'
 import { selectReducer } from '@/reducers/SelectReducer'
-import SelectContext, {
-    SelectState,
-    Action,
-    initialSelectState,
-    ExternalSelectState,
-    UpdateSelectState
-} from '@/contexts/SelectContext'
+import SelectContext, { initialSelectState, ExternalSelectState, UpdateSelectState } from '@/contexts/SelectContext'
 import axios from 'axios'
 import {
     AlgorithmAPIResponse,

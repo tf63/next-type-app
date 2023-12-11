@@ -6,6 +6,12 @@ type NavigateButtonProps = {
     href: string
 }
 
+/**
+ * クリック時に遷移するラッパーオブジェクト
+ * @param param0 children
+ * @param param0 href 遷移先
+ * @returns
+ */
 const Navigate: React.FC<NavigateButtonProps> = ({ children, href }) => {
     const router = useRouter()
 
