@@ -9,13 +9,14 @@ export type TypeState = {
     typeList: string[]
     prefixList: string[]
 }
+
 const TypeContext = createContext<TypeState>({
     indexText: 0,
-    setIndexText: () => {},
     indexLine: 0,
-    setIndexLine: () => {},
     typeList: [],
-    prefixList: []
+    prefixList: [],
+    setIndexText: () => {},
+    setIndexLine: () => {}
 })
 
 export const useTypeContext = () => {

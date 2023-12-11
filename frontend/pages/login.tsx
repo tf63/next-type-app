@@ -1,6 +1,5 @@
 import { getProviders } from 'next-auth/react'
 import { InferGetServerSidePropsType } from 'next'
-import Card from '@/components/Card'
 import LoginButton from '@/components/LoginButton'
 import NavigateButton from '@/components/NavigateButton'
 import SmallHeight from '@/components/SmallHeight'

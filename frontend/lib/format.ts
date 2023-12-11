@@ -1,4 +1,4 @@
-import { IDX_TO_KEY } from './const'
+import { IDX_TO_KEY, KEY_TO_IDX } from './const'
 
 /**
  *
@@ -62,4 +62,55 @@ export const getKey = (idx: number) => {
     } else {
         return 'unknown'
     }
+}
+
+/**
+ * キー入力を変換する
+ * @param key キー入力
+ * @param pressShift シフトキーが押されているかどうか event.shiftKey
+ * @returns 変換されたキー
+ */
+export const wrapKey = (key: string, pressShift: boolean) => {
+    if (pressShift) {
+        switch (key) {
+            case '0':
+                return 's0'
+            default:
+                return key
+        }
+    } else {
+        return key
+    }
+}
+
+export const getMissPrevPerType = (correctTypes: number[], missPrevTypes: number[]) => {
+    const missPrevPerType: number[] = []
+    for (let i = 0; i < KEY_TO_IDX.size; i++) {
+        for (let j = 0; j < KEY_TO_IDX.size; j++) {
+            if (correctTypes[i] === 0) {
+                missPrevPerType.push(0)
+            } else {
+                // キー1つに対するミスタイプの回数を少数第二位まで
+                const value = Math.ceil((100 * missPrevTypes[i * KEY_TO_IDX.size + j]) / correctTypes[i])
+                missPrevPerType.push(value)
+            }
+        }
+    }
+
+    return missPrevPerType
+}
+
+export const getMissPerType = (correctTypes: number[], missTypes: number[]) => {
+    const missPerType: number[] = []
+    for (let i = 0; i < KEY_TO_IDX.size; i++) {
+        if (correctTypes[i] === 0) {
+            missPerType.push(0)
+        } else {
+            // キー1つに対するミスタイプの回数を少数第二位まで
+            const value = Math.ceil((100 * missTypes[i]) / correctTypes[i])
+            missPerType.push(value)
+        }
+    }
+
+    return missPerType
 }

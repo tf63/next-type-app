@@ -10,6 +10,8 @@ import { CustomNextPage } from '@/types/custom-next-page'
 import { KEY_TO_IDX } from '@/lib/const'
 import { GameMonthAPIRequest } from '@/interfaces/interfaces'
 import { useSession } from 'next-auth/react'
+import TypeBoard from '@/components/TypeBoard'
+import { getMissPerType, getMissPrevPerType } from '@/lib/format'
 
 const Game: CustomNextPage = () => {
     const { data, status } = useSession()
@@ -34,6 +36,7 @@ const Game: CustomNextPage = () => {
         Array.from({ length: KEY_TO_IDX.size * KEY_TO_IDX.size }, () => 0)
     )
 
+    // 正解時の処理
     const correctEvent = (key: string) => {
         const keyIdx = KEY_TO_IDX.get(key)
 
@@ -50,11 +53,13 @@ const Game: CustomNextPage = () => {
         console.log(`correct key ${key}!!`)
     }
 
+    // 不正解時の処理
     const missEvent = (key: string, actual: string, prev: string) => {
         const actualIdx = KEY_TO_IDX.get(actual)
         const prevIdx = KEY_TO_IDX.get(prev)
 
         // 正解のキーが定義済みのキーであったら
+        // ミスを記録する
         if (actualIdx != null) {
             setMissTypes((prev) => {
                 const _missTypes = prev
@@ -63,12 +68,9 @@ const Game: CustomNextPage = () => {
             })
         }
 
-        console.log('prev', prevIdx)
-        console.log('actual', actualIdx)
-
         // 正解のキーと一つ前のキーがが定義済みのキーであったら
+        // 一つ前のキーを記録する
         if (actualIdx != null && prevIdx != null) {
-            console.log('prev')
             setMissPrevTypes((prev) => {
                 const _missPrevTypes = prev
                 _missPrevTypes[actualIdx * KEY_TO_IDX.size + prevIdx] += 1
@@ -158,40 +160,8 @@ const Game: CustomNextPage = () => {
         decomposeContent(content)
     }, [content])
 
-    const getMissPerType = () => {
-        const missPerType: number[] = []
-        for (let i = 0; i < KEY_TO_IDX.size; i++) {
-            if (correctTypes[i] === 0) {
-                missPerType.push(0)
-            } else {
-                // キー1つに対するミスタイプの回数を少数第二位まで
-                const value = Math.ceil((100 * missTypes[i]) / correctTypes[i])
-                missPerType.push(value)
-            }
-        }
-
-        return missPerType
-    }
-
-    const getMissPrevPerType = () => {
-        const missPrevPerType: number[] = []
-        for (let i = 0; i < KEY_TO_IDX.size; i++) {
-            for (let j = 0; j < KEY_TO_IDX.size; j++) {
-                if (correctTypes[i] === 0) {
-                    missPrevPerType.push(0)
-                } else {
-                    // キー1つに対するミスタイプの回数を少数第二位まで
-                    const value = Math.ceil((100 * missPrevTypes[i * KEY_TO_IDX.size + j]) / correctTypes[i])
-                    missPrevPerType.push(value)
-                }
-            }
-        }
-
-        return missPrevPerType
-    }
-
     const postLogs = () => {
-        const missPrevPerType = getMissPrevPerType()
+        const missPrevPerType = getMissPrevPerType(correctTypes, missPrevTypes)
 
         console.log(
             missPrevPerType.slice(KEY_TO_IDX.size * KEY_TO_IDX.get('a')!, KEY_TO_IDX.size * (KEY_TO_IDX.get('a')! + 1))
@@ -212,7 +182,9 @@ const Game: CustomNextPage = () => {
     }
 
     const navigateEvent = () => {
-        postLogs()
+        if (status === 'authenticated') {
+            postLogs()
+        }
 
         const resultState: ResultState = {
             category: category as Category,
@@ -220,8 +192,9 @@ const Game: CustomNextPage = () => {
             correct: correct,
             miss: miss,
             timer: timer,
-            missPerType: getMissPerType()
+            missPerType: getMissPerType(correctTypes, missTypes)
         }
+
         router.push({
             pathname: '/result',
             query: { state: JSON.stringify(resultState) }
@@ -243,7 +216,9 @@ const Game: CustomNextPage = () => {
                         prefixList: prefixList
                     }}
                 >
-                    <TypeSystem />
+                    <TypeSystem>
+                        <TypeBoard />
+                    </TypeSystem>
                 </TypeContext.Provider>
             </GameContext.Provider>
             {`correct: ${correct}, miss: ${miss}, time: ${timer}`}
