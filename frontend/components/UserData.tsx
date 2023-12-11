@@ -25,7 +25,7 @@ const UserData: React.FC = () => {
                     <div style={{ paddingLeft: '100px' }} />
                     <div style={{ marginLeft: '40px' }}>
                         <p>Profile</p>
-                        <p>you're not login</p>
+                        <p>You are not authenticated</p>
                     </div>
                 </FlexContainer>
             )}
