@@ -173,7 +173,7 @@ const Profile: CustomNextPage = () => {
     }
 
     return (
-        <main style={{ height: '1300px' }}>
+        <main style={{ minHeight: '1800px' }}>
             <Card>
                 <ProfileBoard />
             </Card>

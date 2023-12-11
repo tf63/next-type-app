@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import KeyList from './KeyList'
 import FlexContainer from './FlexContainer'
-import { KEYBOARD_IDXS_SHIFT, KEYBOARD_IDXS_UNSHIFT, KEY_TO_IDX } from '@/lib/const'
-import { decomposeOpacitys, getOpacitys } from '@/lib/format'
+import { KEYBOARD_IDXS_SHIFT, KEYBOARD_IDXS_UNSHIFT } from '@/lib/const'
+import { getOpacitys } from '@/lib/format'
+import { useKeyBoardStore } from '@/states/KeyBoard'
+import KeyRef from './KeyRef'
 
 export type KeyBoardProps = {
     list: number[]
@@ -14,79 +16,68 @@ export type KeyBoardProps = {
  * @returns キーボード
  */
 const KeyBoard: React.FC<KeyBoardProps> = ({ list }) => {
-    const [initOpacityListsUnshift, initOpacityListsShift] = decomposeOpacitys(
-        Array.from({ length: KEY_TO_IDX.size }, () => `100px`)
-    )
-    const [opacityLists, setOpacityLists] = useState(initOpacityListsUnshift)
-    const [opacityListsUnshift, setOpacityListsUnshift] = useState(initOpacityListsUnshift)
-    const [opacityListsShift, setOpacityListsShift] = useState(initOpacityListsShift)
-    const [keyBoardIdxs, setKeyBoardIdxs] = useState(KEYBOARD_IDXS_UNSHIFT)
+    const shift = useKeyBoardStore((state) => state.shift)
+    const opacityLists = useKeyBoardStore((state) => state.opacityLists)
+    const setOpacityLists = useKeyBoardStore((state) => state.setOpacityLists)
+    const toggleShift = useKeyBoardStore((state) => state.toggleShift)
 
     // キーボードの段ごとのmargin
     const keyListMargins = ['0px', '20px', '40px', '60px']
 
-    // キー入力の参照を取得
-    const divRef = useRef<HTMLDivElement>(null)
-    useEffect(() => {
-        if (divRef.current != null) {
-            divRef.current.focus()
-        }
-    }, [])
-
+    // propsが変化したらopacitysを設定し直す
     useEffect(() => {
         // propsをopacitys (透明度) に変換する
         const opacitys = getOpacitys(list, 20)
-
-        // opacitysをキー配列ごとに分割する
-        const [opacityListsUnshift, opacityListsShift] = decomposeOpacitys(opacitys)
-
-        // setState
-        setOpacityListsUnshift(opacityListsUnshift)
-        setOpacityListsShift(opacityListsShift)
-        setOpacityLists(opacityListsUnshift)
+        setOpacityLists(opacitys)
     }, [list])
 
-    // keydownを検知したら
     const handleKeyDown = (event: React.KeyboardEvent) => {
         const key = event.key
 
         // shiftキーが押されたらshift状態に切り替え
         if (key === 'Shift') {
-            setKeyBoardIdxs(KEYBOARD_IDXS_SHIFT)
-            setOpacityLists(opacityListsShift)
+            toggleShift(true)
         }
     }
 
-    // keyupを検知したら
     const handleKeyUp = (event: React.KeyboardEvent) => {
         const key = event.key
 
         // shiftキーが離れたらunshift状態に切り替え
         if (key === 'Shift') {
-            setKeyBoardIdxs(KEYBOARD_IDXS_UNSHIFT)
-            setOpacityLists(opacityListsUnshift)
+            toggleShift(false)
         }
     }
 
     return (
-        <div
-            style={{ border: 'none', outline: 'none' }}
-            onKeyDown={handleKeyDown}
-            onKeyUp={handleKeyUp}
-            tabIndex={0}
-            ref={divRef}
-        >
-            <FlexContainer position="center">
-                <div>
-                    {keyBoardIdxs.map((keyIdxs, index) => {
-                        return (
-                            <div key={index} style={{ marginLeft: keyListMargins[index], marginBottom: '20px' }}>
-                                <KeyList opacitys={opacityLists[index]} keyIdxs={keyIdxs} />
-                            </div>
-                        )
-                    })}
-                </div>
-            </FlexContainer>
+        <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
+            <KeyRef>
+                <FlexContainer position="center">
+                    <div>
+                        {shift
+                            ? KEYBOARD_IDXS_SHIFT.map((keyIdxs, index) => {
+                                  return (
+                                      <div
+                                          key={index}
+                                          style={{ marginLeft: keyListMargins[index], marginBottom: '20px' }}
+                                      >
+                                          <KeyList opacitys={opacityLists.shift[index]} keyIdxs={keyIdxs} />
+                                      </div>
+                                  )
+                              })
+                            : KEYBOARD_IDXS_UNSHIFT.map((keyIdxs, index) => {
+                                  return (
+                                      <div
+                                          key={index}
+                                          style={{ marginLeft: keyListMargins[index], marginBottom: '20px' }}
+                                      >
+                                          <KeyList opacitys={opacityLists.unshift[index]} keyIdxs={keyIdxs} />
+                                      </div>
+                                  )
+                              })}
+                    </div>
+                </FlexContainer>
+            </KeyRef>
         </div>
     )
 }

@@ -1,7 +1,8 @@
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode } from 'react'
 import { useTypeContext } from '@/contexts/TypeContext'
 import { useGameContext } from '@/contexts/GameContext'
 import { wrapKey } from '@/lib/format'
+import KeyRef from './KeyRef'
 
 type TypeSystemProps = {
     children: ReactNode
@@ -15,14 +16,6 @@ type TypeSystemProps = {
 const TypeSystem: React.FC<TypeSystemProps> = ({ children }) => {
     const typeCtx = useTypeContext()
     const gameCtx = useGameContext()
-
-    // キーイベントの参照
-    const divRef = useRef<HTMLDivElement>(null)
-    useEffect(() => {
-        if (divRef.current != null) {
-            divRef.current.focus()
-        }
-    }, [])
 
     // キーイベントのハンドラ
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -88,8 +81,8 @@ const TypeSystem: React.FC<TypeSystemProps> = ({ children }) => {
     }
 
     return (
-        <div style={{ outline: 'none' }} onKeyDown={handleKeyDown} tabIndex={0} ref={divRef}>
-            {children}
+        <div onKeyDown={handleKeyDown}>
+            <KeyRef>{children}</KeyRef>
         </div>
     )
 }
