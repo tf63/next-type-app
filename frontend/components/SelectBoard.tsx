@@ -1,51 +1,70 @@
-import { useContext } from 'react'
+import { getSelectorName } from '@/lib/format'
 import Accordion from './Accordion'
 import { SelectGroup, SelectGroupMultiLine } from './SelectGroup'
-import { Label } from '@/types/types'
 import SmallHeight from './SmallHeight'
-import SelectContext, { UpdateSelectState } from '@/contexts/SelectContext'
+import { useSelectStore } from '@/states/Select'
 
+/**
+ * selectページで使用するボード
+ * @returns
+ */
 const SelectBoard: React.FC = () => {
-    const { state, dispatch } = useContext(SelectContext)
+    // カテゴリ (language / framework / algorithm / pattern)
 
-    const setData = <T extends keyof UpdateSelectState>(key: T) => {
-        return (label: Label) => {
-            dispatch({ type: 'UPDATE_STATE', data: { [key]: label } })
-        }
-    }
+    // 各カテゴリのセレクタで使用するラベル
+    const { category, size, language, framework, algorithm, pattern } = useSelectStore((state) => ({
+        category: state.category,
+        size: state.size,
+        language: state.language,
+        framework: state.framework,
+        algorithm: state.algorithm,
+        pattern: state.pattern
+    }))
+
+    // ラベルをセットする関数
+    const { setCategory, setSize, setLanguage, setFramework, setAlgorithm, setPattern } = useSelectStore((state) => ({
+        setCategory: state.setCategory,
+        setSize: state.setSize,
+        setLanguage: state.setLanguage,
+        setFramework: state.setFramework,
+        setAlgorithm: state.setAlgorithm,
+        setPattern: state.setPattern
+    }))
 
     return (
         <>
             <p>Problem Category</p>
-            <SelectGroup {...{ labels: state.categoryLabels, setLabel: setData('category') }} />
+            <SelectGroup {...{ labels: category.labels, setLabel: setCategory }} />
 
             <SmallHeight />
             <p>Problem Size</p>
-            <SelectGroup {...{ labels: state.sizeLabels, setLabel: setData('size') }} />
+            <SelectGroup {...{ labels: size.labels, setLabel: setSize }} />
 
+            {/* 基本情報 */}
             <SmallHeight />
-            {state.category.name !== 'framework' && (
-                <Accordion summary={'Programming Language'}>
-                    <SelectGroupMultiLine
-                        {...{ labels: state.categoryToTagLabels.get('language')!, setLabel: setData('language') }}
-                    />
+            {['language', 'algorithm', 'pattern'].includes(getSelectorName(category)) && (
+                <Accordion summary={'Language'}>
+                    <SelectGroupMultiLine {...{ labels: language.labels, setLabel: setLanguage }} />
                 </Accordion>
             )}
 
-            {state.category.name === 'framework' && (
-                <Accordion summary={'Programming Framework'}>
-                    <SelectGroupMultiLine
-                        {...{ labels: state.categoryToTagLabels.get('framework')!, setLabel: setData('tag') }}
-                    />
+            {getSelectorName(category) === 'framework' && (
+                <Accordion summary={'Framework'}>
+                    <SelectGroupMultiLine {...{ labels: framework.labels, setLabel: setFramework }} />
                 </Accordion>
             )}
 
+            {/* 追加情報 */}
             <SmallHeight />
-            {(state.category.name === 'algorithm' || state.category.name === 'pattern') && (
-                <Accordion summary={'Problem Tag'}>
-                    <SelectGroupMultiLine
-                        {...{ labels: state.categoryToTagLabels.get(state.category.name)!, setLabel: setData('tag') }}
-                    />
+            {getSelectorName(category) === 'algorithm' && (
+                <Accordion summary={'Algorithm'}>
+                    <SelectGroupMultiLine {...{ labels: algorithm.labels, setLabel: setAlgorithm }} />
+                </Accordion>
+            )}
+
+            {getSelectorName(category) === 'pattern' && (
+                <Accordion summary={'Pattern'}>
+                    <SelectGroupMultiLine {...{ labels: pattern.labels, setLabel: setPattern }} />
                 </Accordion>
             )}
         </>

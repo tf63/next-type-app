@@ -10,6 +10,18 @@ export type Label = {
     name: string
 }
 
+export type Selector = {
+    labels: Label[]
+    id: number
+}
+
+type ProfileSummary = {
+    month: string
+    correct: number
+    miss: number
+    speed: number
+}
+
 export type SelectBoardProps = {
     category: Label
     setCategory: Dispatch<SetStateAction<Label>>
@@ -18,14 +30,16 @@ export type SelectBoardProps = {
     setTag: Dispatch<SetStateAction<Label>>
 }
 
-export type ProblemState = {
-    category: Label
-    size: Label
-    tag: Label
-    language: Label
+export interface SelectData {
+    category: string
+    size: string
+    languageId?: number
+    frameworkId?: number
+    algorithmId?: number
+    patternId?: number
 }
 
-export type ResultState = {
+export type GameData = {
     category: Category
     problemId: number
     correct: number

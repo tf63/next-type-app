@@ -1,11 +1,17 @@
-import { ProfileMonthAPIRequest } from '@/interfaces/interfaces'
+import { ProfileMonthAPIRequest, ProfileMonthAPIResponse } from '@/interfaces/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { supabase } from '@/lib/supabase'
+import { PostgrestError } from '@supabase/supabase-js'
+
+type ResponseObject = {
+    data: ProfileMonthAPIResponse[] | null
+    error: PostgrestError | null
+}
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     const body: ProfileMonthAPIRequest = req.body
 
-    const { data, error } = await supabase
+    const { data, error }: ResponseObject = await supabase
         .from('user_log_miss_prev_per_type')
         .select('month, miss_prev_per_type')
         .order('month', { ascending: false })

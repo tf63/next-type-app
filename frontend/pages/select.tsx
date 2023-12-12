@@ -1,117 +1,109 @@
 import SelectBoard from '@/components/SelectBoard'
-import { Category, Label } from '@/types/types'
-import { useEffect, useReducer } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { CustomNextPage } from '@/types/custom-next-page'
 import Button from '@/components/Button'
 import SmallHeight from '@/components/SmallHeight'
 import FlexContainer from '@/components/FlexContainer'
-import { selectReducer } from '@/reducers/SelectReducer'
-import SelectContext, { initialSelectState, ExternalSelectState, UpdateSelectState } from '@/contexts/SelectContext'
-import axios from 'axios'
-import {
-    AlgorithmAPIResponse,
-    FrameworkAPIResponse,
-    LanguageAPIResponse,
-    PatternAPIResponse
-} from '@/interfaces/interfaces'
+import { useSelectStore } from '@/states/Select'
+import { getSelectorId, getSelectorName } from '@/lib/format'
+import { SelectData } from '@/types/types'
 
 const Select: CustomNextPage = () => {
-    const [state, dispatch] = useReducer(selectReducer, initialSelectState)
+    const setProblemLabels = useSelectStore((state) => state.setProblemLabels)
+    const { category, size, language, framework, algorithm, pattern } = useSelectStore((state) => ({
+        category: state.category,
+        size: state.size,
+        language: state.language,
+        framework: state.framework,
+        algorithm: state.algorithm,
+        pattern: state.pattern
+    }))
 
     // ページ読み込み時
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // カテゴリデータを取得する
-                // ----------------------------------------------------------------
-                let response = await axios.get('/api/language')
-                const languages: LanguageAPIResponse[] = await response.data
-                const languageLabels: Label[] = languages.map((obj) => ({ id: obj.language_id, name: obj.name }))
-
-                response = await axios.get('/api/framework')
-                const frameworks: FrameworkAPIResponse[] = await response.data
-                const frameworkLabels: Label[] = frameworks.map((obj) => ({ id: obj.tool_id, name: obj.name }))
-
-                response = await axios.get('/api/algorithm')
-                const algorithms: AlgorithmAPIResponse[] = await response.data
-                const algorithmLabels: Label[] = algorithms.map((obj) => ({ id: obj.algorithm_id, name: obj.name }))
-
-                response = await axios.get('/api/pattern')
-                const patterns: PatternAPIResponse[] = await response.data
-                const patternLabels: Label[] = patterns.map((obj) => ({ id: obj.pattern_id, name: obj.name }))
-
-                // problemのメタデータ (tag) を事前準備しておく
-                const categoryToTagLabels = new Map<Category, Label[]>([
-                    ['language', languageLabels],
-                    ['framework', frameworkLabels],
-                    ['algorithm', algorithmLabels],
-                    ['pattern', patternLabels]
-                ])
-                // 取得したデータを登録する
-                const externalState: ExternalSelectState = {
-                    categoryToTagLabels: categoryToTagLabels
-                }
-                // 初期データを登録する
-                const updateState: UpdateSelectState = {
-                    category: state.categoryLabels[0],
-                    size: state.sizeLabels[0],
-                    language: languageLabels[0],
-                    tag: categoryToTagLabels.get('language')![0]
-                }
-
-                dispatch({ type: 'INIT_STATE', data: externalState })
-                dispatch({ type: 'UPDATE_STATE', data: updateState })
-            } catch (error) {
-                console.error('Error fetching data:', error)
-            }
-        }
-
-        fetchData()
+        setProblemLabels()
     }, [])
-
-    useEffect(() => {
-        try {
-            // カテゴリが変化したらtagを更新する
-            const tagName: Label = state.categoryToTagLabels.get(state.category.name as Category)![0]
-            const updateState: UpdateSelectState = {
-                tag: tagName
-            }
-            dispatch({ type: 'UPDATE_STATE', data: updateState })
-        } catch (error) {
-            // エラー時は何もしない
-            console.error('Error change state:', error)
-        }
-    }, [state.category])
-
-    const problemState = { category: state.category, size: state.size, tag: state.tag, language: state.language } // 遷移時に渡すオブジェクト
 
     // Select -> Gameに遷移
     const router = useRouter()
     const navigateEvent = () => {
+        let selectData: SelectData
+        const categoryName = getSelectorName(category)
+        const sizeName = getSelectorName(size)
+        switch (categoryName) {
+            case 'language':
+                selectData = { category: categoryName, size: sizeName, languageId: getSelectorId(language) }
+                break
+            case 'framework':
+                selectData = { category: categoryName, size: sizeName, frameworkId: getSelectorId(framework) }
+                break
+            case 'algorithm':
+                selectData = {
+                    category: categoryName,
+                    size: sizeName,
+                    languageId: getSelectorId(language),
+                    algorithmId: getSelectorId(algorithm)
+                }
+                break
+            case 'pattern':
+                selectData = {
+                    category: categoryName,
+                    size: sizeName,
+                    languageId: getSelectorId(language),
+                    patternId: getSelectorId(pattern)
+                }
+                break
+            default:
+                selectData = { category: categoryName, size: sizeName }
+                break
+        }
+
         router.push({
             pathname: '/game',
-            query: { state: JSON.stringify(problemState) }
+            query: { state: JSON.stringify(selectData) }
         })
     }
 
+    // 現在の選択状況のサマリ
+    const problemSummary = () => {
+        switch (getSelectorName(category)) {
+            case 'language':
+                return <span>{`Language: ${getSelectorName(language)}, Size: ${getSelectorName(size)}`}</span>
+            case 'framework':
+                return <span>{`Framework: ${getSelectorName(framework)},  Size: ${getSelectorName(size)}`}</span>
+            case 'algorithm':
+                return (
+                    <span>{`Language: ${getSelectorName(language)}, Size: ${getSelectorName(
+                        size
+                    )}, Algorithm: ${getSelectorName(algorithm)}`}</span>
+                )
+            case 'pattern':
+                return (
+                    <span>{`Language: ${getSelectorName(language)}, Size: ${getSelectorName(
+                        size
+                    )}, Pattern: ${getSelectorName(pattern)}`}</span>
+                )
+            default:
+                return <span></span>
+        }
+        return
+    }
     return (
         <main style={{ height: '1300px' }}>
             <FlexContainer>
-                <p style={{ marginBottom: '50px' }}>
-                    <span>{`Language: ${state.language.name}, Size: ${state.size.name}`}</span>
-                    {state.category.name !== 'language' && <span>{`, Tag: ${state.tag.name}`}</span>}
-                </p>
+                <p style={{ marginBottom: '50px' }}>{problemSummary()}</p>
             </FlexContainer>
+
             <FlexContainer>
                 <Button onClick={navigateEvent} flex={true}>
                     Start
                 </Button>
             </FlexContainer>
+
             <SmallHeight />
-            <SelectContext.Provider value={{ state, dispatch }}>
-                <SelectBoard />
-            </SelectContext.Provider>
+
+            <SelectBoard />
         </main>
     )
 }

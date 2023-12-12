@@ -1,3 +1,4 @@
+import { ProfileSummary, Selector } from '@/types/types'
 import { IDX_TO_KEY, KEY_TO_IDX } from './const'
 
 /**
@@ -83,6 +84,25 @@ export const wrapKey = (key: string, pressShift: boolean) => {
     }
 }
 
+/**
+ *
+ * @param speed
+ * @returns 小数点以下第二位にする
+ */
+export const getSpeed = (speed: number) => {
+    return speed.toFixed(2)
+}
+
+/**
+ *
+ * @param correct 正解数
+ * @param miss 不正解数
+ * @returns 精度を小数点以下第二位で返す
+ */
+export const getAccuracy = (correct: number, miss: number) => {
+    return ((correct / (correct + miss + 0.000001)) * 100).toFixed(2)
+}
+
 export const getMissPrevPerType = (correctTypes: number[], missPrevTypes: number[]) => {
     const missPrevPerType: number[] = []
     for (let i = 0; i < KEY_TO_IDX.size; i++) {
@@ -100,6 +120,31 @@ export const getMissPrevPerType = (correctTypes: number[], missPrevTypes: number
     return missPrevPerType
 }
 
+/**
+ *
+ * @param dateUtc UTC形式のdate
+ * @returns 01/01 00:00という形式で返す
+ */
+export const getDateStr = (dateUtc: string) => {
+    const dateObject = new Date(dateUtc)
+    const hour = dateObject.getHours().toString().padStart(2, '0')
+    const minute = dateObject.getMinutes().toString().padStart(2, '0')
+    const dateStr = `${dateObject.getMonth() + 1}/${dateObject.getDate()} ${hour}:${minute}`
+
+    return dateStr
+}
+
+/**
+ *
+ * @param dateUtc UTC形式のdate
+ * @returns 2000/01という形式で返す
+ */
+export const getYearMonth = (dateUtc: string) => {
+    const dateObject = new Date(dateUtc)
+    const dateStr = `${dateObject.getFullYear()}/${dateObject.getMonth() + 1}`
+    return dateStr
+}
+
 export const getMissPerType = (correctTypes: number[], missTypes: number[]) => {
     const missPerType: number[] = []
     for (let i = 0; i < KEY_TO_IDX.size; i++) {
@@ -113,4 +158,80 @@ export const getMissPerType = (correctTypes: number[], missTypes: number[]) => {
     }
 
     return missPerType
+}
+
+/**
+ * セレクタから現在アクティブになっているLabelを取得する
+ * @param selector セレクタ
+ * @returns アクティブになっているLabel
+ */
+export const getSelectorLabel = (selector: Selector) => {
+    for (const label of selector.labels) {
+        if (label.id === selector.id) {
+            return label
+        }
+    }
+
+    return { id: 0, name: '' }
+}
+
+/**
+ * セレクタから現在アクティブになっている要素のnameを取得する
+ * @param selector セレクタ
+ * @returns アクティブになっている要素のname
+ */
+export const getSelectorName = (selector: Selector) => {
+    for (const label of selector.labels) {
+        if (label.id === selector.id) {
+            return label.name
+        }
+    }
+
+    return ''
+}
+
+/**
+ * セレクタから現在アクティブになっている要素のidを取得する
+ * @param selector セレクタ
+ * @returns アクティブになっている要素のid
+ */
+export const getSelectorId = (selector: Selector) => {
+    for (const label of selector.labels) {
+        if (label.id === selector.id) {
+            return label.id
+        }
+    }
+
+    return 0
+}
+
+export const getSummaryByMonth = (summarys: ProfileSummary[], month: string) => {
+    for (const summary of summarys) {
+        if (month === summary.month) {
+            return summary
+        }
+    }
+
+    return { month: '', correct: 0, miss: 0, speed: 0 }
+}
+
+/**
+ * タイピングの問題文を改行ごとに分割してリストにする (typeList)
+ * インデントレベルをprefixListとして返す
+ * @param content 問題文
+ * @returns [typeList, prefixList]
+ */
+export const decomposeContent = (content: string) => {
+    const splitContent = content.split(/\r?\n/)
+    const typeList: string[] = []
+    const prefixList: string[] = []
+    for (let s of splitContent) {
+        const result = s.match(/^(\s*)(.*)/)
+        if (result != null) {
+            prefixList.push(result[1])
+            typeList.push(result[2])
+        }
+    }
+
+    return [typeList, prefixList]
 }

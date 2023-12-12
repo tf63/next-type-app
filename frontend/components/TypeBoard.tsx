@@ -2,35 +2,38 @@ import React from 'react'
 import { TypeLine, TypeLineWithCaret } from './TypeLine'
 import Card from './Card'
 import styles from '../styles/TypeBoard.module.css'
-import { useTypeContext } from '@/contexts/TypeContext'
+import { useGameStore } from '@/states/Game'
 
 /**
  * タイピングの問題文を表示するボード
  * @returns
  */
 const TypeBoard: React.FC = () => {
-    const ctx = useTypeContext()
+    const typeList = useGameStore((state) => state.typeList)
+    const indexLine = useGameStore((state) => state.indexLine)
+    const indexText = useGameStore((state) => state.indexText)
+    const prefixList = useGameStore((state) => state.prefixList)
 
     return (
         <div className={styles.type_board}>
             <Card>
                 <ul>
-                    {ctx.typeList.map((typeText, index) => {
-                        if (index < ctx.indexLine) {
+                    {typeList.map((typeText, index) => {
+                        if (index < indexLine) {
                             // タイプ済みの行
                             return (
                                 <li key={index} className={styles.type_board_item}>
-                                    <TypeLine text={typeText} prefix={ctx.prefixList[index]} isTyped={true} />
+                                    <TypeLine text={typeText} prefix={prefixList[index]} isTyped={true} />
                                 </li>
                             )
-                        } else if (index === ctx.indexLine) {
+                        } else if (index === indexLine) {
                             // 現在ターゲットにしている行
                             return (
                                 <li key={index} className={styles.type_board_item}>
                                     <TypeLineWithCaret
                                         text={typeText}
-                                        indexCaret={ctx.indexText}
-                                        prefix={ctx.prefixList[index]}
+                                        indexCaret={indexText}
+                                        prefix={prefixList[index]}
                                     />
                                 </li>
                             )
@@ -38,7 +41,7 @@ const TypeBoard: React.FC = () => {
                             // タイプしていない行
                             return (
                                 <li key={index} className={styles.type_board_item}>
-                                    <TypeLine text={typeText} prefix={ctx.prefixList[index]} isTyped={false} />
+                                    <TypeLine text={typeText} prefix={prefixList[index]} isTyped={false} />
                                 </li>
                             )
                         }

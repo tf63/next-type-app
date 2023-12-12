@@ -19,6 +19,7 @@ https://next-type-app-delta.vercel.app/
 | -- | -- |
 | Next.js | フレームワーク|
 | API Routes | backend |
+| zustand | 状態管理 |
 | CSS Modules | style |
 | Supabase | DB |
 | Postgres | (Supabase) |

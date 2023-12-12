@@ -7,54 +7,49 @@ import SmallHeight from '@/components/SmallHeight'
 import KeyBoard from '@/components/KeyBoard'
 import UserData from '@/components/UserData'
 import { KEY_TO_IDX } from '@/lib/const'
+import TwoColumn from '@/components/TwoColumn'
 
 const Home: CustomNextPage = () => {
     const { status } = useSession()
 
     return (
-        <main>
+        <main style={{ minHeight: '800px' }}>
+            {/* Selectページへ */}
             <FlexContainer>
                 <p>A Type App using program code as prompts</p>
             </FlexContainer>
             <SmallHeight />
+
             <KeyBoard list={Array.from({ length: KEY_TO_IDX.size }, () => 100)} />
+
             <FlexContainer>
                 <NavigateButton href="/select" flex={true}>
                     Game
                 </NavigateButton>
             </FlexContainer>
-            <SmallHeight />
+            <SmallHeight height="80px" />
+
+            {/* Profileページへ */}
             <Card>
                 {status === 'authenticated' && (
-                    <FlexContainer position="left">
-                        <div style={{ width: '50%' }}>
-                            <UserData />
-                        </div>
-                        <div style={{ width: '50%' }}>
-                            <NavigateButton href="/profile" flex={true}>
-                                Profile
-                            </NavigateButton>
-                        </div>
-                    </FlexContainer>
+                    <TwoColumn>
+                        <UserData />
+                        <NavigateButton href="/profile" flex={true}>
+                            Profile
+                        </NavigateButton>
+                    </TwoColumn>
                 )}
                 {status !== 'authenticated' && (
-                    <FlexContainer position="left">
-                        <div style={{ width: '50%' }}>
-                            <FlexContainer position="left" align="top">
-                                <div style={{ marginLeft: '40px' }}>
-                                    <p>You are not Logged in</p>
-                                </div>
-                            </FlexContainer>
-                        </div>
-                        <div style={{ width: '50%' }}>
-                            <NavigateButton href="/login" flex={true}>
-                                Login
-                            </NavigateButton>
-                        </div>
-                    </FlexContainer>
+                    <TwoColumn>
+                        <FlexContainer position="left">
+                            <p style={{ marginLeft: '40px' }}>you are not authenticated</p>
+                        </FlexContainer>
+                        <NavigateButton href="/login" flex={true}>
+                            Login
+                        </NavigateButton>
+                    </TwoColumn>
                 )}
             </Card>
-            <SmallHeight />
         </main>
     )
 }
