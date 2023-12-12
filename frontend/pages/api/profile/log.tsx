@@ -2,15 +2,14 @@ import { ProfileLogAPIRequest, ProfileLogAPIResponse } from '@/interfaces/interf
 import { NextApiRequest, NextApiResponse } from 'next'
 import { supabase } from '@/lib/supabase'
 import { PostgrestError } from '@supabase/supabase-js'
-import { Database } from '@/types/database.types'
+
+type ResponseObject = {
+    data: ProfileLogAPIResponse[] | null
+    error: PostgrestError | null
+}
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     const body: ProfileLogAPIRequest = req.body
-
-    type ResponseObject = {
-        data: ProfileLogAPIResponse | null
-        error: PostgrestError | null
-    }
 
     const { data, error }: ResponseObject = await supabase
         .from('user_log_problem')
@@ -18,7 +17,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         .order('created_at', { ascending: false })
         .eq('user_id', body.userId)
         .range(body.offset, body.offset + body.num - 1)
-        .returns<Database['public']['Tables']['user_log_problem']['Row']>()
 
     if (error != null) {
         res.status(503).json({ error: error })

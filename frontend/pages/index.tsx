@@ -13,7 +13,7 @@ const Home: CustomNextPage = () => {
     const { status } = useSession()
 
     return (
-        <main>
+        <main style={{ minHeight: '800px' }}>
             {/* Selectページへ */}
             <FlexContainer>
                 <p>A Type App using program code as prompts</p>
@@ -27,7 +27,7 @@ const Home: CustomNextPage = () => {
                     Game
                 </NavigateButton>
             </FlexContainer>
-            <SmallHeight />
+            <SmallHeight height="80px" />
 
             {/* Profileページへ */}
             <Card>
@@ -50,7 +50,6 @@ const Home: CustomNextPage = () => {
                     </TwoColumn>
                 )}
             </Card>
-            <SmallHeight />
         </main>
     )
 }

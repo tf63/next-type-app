@@ -1,12 +1,10 @@
-import React, { Dispatch, ReactNode, SetStateAction } from 'react'
+import React, { ReactNode } from 'react'
 import { wrapKey } from '@/lib/format'
-import KeyRef from './KeyRef'
 import { KEY_TO_IDX } from '@/lib/const'
+import { useProfileStore } from '@/states/Profile'
 
 type TypeSystemProps = {
     children: ReactNode
-    missPrevPerTypes: number[][]
-    setOpacitys: Dispatch<SetStateAction<number[]>>
 }
 
 /**
@@ -14,7 +12,10 @@ type TypeSystemProps = {
  * @param param0 children
  * @returns
  */
-const TypePrevSystem: React.FC<TypeSystemProps> = ({ children, missPrevPerTypes, setOpacitys }) => {
+const TypePrevSystem: React.FC<TypeSystemProps> = ({ children }) => {
+    const missPrevPerTypes = useProfileStore((state) => state.missPrevPerTypes)
+    const updateOpacityValues = useProfileStore((state) => state.updateOpacityValues)
+
     // キーイベントのハンドラ
     const handleKeyDown = (event: React.KeyboardEvent) => {
         const key = wrapKey(event.key, event.shiftKey)
@@ -30,23 +31,24 @@ const TypePrevSystem: React.FC<TypeSystemProps> = ({ children, missPrevPerTypes,
             return false
         }
 
+        // キーのidxを取得
         const idx = KEY_TO_IDX.get(key)
         if (idx != null) {
-            const op = missPrevPerTypes[0].slice(idx * KEY_TO_IDX.size, (idx + 1) * KEY_TO_IDX.size)
-            console.log('op', op)
-            setOpacitys(op)
-            console.log('key: ', key, 'idx: ', idx)
+            // キーの前の入力のミス回数を取り出す
+            const opacityValues = missPrevPerTypes[0].slice(idx * KEY_TO_IDX.size, (idx + 1) * KEY_TO_IDX.size)
+            updateOpacityValues(opacityValues)
         }
     }
 
     // キーイベントのハンドラ
     const handleKeyUp = (event: React.KeyboardEvent) => {
-        setOpacitys(Array.from({ length: KEY_TO_IDX.size }, () => 0))
+        // キーが離れたら初期状態に戻す
+        updateOpacityValues(Array.from({ length: KEY_TO_IDX.size }, () => 0))
     }
 
     return (
         <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
-            <KeyRef>{children}</KeyRef>
+            {children}
         </div>
     )
 }

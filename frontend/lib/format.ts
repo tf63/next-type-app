@@ -1,4 +1,4 @@
-import { Selector } from '@/types/types'
+import { ProfileSummary, Selector } from '@/types/types'
 import { IDX_TO_KEY, KEY_TO_IDX } from './const'
 
 /**
@@ -173,4 +173,14 @@ export const getSelectorName = (selector: Selector) => {
     }
 
     return ''
+}
+
+export const getSummaryByMonth = (summarys: ProfileSummary[], month: string) => {
+    for (const summary of summarys) {
+        if (month === summary.month) {
+            return summary
+        }
+    }
+
+    return { month: '', correct: 0, miss: 0, speed: 0 }
 }

@@ -15,6 +15,13 @@ export type Selector = {
     id: number
 }
 
+type ProfileSummary = {
+    month: string
+    correct: number
+    miss: number
+    speed: number
+}
+
 export type SelectBoardProps = {
     category: Label
     setCategory: Dispatch<SetStateAction<Label>>
