@@ -10,6 +10,11 @@ export type Label = {
     name: string
 }
 
+export type Selector = {
+    labels: Label[]
+    id: number
+}
+
 export type SelectBoardProps = {
     category: Label
     setCategory: Dispatch<SetStateAction<Label>>

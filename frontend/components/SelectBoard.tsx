@@ -1,3 +1,4 @@
+import { getSelectorName } from '@/lib/format'
 import Accordion from './Accordion'
 import { SelectGroup, SelectGroupMultiLine } from './SelectGroup'
 import SmallHeight from './SmallHeight'
@@ -9,18 +10,16 @@ import { useSelectStore } from '@/states/Select'
  */
 const SelectBoard: React.FC = () => {
     // カテゴリ (language / framework / algorithm / pattern)
-    const category = useSelectStore((state) => state.category)
 
     // 各カテゴリのセレクタで使用するラベル
-    const { categoryLabels, sizeLabels, languageLabels, frameworkLabels, algorithmLabels, patternLabels } =
-        useSelectStore((state) => ({
-            categoryLabels: state.categoryLabels,
-            sizeLabels: state.sizeLabels,
-            languageLabels: state.languageLabels,
-            frameworkLabels: state.frameworkLabels,
-            algorithmLabels: state.algorithmLabels,
-            patternLabels: state.patternLabels
-        }))
+    const { category, size, language, framework, algorithm, pattern } = useSelectStore((state) => ({
+        category: state.category,
+        size: state.size,
+        language: state.language,
+        framework: state.framework,
+        algorithm: state.algorithm,
+        pattern: state.pattern
+    }))
 
     // ラベルをセットする関数
     const { setCategory, setSize, setLanguage, setFramework, setAlgorithm, setPattern } = useSelectStore((state) => ({
@@ -35,37 +34,37 @@ const SelectBoard: React.FC = () => {
     return (
         <>
             <p>Problem Category</p>
-            <SelectGroup {...{ labels: categoryLabels, setLabel: setCategory }} />
+            <SelectGroup {...{ labels: category.labels, setLabel: setCategory }} />
 
             <SmallHeight />
             <p>Problem Size</p>
-            <SelectGroup {...{ labels: sizeLabels, setLabel: setSize }} />
+            <SelectGroup {...{ labels: size.labels, setLabel: setSize }} />
 
             {/* 基本情報 */}
             <SmallHeight />
-            {category.name !== 'framework' && (
+            {['language', 'algorithm', 'pattern'].includes(getSelectorName(category)) && (
                 <Accordion summary={'Language'}>
-                    <SelectGroupMultiLine {...{ labels: languageLabels, setLabel: setLanguage }} />
+                    <SelectGroupMultiLine {...{ labels: language.labels, setLabel: setLanguage }} />
                 </Accordion>
             )}
 
-            {category.name === 'framework' && (
+            {getSelectorName(category) === 'framework' && (
                 <Accordion summary={'Framework'}>
-                    <SelectGroupMultiLine {...{ labels: frameworkLabels, setLabel: setFramework }} />
+                    <SelectGroupMultiLine {...{ labels: framework.labels, setLabel: setFramework }} />
                 </Accordion>
             )}
 
             {/* 追加情報 */}
             <SmallHeight />
-            {category.name === 'algorithm' && (
+            {getSelectorName(category) === 'algorithm' && (
                 <Accordion summary={'Algorithm'}>
-                    <SelectGroupMultiLine {...{ labels: algorithmLabels, setLabel: setAlgorithm }} />
+                    <SelectGroupMultiLine {...{ labels: algorithm.labels, setLabel: setAlgorithm }} />
                 </Accordion>
             )}
 
-            {category.name === 'pattern' && (
+            {getSelectorName(category) === 'pattern' && (
                 <Accordion summary={'Pattern'}>
-                    <SelectGroupMultiLine {...{ labels: patternLabels, setLabel: setPattern }} />
+                    <SelectGroupMultiLine {...{ labels: pattern.labels, setLabel: setPattern }} />
                 </Accordion>
             )}
         </>

@@ -1,3 +1,4 @@
+import { Selector } from '@/types/types'
 import { IDX_TO_KEY, KEY_TO_IDX } from './const'
 
 /**
@@ -157,4 +158,19 @@ export const getMissPerType = (correctTypes: number[], missTypes: number[]) => {
     }
 
     return missPerType
+}
+
+/**
+ * セレクタから現在アクティブになっている要素のnameを取得する
+ * @param selector セレクタ
+ * @returns アクティブになっている要素のname
+ */
+export const getSelectorName = (selector: Selector) => {
+    for (const label of selector.labels) {
+        if (label.id === selector.id) {
+            return label.name
+        }
+    }
+
+    return ''
 }

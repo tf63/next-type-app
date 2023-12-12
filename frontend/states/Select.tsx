@@ -1,4 +1,4 @@
-import { Label } from '@/types/types'
+import { Label, Selector } from '@/types/types'
 import axios from 'axios'
 import { create } from 'zustand'
 
@@ -10,40 +10,24 @@ import {
 } from '@/interfaces/interfaces'
 
 type State = {
-    categoryLabels: Label[]
-    sizeLabels: Label[]
-    languageLabels: Label[]
-    frameworkLabels: Label[]
-    algorithmLabels: Label[]
-    patternLabels: Label[]
-    category: Label
-    size: Label
-    language: Label
-    framework: Label
-    algorithm: Label
-    pattern: Label
+    category: Selector
+    size: Selector
+    language: Selector
+    framework: Selector
+    algorithm: Selector
+    pattern: Selector
+    month: Selector
 }
 
 type Action = {
+    setProblemLabels: () => void
     setCategory: (id: number) => void
     setSize: (id: number) => void
     setLanguage: (id: number) => void
     setFramework: (id: number) => void
     setAlgorithm: (id: number) => void
     setPattern: (id: number) => void
-    setLabels: () => void
-}
-
-const getLabelById = (id: number, labels: Label[]) => {
-    for (const label of labels) {
-        if (label.id === id) {
-            console.log('getLabelById', label)
-            return label
-        }
-    }
-
-    console.log('getLabelById', { id: 0, name: '' })
-    return { id: 0, name: '' }
+    setMonth: (id: number) => void
 }
 
 // Create your store, which includes both state and (optionally) actions
@@ -61,49 +45,64 @@ export const useSelectStore = create<State & Action>((set) => {
     ]
 
     return {
-        categoryLabels: categoryLabels,
-        sizeLabels: sizeLabels,
-        languageLabels: [{ id: 0, name: '' }],
-        frameworkLabels: [{ id: 0, name: '' }],
-        algorithmLabels: [{ id: 0, name: '' }],
-        patternLabels: [{ id: 0, name: '' }],
-        category: categoryLabels[0],
-        size: sizeLabels[0],
-        language: { id: 0, name: '' },
-        framework: { id: 0, name: '' },
-        algorithm: { id: 0, name: '' },
-        pattern: { id: 0, name: '' },
+        category: {
+            id: 1,
+            labels: [
+                { id: 1, name: 'language' },
+                { id: 2, name: 'framework' },
+                { id: 3, name: 'algorithm' },
+                { id: 4, name: 'pattern' }
+            ]
+        },
+        size: {
+            id: 1,
+            labels: [
+                { id: 1, name: 'short' },
+                { id: 2, name: 'medium' },
+                { id: 3, name: 'long' }
+            ]
+        },
+        language: { id: 0, labels: [{ id: 0, name: '' }] },
+        framework: { id: 0, labels: [{ id: 0, name: '' }] },
+        algorithm: { id: 0, labels: [{ id: 0, name: '' }] },
+        pattern: { id: 0, labels: [{ id: 0, name: '' }] },
+        month: { id: 0, labels: [{ id: 0, name: '' }] },
         setCategory: (id) => {
             set((state) => {
-                return { category: getLabelById(id, state.categoryLabels) }
+                return { category: { id: id, labels: state.category.labels } }
             })
         },
         setSize: (id) => {
             set((state) => {
-                return { size: getLabelById(id, state.sizeLabels) }
+                return { size: { id: id, labels: state.size.labels } }
             })
         },
         setLanguage: (id) => {
             set((state) => {
-                return { language: getLabelById(id, state.languageLabels) }
+                return { language: { id: id, labels: state.language.labels } }
             })
         },
         setFramework: (id) => {
             set((state) => {
-                return { framework: getLabelById(id, state.frameworkLabels) }
+                return { framework: { id: id, labels: state.framework.labels } }
             })
         },
         setAlgorithm: (id) => {
             set((state) => {
-                return { algorithm: getLabelById(id, state.algorithmLabels) }
+                return { algorithm: { id: id, labels: state.algorithm.labels } }
             })
         },
         setPattern: (id) => {
             set((state) => {
-                return { pattern: getLabelById(id, state.patternLabels) }
+                return { pattern: { id: id, labels: state.pattern.labels } }
             })
         },
-        setLabels: async () => {
+        setMonth: (id) => {
+            set((state) => {
+                return { month: { id: id, labels: state.month.labels } }
+            })
+        },
+        setProblemLabels: async () => {
             try {
                 // カテゴリデータを取得する
                 // ----------------------------------------------------------------
@@ -124,24 +123,13 @@ export const useSelectStore = create<State & Action>((set) => {
                 const patternLabels: Label[] = patterns.map((obj) => ({ id: obj.pattern_id, name: obj.name }))
 
                 set(() => ({
-                    language: languageLabels[0],
-                    framework: frameworkLabels[0],
-                    algorithm: algorithmLabels[0],
-                    pattern: patternLabels[0],
-                    languageLabels: languageLabels,
-                    frameworkLabels: frameworkLabels,
-                    algorithmLabels: algorithmLabels,
-                    patternLabels: patternLabels
+                    language: { id: languageLabels[0].id, labels: languageLabels },
+                    framework: { id: frameworkLabels[0].id, labels: frameworkLabels },
+                    algorithm: { id: algorithmLabels[0].id, labels: algorithmLabels },
+                    pattern: { id: patternLabels[0].id, labels: patternLabels }
                 }))
             } catch (error) {
                 console.error('Error fetching data:', error)
-
-                set(() => ({
-                    languageLabels: [],
-                    frameworkLabels: [],
-                    algorithmLabels: [],
-                    patternLabels: []
-                }))
             }
         }
     }
