@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { ResultState } from '@/types/types'
+import { GameData } from '@/types/types'
 import { CustomNextPage } from '@/types/custom-next-page'
 import NavigateButton from '@/components/NavigateButton'
 import { useSession } from 'next-auth/react'
@@ -15,7 +15,7 @@ const Result: CustomNextPage = () => {
     const router = useRouter()
     const { data, status } = useSession()
     const [posted, setPosted] = useState(false)
-    const [resultState, setResultState] = useState<ResultState>({
+    const [resultState, setResultState] = useState<GameData>({
         category: 'language',
         problemId: 0,
         correct: 0,
@@ -26,7 +26,7 @@ const Result: CustomNextPage = () => {
 
     useEffect(() => {
         if (router.query.state != null) {
-            const state: ResultState = JSON.parse(router.query.state as string)
+            const state: GameData = JSON.parse(router.query.state as string)
             setResultState(state)
         }
     }, [])

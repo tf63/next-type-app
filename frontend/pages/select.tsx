@@ -6,7 +6,8 @@ import Button from '@/components/Button'
 import SmallHeight from '@/components/SmallHeight'
 import FlexContainer from '@/components/FlexContainer'
 import { useSelectStore } from '@/states/Select'
-import { getSelectorName } from '@/lib/format'
+import { getSelectorId, getSelectorName } from '@/lib/format'
+import { SelectData } from '@/types/types'
 
 const Select: CustomNextPage = () => {
     const setProblemLabels = useSelectStore((state) => state.setProblemLabels)
@@ -24,14 +25,43 @@ const Select: CustomNextPage = () => {
         setProblemLabels()
     }, [])
 
-    const problemState = { category: category, size: size, language: language } // 遷移時に渡すオブジェクト
-
     // Select -> Gameに遷移
     const router = useRouter()
     const navigateEvent = () => {
+        let selectData: SelectData
+        const categoryName = getSelectorName(category)
+        const sizeName = getSelectorName(size)
+        switch (categoryName) {
+            case 'language':
+                selectData = { category: categoryName, size: sizeName, languageId: getSelectorId(language) }
+                break
+            case 'framework':
+                selectData = { category: categoryName, size: sizeName, frameworkId: getSelectorId(framework) }
+                break
+            case 'algorithm':
+                selectData = {
+                    category: categoryName,
+                    size: sizeName,
+                    languageId: getSelectorId(language),
+                    algorithmId: getSelectorId(algorithm)
+                }
+                break
+            case 'pattern':
+                selectData = {
+                    category: categoryName,
+                    size: sizeName,
+                    languageId: getSelectorId(language),
+                    patternId: getSelectorId(pattern)
+                }
+                break
+            default:
+                selectData = { category: categoryName, size: sizeName }
+                break
+        }
+
         router.push({
             pathname: '/game',
-            query: { state: JSON.stringify(problemState) }
+            query: { state: JSON.stringify(selectData) }
         })
     }
 

@@ -161,6 +161,21 @@ export const getMissPerType = (correctTypes: number[], missTypes: number[]) => {
 }
 
 /**
+ * セレクタから現在アクティブになっているLabelを取得する
+ * @param selector セレクタ
+ * @returns アクティブになっているLabel
+ */
+export const getSelectorLabel = (selector: Selector) => {
+    for (const label of selector.labels) {
+        if (label.id === selector.id) {
+            return label
+        }
+    }
+
+    return { id: 0, name: '' }
+}
+
+/**
  * セレクタから現在アクティブになっている要素のnameを取得する
  * @param selector セレクタ
  * @returns アクティブになっている要素のname
@@ -175,6 +190,21 @@ export const getSelectorName = (selector: Selector) => {
     return ''
 }
 
+/**
+ * セレクタから現在アクティブになっている要素のidを取得する
+ * @param selector セレクタ
+ * @returns アクティブになっている要素のid
+ */
+export const getSelectorId = (selector: Selector) => {
+    for (const label of selector.labels) {
+        if (label.id === selector.id) {
+            return label.id
+        }
+    }
+
+    return 0
+}
+
 export const getSummaryByMonth = (summarys: ProfileSummary[], month: string) => {
     for (const summary of summarys) {
         if (month === summary.month) {
@@ -183,4 +213,25 @@ export const getSummaryByMonth = (summarys: ProfileSummary[], month: string) => 
     }
 
     return { month: '', correct: 0, miss: 0, speed: 0 }
+}
+
+/**
+ * タイピングの問題文を改行ごとに分割してリストにする (typeList)
+ * インデントレベルをprefixListとして返す
+ * @param content 問題文
+ * @returns [typeList, prefixList]
+ */
+export const decomposeContent = (content: string) => {
+    const splitContent = content.split(/\r?\n/)
+    const typeList: string[] = []
+    const prefixList: string[] = []
+    for (let s of splitContent) {
+        const result = s.match(/^(\s*)(.*)/)
+        if (result != null) {
+            prefixList.push(result[1])
+            typeList.push(result[2])
+        }
+    }
+
+    return [typeList, prefixList]
 }

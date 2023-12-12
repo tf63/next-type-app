@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react'
-import { useTypeContext } from '@/contexts/TypeContext'
-import { useGameContext } from '@/contexts/GameContext'
 import { wrapKey } from '@/lib/format'
 import KeyRef from './KeyRef'
+import { useGameStore } from '@/states/Game'
 
 type TypeSystemProps = {
     children: ReactNode
+    navigateEvent: () => void
 }
 
 /**
@@ -13,18 +13,22 @@ type TypeSystemProps = {
  * @param param0 children
  * @returns
  */
-const TypeSystem: React.FC<TypeSystemProps> = ({ children }) => {
-    const typeCtx = useTypeContext()
-    const gameCtx = useGameContext()
+const TypeSystem: React.FC<TypeSystemProps> = ({ children, navigateEvent }) => {
+    const typeList = useGameStore((state) => state.typeList)
+    const indexLine = useGameStore((state) => state.indexLine)
+    const indexText = useGameStore((state) => state.indexText)
+    const resetIndexText = useGameStore((state) => state.resetIndexText)
+    const incrementIndexLine = useGameStore((state) => state.incrementIndexLine)
+    const incrementIndexText = useGameStore((state) => state.incrementIndexText)
+    const correctEvent = useGameStore((state) => state.correctEvent)
+    const missEvent = useGameStore((state) => state.missEvent)
 
     // キーイベントのハンドラ
     const handleKeyDown = (event: React.KeyboardEvent) => {
         // 押されたキーをラップしてから取得
         const key = wrapKey(event.key, event.shiftKey)
         // 行内のテキスト
-        const text = typeCtx.typeList[typeCtx.indexLine]
-        // テキスト内の位置
-        const indexText = typeCtx.indexText
+        const text = typeList[indexLine]
 
         // ブラウザの動作があるキーを無効化する
         if (key === 'Tab' || key === ' ') {
@@ -43,15 +47,15 @@ const TypeSystem: React.FC<TypeSystemProps> = ({ children }) => {
                 // 入力が正解のとき
 
                 // indexを加算
-                typeCtx.setIndexText(typeCtx.indexText + 1)
+                incrementIndexText()
                 // 正解時のイベント
-                gameCtx.correctEvent(key)
+                correctEvent(key)
             } else {
                 // 入力が不正解のとき
                 const prevKey = indexText == 0 ? '' : text[indexText - 1]
 
                 // 不正解時のイベント
-                gameCtx.missEvent(key, text[indexText], prevKey)
+                missEvent(key, text[indexText], prevKey)
             }
         } else {
             // 行末に達している場合
@@ -59,23 +63,23 @@ const TypeSystem: React.FC<TypeSystemProps> = ({ children }) => {
                 // Enterキーが押されたら正解
 
                 // Enterが押されたら次の行へ移動
-                typeCtx.setIndexText(0)
-                typeCtx.setIndexLine(typeCtx.indexLine + 1)
+                resetIndexText()
+                incrementIndexLine()
 
                 // 正解時のイベント
-                gameCtx.correctEvent(key)
+                correctEvent(key)
 
                 // 最後の行だったらゲーム終了
-                if (typeCtx.indexLine === typeCtx.typeList.length - 1) {
+                if (indexLine === typeList.length - 1) {
                     // ベージ遷移
-                    gameCtx.navigateEvent()
+                    navigateEvent()
                 }
             } else {
                 // Enter以外のキーが押されたら不正解とする
                 const prevKey = indexText == 0 ? '' : text[indexText - 1]
 
                 // 不正解時のイベント
-                gameCtx.missEvent(key, text[indexText], prevKey)
+                missEvent(key, text[indexText], prevKey)
             }
         }
     }
