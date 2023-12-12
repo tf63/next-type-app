@@ -83,6 +83,25 @@ export const wrapKey = (key: string, pressShift: boolean) => {
     }
 }
 
+/**
+ *
+ * @param speed
+ * @returns 小数点以下第二位にする
+ */
+export const getSpeed = (speed: number) => {
+    return speed.toFixed(2)
+}
+
+/**
+ *
+ * @param correct 正解数
+ * @param miss 不正解数
+ * @returns 精度を小数点以下第二位で返す
+ */
+export const getAccuracy = (correct: number, miss: number) => {
+    return ((correct / (correct + miss + 0.000001)) * 100).toFixed(2)
+}
+
 export const getMissPrevPerType = (correctTypes: number[], missPrevTypes: number[]) => {
     const missPrevPerType: number[] = []
     for (let i = 0; i < KEY_TO_IDX.size; i++) {
@@ -98,6 +117,31 @@ export const getMissPrevPerType = (correctTypes: number[], missPrevTypes: number
     }
 
     return missPrevPerType
+}
+
+/**
+ *
+ * @param dateUtc UTC形式のdate
+ * @returns 01/01 00:00という形式で返す
+ */
+export const getDateStr = (dateUtc: string) => {
+    const dateObject = new Date(dateUtc)
+    const hour = dateObject.getHours().toString().padStart(2, '0')
+    const minute = dateObject.getMinutes().toString().padStart(2, '0')
+    const dateStr = `${dateObject.getMonth() + 1}/${dateObject.getDate()} ${hour}:${minute}`
+
+    return dateStr
+}
+
+/**
+ *
+ * @param dateUtc UTC形式のdate
+ * @returns 2000/01という形式で返す
+ */
+export const getYearMonth = (dateUtc: string) => {
+    const dateObject = new Date(dateUtc)
+    const dateStr = `${dateObject.getFullYear()}/${dateObject.getMonth() + 1}`
+    return dateStr
 }
 
 export const getMissPerType = (correctTypes: number[], missTypes: number[]) => {

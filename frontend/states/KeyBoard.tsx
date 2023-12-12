@@ -26,13 +26,9 @@ const getOpacityLists = (opacitys: string[]) => {
 }
 
 // Create your store, which includes both state and (optionally) actions
-export const useKeyBoardStore = create<State & Action>((set) => {
-    const opacityLists = getOpacityLists(Array.from({ length: KEY_TO_IDX.size }, () => '100px'))
-
-    return {
-        opacityLists: opacityLists,
-        shift: false,
-        setOpacityLists: (opacitys) => set(() => ({ opacityLists: getOpacityLists(opacitys) })),
-        toggleShift: (shift) => set(() => ({ shift: shift }))
-    }
-})
+export const useKeyBoardStore = create<State & Action>((set) => ({
+    opacityLists: getOpacityLists(Array.from({ length: KEY_TO_IDX.size }, () => '100px')),
+    shift: false,
+    setOpacityLists: (opacitys) => set(() => ({ opacityLists: getOpacityLists(opacitys) })),
+    toggleShift: (shift) => set(() => ({ shift: shift }))
+}))

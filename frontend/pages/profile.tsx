@@ -10,7 +10,7 @@ import {
 import { CustomNextPage } from '@/types/custom-next-page'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SmallHeight from '@/components/SmallHeight'
 import ProfileBoard from '@/components/ProfileBoard'
 import FlexContainer from '@/components/FlexContainer'
@@ -19,9 +19,11 @@ import { Label } from '@/types/types'
 import { SelectGroupMultiLine } from '@/components/SelectGroup'
 import KeyBoard from '@/components/KeyBoard'
 import { KEY_TO_IDX } from '@/lib/const'
+import { getAccuracy, getDateStr, getSpeed, getYearMonth } from '@/lib/format'
+import TypePrevSystem from '@/components/TypePrevSystem'
 
 const Profile: CustomNextPage = () => {
-    const { data, status } = useSession()
+    const { data } = useSession()
 
     const [page, setPage] = useState(0)
     const [monthToSummary, setMonthToSummary] =
@@ -30,21 +32,6 @@ const Profile: CustomNextPage = () => {
     const [month, setMonth] = useState<Label>({ id: 1, name: '' })
     const [monthLabels, setMonthLabels] = useState<Label[]>([])
     const PAGE_SIZE = 5
-
-    const getDateStr = (dateUtc: string) => {
-        const dateObject = new Date(dateUtc)
-        const hour = dateObject.getHours().toString().padStart(2, '0')
-        const minute = dateObject.getMinutes().toString().padStart(2, '0')
-        const dateStr = `${dateObject.getMonth() + 1}/${dateObject.getDate()} ${hour}:${minute}`
-
-        return dateStr
-    }
-
-    const getYearMonth = (dateUtc: string) => {
-        const dateObject = new Date(dateUtc)
-        const dateStr = `${dateObject.getFullYear()}/${dateObject.getMonth() + 1}`
-        return dateStr
-    }
 
     const [missPrevPerTypes, setMissPrevPerTypes] = useState([
         Array.from({ length: KEY_TO_IDX.size * KEY_TO_IDX.size }, () => 0)
@@ -116,61 +103,7 @@ const Profile: CustomNextPage = () => {
         fetchData()
     }, [page])
 
-    const getSpeed = (speed: number | undefined) => {
-        if (speed != null) {
-            return speed.toFixed(2)
-        } else {
-            return 0
-        }
-    }
-
-    const getAccuracy = (correct: number | undefined, miss: number | undefined) => {
-        if (correct != null && miss != null) {
-            return ((correct / (correct + miss + 0.000001)) * 100).toFixed(2)
-        } else {
-            return 0
-        }
-    }
-
-    const divRef = useRef<HTMLDivElement>(null)
-    useEffect(() => {
-        if (divRef.current != null) {
-            divRef.current.focus()
-        }
-    }, [])
-
     const [opacitys, setOpacitys] = useState(Array.from({ length: KEY_TO_IDX.size }, () => 0))
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        let key = event.key
-        // ブラウザの動作があるキーを無効化する
-        if (key === 'Tab' || key === ' ') {
-            event.preventDefault()
-            console.log('prevent default')
-        }
-
-        // 一部のキーはエスケープする
-        if (key === 'Shift' || key === 'Control' || key === 'CapsLock' || key === 'Meta' || key === 'Alt') {
-            console.log('disable key')
-            return false
-        }
-
-        // mapper
-        if (key === '0' && event.shiftKey) {
-            key = 's0'
-        }
-
-        const idx = KEY_TO_IDX.get(key)
-        if (idx != null) {
-            const op = missPrevPerTypes[0].slice(idx * KEY_TO_IDX.size, (idx + 1) * KEY_TO_IDX.size)
-            console.log('op', op)
-            setOpacitys(op)
-            console.log('key: ', key, 'idx: ', idx)
-        }
-    }
-
-    const handleKeyUp = (event: React.KeyboardEvent) => {
-        setOpacitys(Array.from({ length: KEY_TO_IDX.size }, () => 0))
-    }
 
     return (
         <main style={{ minHeight: '1800px' }}>
@@ -202,16 +135,18 @@ const Profile: CustomNextPage = () => {
                                     monthToSummary?.get(month.name)?.miss!
                                 )}
                         </p>
-                        <p style={{ marginLeft: '20px' }}>speed: {getSpeed(monthToSummary?.get(month.name)?.speed!)}</p>
+                        <p style={{ marginLeft: '20px' }}>
+                            speed: {monthToSummary != null && getSpeed(monthToSummary?.get(month.name)?.speed!)}
+                        </p>
                     </div>
                 </FlexContainer>
             </Card>
 
             <SmallHeight />
             <p>Key Log</p>
-            <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp} ref={divRef}>
+            <TypePrevSystem missPrevPerTypes={missPrevPerTypes} setOpacitys={setOpacitys}>
                 <KeyBoard list={opacitys} />
-            </div>
+            </TypePrevSystem>
 
             <PageBar datas={logs} page={page} setPage={setPage} pageSize={PAGE_SIZE} />
             {logs.slice(0, PAGE_SIZE).map((log, index) => {
