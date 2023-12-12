@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import FlexContainer from './FlexContainer'
+import FlexContainer, { FlexContainerProps } from './FlexContainer'
 
 type TwoColumnProps = {
     children: [ReactNode, ReactNode]
@@ -10,9 +10,13 @@ type TwoColumnProps = {
  * @param param0 children 2つ必要
  * @returns
  */
-const TwoColumn: React.FC<TwoColumnProps> = ({ children }) => {
+const TwoColumn: React.FC<TwoColumnProps & Omit<FlexContainerProps, 'children'>> = ({
+    children,
+    position = 'center',
+    align = 'center'
+}) => {
     return (
-        <FlexContainer>
+        <FlexContainer position={position} align={align}>
             <div style={{ width: '50%' }}>{children[0]}</div>
             <div style={{ width: '50%' }}>{children[1]}</div>
         </FlexContainer>

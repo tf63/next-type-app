@@ -4,7 +4,7 @@ import styles from '../styles/FlexContainer.module.css'
 type PositionType = 'left' | 'center' | 'right'
 type AlignType = 'top' | 'center' | 'bottom'
 
-type FlexContainerProps = {
+export type FlexContainerProps = {
     position?: PositionType
     align?: AlignType
     children: ReactNode

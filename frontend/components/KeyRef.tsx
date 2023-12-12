@@ -12,6 +12,8 @@ const KeyRef: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         if (divRef.current != null) {
             divRef.current.focus()
         }
+
+        window.scrollTo(0, 0)
     }, [])
 
     return (
