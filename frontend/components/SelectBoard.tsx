@@ -1,51 +1,71 @@
-import { useContext } from 'react'
 import Accordion from './Accordion'
 import { SelectGroup, SelectGroupMultiLine } from './SelectGroup'
-import { Label } from '@/types/types'
 import SmallHeight from './SmallHeight'
-import SelectContext, { UpdateSelectState } from '@/contexts/SelectContext'
+import { useSelectStore } from '@/states/Select'
 
+/**
+ * selectページで使用するボード
+ * @returns
+ */
 const SelectBoard: React.FC = () => {
-    const { state, dispatch } = useContext(SelectContext)
+    // カテゴリ (language / framework / algorithm / pattern)
+    const category = useSelectStore((state) => state.category)
 
-    const setData = <T extends keyof UpdateSelectState>(key: T) => {
-        return (label: Label) => {
-            dispatch({ type: 'UPDATE_STATE', data: { [key]: label } })
-        }
-    }
+    // 各カテゴリのセレクタで使用するラベル
+    const { categoryLabels, sizeLabels, languageLabels, frameworkLabels, algorithmLabels, patternLabels } =
+        useSelectStore((state) => ({
+            categoryLabels: state.categoryLabels,
+            sizeLabels: state.sizeLabels,
+            languageLabels: state.languageLabels,
+            frameworkLabels: state.frameworkLabels,
+            algorithmLabels: state.algorithmLabels,
+            patternLabels: state.patternLabels
+        }))
+
+    // ラベルをセットする関数
+    const { setCategory, setSize, setLanguage, setFramework, setAlgorithm, setPattern } = useSelectStore((state) => ({
+        setCategory: state.setCategory,
+        setSize: state.setSize,
+        setLanguage: state.setLanguage,
+        setFramework: state.setFramework,
+        setAlgorithm: state.setAlgorithm,
+        setPattern: state.setPattern
+    }))
 
     return (
         <>
             <p>Problem Category</p>
-            <SelectGroup {...{ labels: state.categoryLabels, setLabel: setData('category') }} />
+            <SelectGroup {...{ labels: categoryLabels, setLabel: setCategory }} />
 
             <SmallHeight />
             <p>Problem Size</p>
-            <SelectGroup {...{ labels: state.sizeLabels, setLabel: setData('size') }} />
+            <SelectGroup {...{ labels: sizeLabels, setLabel: setSize }} />
 
+            {/* 基本情報 */}
             <SmallHeight />
-            {state.category.name !== 'framework' && (
-                <Accordion summary={'Programming Language'}>
-                    <SelectGroupMultiLine
-                        {...{ labels: state.categoryToTagLabels.get('language')!, setLabel: setData('language') }}
-                    />
+            {category.name !== 'framework' && (
+                <Accordion summary={'Language'}>
+                    <SelectGroupMultiLine {...{ labels: languageLabels, setLabel: setLanguage }} />
                 </Accordion>
             )}
 
-            {state.category.name === 'framework' && (
-                <Accordion summary={'Programming Framework'}>
-                    <SelectGroupMultiLine
-                        {...{ labels: state.categoryToTagLabels.get('framework')!, setLabel: setData('tag') }}
-                    />
+            {category.name === 'framework' && (
+                <Accordion summary={'Framework'}>
+                    <SelectGroupMultiLine {...{ labels: frameworkLabels, setLabel: setFramework }} />
                 </Accordion>
             )}
 
+            {/* 追加情報 */}
             <SmallHeight />
-            {(state.category.name === 'algorithm' || state.category.name === 'pattern') && (
-                <Accordion summary={'Problem Tag'}>
-                    <SelectGroupMultiLine
-                        {...{ labels: state.categoryToTagLabels.get(state.category.name)!, setLabel: setData('tag') }}
-                    />
+            {category.name === 'algorithm' && (
+                <Accordion summary={'Algorithm'}>
+                    <SelectGroupMultiLine {...{ labels: algorithmLabels, setLabel: setAlgorithm }} />
+                </Accordion>
+            )}
+
+            {category.name === 'pattern' && (
+                <Accordion summary={'Pattern'}>
+                    <SelectGroupMultiLine {...{ labels: patternLabels, setLabel: setPattern }} />
                 </Accordion>
             )}
         </>
