@@ -1,13 +1,9 @@
 import { useSession } from 'next-auth/react'
 import { CustomNextPage } from '@/types/custom-next-page'
-import Card from '@/components/Card'
-import NavigateButton from '@/components/NavigateButton'
-import FlexContainer from '@/components/FlexContainer'
-import SmallHeight from '@/components/SmallHeight'
-import KeyBoard from '@/components/KeyBoard'
-import UserData from '@/components/UserData'
+import { Card, NavigateButton, FlexContainer, SmallHeight, TwoColumn } from '@/features/ui'
+import { KeyBoard } from '@/features/keyboard'
+import { UserData } from '@/features/users'
 import { KEY_TO_IDX } from '@/lib/const'
-import TwoColumn from '@/components/TwoColumn'
 
 const Home: CustomNextPage = () => {
     const { status } = useSession()

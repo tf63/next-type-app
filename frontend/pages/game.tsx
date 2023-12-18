@@ -1,13 +1,11 @@
-import React from 'react'
-import TypeSystem from '@/components/TypeSystem'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { Category, GameData, SelectData } from '@/types/types'
 import { CustomNextPage } from '@/types/custom-next-page'
-import TypeBoard from '@/components/TypeBoard'
 import { useGameStore } from '@/states/Game'
-import { useSession } from 'next-auth/react'
 import { getMissPerType } from '@/lib/format'
+import { TypeSystem, TypeBoard } from '@/features/game'
 
 const Game: CustomNextPage = () => {
     const router = useRouter()

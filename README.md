@@ -105,3 +105,7 @@ https://supabase.com/docs/reference/javascript
 nextからsupabase
 
 https://supabase.com/docs/guides/getting-started/quickstarts/nextjs
+
+project architecture
+
+https://dev.to/profydev/screaming-architecture-evolution-of-a-react-folder-structure-4g25#best-practices

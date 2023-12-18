@@ -1,9 +1,6 @@
 import { getProviders } from 'next-auth/react'
 import { InferGetServerSidePropsType } from 'next'
-import LoginButton from '@/components/LoginButton'
-import NavigateButton from '@/components/NavigateButton'
-import SmallHeight from '@/components/SmallHeight'
-import FlexContainer from '@/components/FlexContainer'
+import { LoginButton, NavigateButton, SmallHeight, FlexContainer } from '@/features/ui'
 
 const Login = ({ providers }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     return (

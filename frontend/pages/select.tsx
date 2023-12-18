@@ -1,13 +1,11 @@
-import SelectBoard from '@/components/SelectBoard'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { CustomNextPage } from '@/types/custom-next-page'
-import Button from '@/components/Button'
-import SmallHeight from '@/components/SmallHeight'
-import FlexContainer from '@/components/FlexContainer'
 import { useSelectStore } from '@/states/Select'
 import { getSelectorId, getSelectorName } from '@/lib/format'
 import { SelectData } from '@/types/types'
+import { SmallHeight, FlexContainer, Button } from '@/features/ui'
+import { SelectBoard } from '@/features/select'
 
 const Select: CustomNextPage = () => {
     const setProblemLabels = useSelectStore((state) => state.setProblemLabels)

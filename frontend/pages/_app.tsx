@@ -1,11 +1,10 @@
 import { AppProps } from 'next/app'
-import '../styles/Global.css'
+import '@/styles/Global.css'
 import { NextComponentType } from 'next'
 import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
-import MyHead from '@/components/Head'
-import Layout from '@/components/Layout'
-import AuthGuard from '@/components/AuthGuard'
+import { MyHead, Layout } from '@/features/ui'
+import { AuthGuard } from '@/features/users'
 
 export type CustomAppProps = AppProps<{ session: Session }> & {
     Component: NextComponentType & { requireAuth?: boolean }
