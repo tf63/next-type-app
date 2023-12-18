@@ -20,10 +20,16 @@ const Profile: CustomNextPage = () => {
     const setProfileMonth = useProfileStore((state) => state.setProfileMonth)
     const opacityValues = useProfileStore((state) => state.opacityValues)
 
+    // ページ読み込み時にユーザーログを取得する
     useEffect(() => {
+        // このページは認証が必要なためdata.user.idは存在するはず
+
+        // ユーザーのサマリを取得する
         const summaryRequestBody: ProfileSummaryAPIRequest = {
             userId: data?.user?.id!
         }
+
+        // ユーザーの月ごとのログを取得する
         const monthRequestBody: ProfileMonthAPIRequest = {
             userId: data?.user?.id!,
             offset: 0,

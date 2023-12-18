@@ -18,12 +18,12 @@ const Select: CustomNextPage = () => {
         pattern: state.pattern
     }))
 
-    // ページ読み込み時
+    // ページ読み込み時に表示するデータを取得する
     useEffect(() => {
         setProblemLabels()
     }, [])
 
-    // Select -> Gameに遷移
+    // Select -> Gameに遷移するイベント
     const router = useRouter()
     const navigateEvent = () => {
         let selectData: SelectData
@@ -85,8 +85,8 @@ const Select: CustomNextPage = () => {
             default:
                 return <span></span>
         }
-        return
     }
+
     return (
         <main style={{ height: '1300px' }}>
             <FlexContainer>

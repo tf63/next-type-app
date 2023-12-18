@@ -22,15 +22,20 @@ const Game: CustomNextPage = () => {
     const incrementTime = useGameStore((state) => state.incrementTime)
     const postMonthLog = useGameStore((status) => status.postMonthLog)
 
+    // ページ読み込み時にcategoryに応じて問題文を取得する
     useEffect(() => {
+        // 前のページからデータが送られていることを確認する
         if (router.query.state == null) {
+            // このときのエラーハンドリングが必要かもしれない
             return
         }
 
         const selectData: SelectData = JSON.parse(router.query.state as string)
         const category = selectData.category
+
+        // categoryに応じてresponseBodyを作成
         let requestBody: any
-        switch (selectData.category) {
+        switch (category) {
             case 'language':
                 requestBody = { language_id: selectData.languageId, size: selectData.size }
                 break
@@ -55,9 +60,11 @@ const Game: CustomNextPage = () => {
                 return
         }
 
+        // Categoryにキャスト出来ない場合はreturnされる (良くないかも)
         setContent(category as Category, requestBody)
     }, [])
 
+    // ゲーム中のタイマー
     useEffect(() => {
         const timerId = setInterval(() => {
             incrementTime()
@@ -66,6 +73,7 @@ const Game: CustomNextPage = () => {
         return () => clearInterval(timerId)
     }, [time])
 
+    // ゲーム終了時にresultページへ遷移するためのイベント
     const navigateEvent = () => {
         if (status === 'authenticated') {
             postMonthLog(data?.user?.name!)

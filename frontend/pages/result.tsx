@@ -22,13 +22,19 @@ const Result: CustomNextPage = () => {
         missPerType: Array.from({ length: KEY_TO_IDX.size }, () => 0)
     })
 
+    // GameページからGameDataを取得する
     useEffect(() => {
-        if (router.query.state != null) {
-            const state: GameData = JSON.parse(router.query.state as string)
-            setResultState(state)
+        // 前のページからデータが送られていることを確認する
+        if (router.query.state == null) {
+            // このときのエラーハンドリングが必要かもしれない
+            return
         }
+
+        const state: GameData = JSON.parse(router.query.state as string)
+        setResultState(state)
     }, [])
 
+    // ユーザーのログを保存する
     useEffect(() => {
         if (resultState.problemId === 0 || posted) {
             return
