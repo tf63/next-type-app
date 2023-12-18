@@ -2,13 +2,11 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { GameData } from '@/types/types'
 import { CustomNextPage } from '@/types/custom-next-page'
-import NavigateButton from '@/components/NavigateButton'
 import { useSession } from 'next-auth/react'
 import { GameFinishAPIRequest } from '@/interfaces/interfaces'
 import axios from 'axios'
-import FlexContainer from '@/components/FlexContainer'
-import KeyBoard from '@/components/KeyBoard'
-import SmallHeight from '@/components/SmallHeight'
+import { FlexContainer, SmallHeight, NavigateButton } from '@/features/ui'
+import { KeyBoard } from '@/features/keyboard'
 import { KEY_TO_IDX } from '@/lib/const'
 
 const Result: CustomNextPage = () => {
@@ -24,13 +22,19 @@ const Result: CustomNextPage = () => {
         missPerType: Array.from({ length: KEY_TO_IDX.size }, () => 0)
     })
 
+    // GameページからGameDataを取得する
     useEffect(() => {
-        if (router.query.state != null) {
-            const state: GameData = JSON.parse(router.query.state as string)
-            setResultState(state)
+        // 前のページからデータが送られていることを確認する
+        if (router.query.state == null) {
+            // このときのエラーハンドリングが必要かもしれない
+            return
         }
+
+        const state: GameData = JSON.parse(router.query.state as string)
+        setResultState(state)
     }, [])
 
+    // ユーザーのログを保存する
     useEffect(() => {
         if (resultState.problemId === 0 || posted) {
             return

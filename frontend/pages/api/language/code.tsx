@@ -1,7 +1,7 @@
 import { LanguageCodeAPIRequest, LanguageCodeAPIResponse } from '@/interfaces/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     const requestBody: LanguageCodeAPIRequest = req.body
     console.log(requestBody)
 

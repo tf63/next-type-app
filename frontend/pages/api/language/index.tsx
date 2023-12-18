@@ -21,6 +21,6 @@ const languages = [
     { name: 'julia', language_id: 18 }
 ]
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     res.status(200).json(languages)
 }

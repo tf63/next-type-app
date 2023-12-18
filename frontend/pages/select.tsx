@@ -1,13 +1,11 @@
-import SelectBoard from '@/components/SelectBoard'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { CustomNextPage } from '@/types/custom-next-page'
-import Button from '@/components/Button'
-import SmallHeight from '@/components/SmallHeight'
-import FlexContainer from '@/components/FlexContainer'
 import { useSelectStore } from '@/states/Select'
 import { getSelectorId, getSelectorName } from '@/lib/format'
 import { SelectData } from '@/types/types'
+import { SmallHeight, FlexContainer, Button } from '@/features/ui'
+import { SelectBoard } from '@/features/select'
 
 const Select: CustomNextPage = () => {
     const setProblemLabels = useSelectStore((state) => state.setProblemLabels)
@@ -20,12 +18,12 @@ const Select: CustomNextPage = () => {
         pattern: state.pattern
     }))
 
-    // ページ読み込み時
+    // ページ読み込み時に表示するデータを取得する
     useEffect(() => {
         setProblemLabels()
     }, [])
 
-    // Select -> Gameに遷移
+    // Select -> Gameに遷移するイベント
     const router = useRouter()
     const navigateEvent = () => {
         let selectData: SelectData
@@ -87,8 +85,8 @@ const Select: CustomNextPage = () => {
             default:
                 return <span></span>
         }
-        return
     }
+
     return (
         <main style={{ height: '1300px' }}>
             <FlexContainer>

@@ -27,6 +27,6 @@ const tools = [
     { name: 'go-echo', tool_id: 501 }
 ]
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     res.status(200).json(tools)
 }

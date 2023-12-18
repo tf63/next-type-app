@@ -21,6 +21,7 @@ type State = {
 }
 
 type Action = {
+    initializeGameState: () => void
     incrementIndexText: () => void
     incrementIndexLine: () => void
     resetIndexText: () => void
@@ -31,8 +32,7 @@ type Action = {
     postMonthLog: (userId: string) => void
 }
 
-// Create your store, which includes both state and (optionally) actions
-export const useGameStore = create<State & Action>((set, get) => ({
+const initialGameState = {
     indexText: 0,
     indexLine: 0,
     typeList: [],
@@ -44,7 +44,13 @@ export const useGameStore = create<State & Action>((set, get) => ({
     time: 0,
     correctTypes: Array.from({ length: KEY_TO_IDX.size }, () => 0),
     missTypes: Array.from({ length: KEY_TO_IDX.size }, () => 0),
-    missPrevTypes: Array.from({ length: KEY_TO_IDX.size * KEY_TO_IDX.size }, () => 0),
+    missPrevTypes: Array.from({ length: KEY_TO_IDX.size * KEY_TO_IDX.size }, () => 0)
+}
+
+// Create your store, which includes both state and (optionally) actions
+export const useGameStore = create<State & Action>((set, get) => ({
+    ...initialGameState,
+    initializeGameState: () => set(() => initialGameState),
     incrementIndexText: () => set((state) => ({ indexText: state.indexText + 1 })),
     incrementIndexLine: () => set((state) => ({ indexLine: state.indexLine + 1 })),
     resetIndexText: () => set(() => ({ indexText: 0 })),
