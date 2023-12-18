@@ -11,6 +11,7 @@ const Game: CustomNextPage = () => {
     const router = useRouter()
     const { data, status } = useSession()
 
+    const initializeGameState = useGameStore((state) => state.initializeGameState)
     const problemId = useGameStore((state) => state.problemId)
     const category = useGameStore((state) => state.category)
     const setContent = useGameStore((state) => state.setContent)
@@ -29,6 +30,9 @@ const Game: CustomNextPage = () => {
             // このときのエラーハンドリングが必要かもしれない
             return
         }
+
+        // ページ読み込み時にGameStateを初期化する
+        initializeGameState()
 
         const selectData: SelectData = JSON.parse(router.query.state as string)
         const category = selectData.category
