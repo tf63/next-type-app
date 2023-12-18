@@ -26,6 +26,6 @@ const patterns = [
     { name: 'visitor', pattern_id: 23 }
 ]
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     res.status(200).json(patterns)
 }

@@ -1,17 +1,14 @@
-import Card from '@/components/Card'
 import { ProfileMonthAPIRequest, ProfileSummaryAPIRequest } from '@/interfaces/interfaces'
 import { CustomNextPage } from '@/types/custom-next-page'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
-import SmallHeight from '@/components/SmallHeight'
-import ProfileBoard from '@/components/ProfileBoard'
-import { SelectGroupMultiLine } from '@/components/SelectGroup'
-import KeyBoard from '@/components/KeyBoard'
 import { getAccuracy, getSelectorName, getSpeed, getSummaryByMonth } from '@/lib/format'
-import TypePrevSystem from '@/components/TypePrevSystem'
 import { useProfileStore } from '@/states/Profile'
-import HistoryBoard from '@/components/HistoryBoard'
-import TwoColumn from '@/components/TwoColumn'
+import { HistoryBoard, ProfileBoard } from '@/features/profile'
+import { KeyBoard } from '@/features/keyboard'
+import { SelectGroupMultiLine } from '@/features/select'
+import { TypePrevSystem } from '@/features/game'
+import { Card, SmallHeight, TwoColumn } from '@/features/ui'
 
 const Profile: CustomNextPage = () => {
     const { data } = useSession()
@@ -23,10 +20,16 @@ const Profile: CustomNextPage = () => {
     const setProfileMonth = useProfileStore((state) => state.setProfileMonth)
     const opacityValues = useProfileStore((state) => state.opacityValues)
 
+    // ページ読み込み時にユーザーログを取得する
     useEffect(() => {
+        // このページは認証が必要なためdata.user.idは存在するはず
+
+        // ユーザーのサマリを取得する
         const summaryRequestBody: ProfileSummaryAPIRequest = {
             userId: data?.user?.id!
         }
+
+        // ユーザーの月ごとのログを取得する
         const monthRequestBody: ProfileMonthAPIRequest = {
             userId: data?.user?.id!,
             offset: 0,

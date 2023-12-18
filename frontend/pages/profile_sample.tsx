@@ -1,13 +1,8 @@
-import Card from '@/components/Card'
 import { CustomNextPage } from '@/types/custom-next-page'
-import SmallHeight from '@/components/SmallHeight'
-import FlexContainer from '@/components/FlexContainer'
-import PageBar from '@/components/PageBar'
-import { SelectGroupMultiLine } from '@/components/SelectGroup'
-import Button from '@/components/Button'
+import { SmallHeight, FlexContainer, PageBar, Button, TwoColumn, Card } from '@/features/ui'
+import { KeyBoard } from '@/features/keyboard'
+import { SelectGroupMultiLine } from '@/features/select'
 import { getAccuracy, getSpeed } from '@/lib/format'
-import TwoColumn from '@/components/TwoColumn'
-import KeyBoard from '@/components/KeyBoard'
 import { KEY_TO_IDX } from '@/lib/const'
 
 const ProfileSample: CustomNextPage = () => {
