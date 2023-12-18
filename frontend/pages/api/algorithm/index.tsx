@@ -18,6 +18,6 @@ const algorithms = [
     { algorithm_id: 15, name: 'prime_factorization' }
 ]
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     res.status(200).json(algorithms)
 }
