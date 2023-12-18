@@ -1,145 +1,107 @@
 ## タイピングアプリ (仮)
-
+<!-- ロゴとラベルの色はここから https://simpleicons.org -->
+![Node](https://img.shields.io/badge/Node-1.19-339933?logo=nodedotjs)
+![Docker](https://img.shields.io/badge/Docker-v24.0.5-2496ED?logo=docker)
+![Supabase](https://img.shields.io/badge/Supabase-1.100.1-3FCF8E?logo=supabase)
+![Postgres](https://img.shields.io/badge/Postgres-16.1-4169E1?logo=postgresql)
 <!-- ![Next CI](https://github.com/tf63/grapescript/actions/workflows/next.yml/badge.svg) -->
 
 ### 概要
 
-**Frontend**
+https://next-type-app-delta.vercel.app/
 
-<img src="https://skillicons.dev/icons?i=ts,next,vercel,jest">
-
-**Backend**
-
-<img src="https://skillicons.dev/icons?i=postgres,supabase,prisma" />
+ <img src="https://skillicons.dev/icons?i=ts,next,vercel,supabase,postgres,docker">
+<img width="999" alt="main_scs" src="https://github.com/tf63/next-type-app/assets/74246282/272287a3-b398-481e-a492-c0057448379c">
 
 
-**方向性**
-- styled-componentではなくcss moduleを使う
-- storybookには価値のあるコンポーネントだけ載せる
-- 無駄なコンポーネントは作らないようにする
-- memo.mdに色々書く，後々Qiitaにあげる
-- cssのクラス名はハイフンではなくアンダーバーで区切る
-
-### 各種コマンド
-
-**nextプロジェクトの作成**
+### 技術選定
+| 技術 | 役割 |
+| -- | -- |
+| Next.js | フレームワーク|
+| API Routes | backend |
+| zustand | 状態管理 |
+| CSS Modules | style |
+| Supabase | DB |
+| Postgres | (Supabase) |
+| Vercel | ホスティング |
+| Next Auth | 認証 |
+| Github Auth | OAuth Provider |
+| Supabase Adapter | DB Access |
+ 
+### 基本コマンド
+コンテナ周り
 ```
-    npx create-next-app@latest --ts <プロジェクト名>
-```
-
-**ルーティング**
-```
-    function Sample() {
-        return <span>サンプルのページです</span>
-    }
-
-    // ページコンポーネントはexport defaultする
-    export default Sample
-```
-
-**Storybook**
-
-- storybookの導入
-```
-    npx sb@latest init
+    # コンテナの立ち上げ
+    docker compose up -d
+    # コンテナの停止
+    docker compose down
+    # volumeの削除
+    docker volume rm $(docker volume ls | grep -o 'next-type*')
+    # nextコンテナをアタッチ
+    docker compose exec next /bin/sh
 ```
 
-- storybookの起動
-    - 現状docker composeでnextの開発サーバーとstorybookを同時に起動出来てない (バックグラウンドでどっちかを起動出来てない)
-```
-    npm run storybook
-```
-
-**Jest**
-
-- Jestの導入
-```
-    npm install --save-dev jest @testing-library/react @testing-library/jest-dom
-    npm install --save-dev jest-environment-jsdom
+開発サーバーの立ち上げ
+```bash
+    npm run dev
 ```
 
-- スクリプトの登録 (`package.json`)
-```
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "test": "jest --watchAll",
-        "lint": "next lint",
-        "storybook": "storybook dev -p 6006",
-        "build-storybook": "storybook build"
-    },
+ビルド
+```bash
+    npm run build
 ```
 
-- `jest.config.js`ファイルの作成
-
-- https://zenn.dev/miruoon_892/articles/e42e64fbb55137
-- https://zenn.dev/keita_hino/articles/488d31e8c4a240
-
-**環境変数**
-- `env`ファイル名に応じて読み込まれるかどうかが決まる
-- `.env.local`, `.env.development.local`, `.env.production.local`はgit管理しない
-- `.env`, `.env.development`, `.env.production`はgit管理しても良い (管理して良いものを入れる)
-
-- 先頭に`NEXT_PUBLIC_`がつく変数はクライアントでも呼び出せる
-- 使うときは`process.env.NEXT_PUBLIC_****`のようにする
-
-- https://fwywd.com/tech/next-env
-
-
-**Supabase連携**
-![](docs/img/vercel_supabase_connection.png)
-
-- Vercelとローカル環境のリンク (.env.localファイルが作成される)
-```
-    npx vercel link
-    npx vercel env pull
+DB接続
+```bash
+    # 同一ネットワークのコンテナからpostgresへ接続する場合
+    psql 'postgresql://postgres:postgres@supabase_db_next-type-app:5432/postgres'
+    # ローカルからpostgresへ接続する場合
+    psql 'postgresql://postgres:postgres@localhost:54322/postgres'
 ```
 
-- Supabaseとローカル環境のリンク
+Supabase周り
 ```
-    npm install --save-dev @types/node
-    npm install @supabase/supabase-js
-```
-
-- alpine linuxだと必要なパッケージがある
-```
-    apk update && apk add --no-cache python3 make g++
-```
-
-- https://tech-blog.rakus.co.jp/entry/20220928/vercel
-
-Supabase CLIのインストールとか
-- https://zenn.dev/razokulover/articles/db984ebfcf4bf6
-
-**Prismaの導入**
-- インストール
-- `init`すると`prisma/schema.prisma`ファイルが作成される
-```
-    npm install --save-dev prisma
-    npx prisma init
+    # supabaseコンテナの起動
+    supabase start
+    # supabaseコンテナの停止
+    supabase stop
+    # remoteのリンク
+    supabase link --project-ref <project_id>
+    # remoteのスキーマ情報の取得
+    supabase db pull
+    # マイグレーションファイルの作成
+    supabase migration new <migration_name>
+    # マイグレーションの適用
+    supabase db reset
+    # 型情報の作成
+    supabase gen types typescript --local > frontend/types/database.types.d.ts 
+    # デプロイ
+    supabase db remote commit
 ```
 
-
-(注意)
-- **`.env`ファイルにprismaの環境変数が挿入されるが，`.env`ファイルはgit管理されているので`.env.local`のほうへ移動する**
-- `.env.local`はdocker-composeで読み込むようにしておく
-
-- Supabaseの`settings > Database`からDBのURI (Connection String) を確認し，環境変数に設定する
-![](docs/img/supabase_uri.png)
-
-```.env.local
-    DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@-----------------
+乱数の生成
+```
+    openssl rand -base64 32
 ```
 
-- マイグレーションの実行
-- 既存のテーブルは全部消される
-- マイグレーションファイル
-```
-    npx prisma migrate dev --name <migration_name>
-```
+### 重要なリンク
 
-- https://zenn.dev/kuesato/articles/8da958751b52fb
+next authのsupabase adapter
 
-公式チュートリアル
-- https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/using-prisma-migrate-typescript-postgresql
+https://authjs.dev/reference/adapter/supabase
+
+ローカルのsupabaseの導入
+
+https://supabase.com/docs/guides/cli/local-development
+
+sql -> supabase
+
+https://supabase.com/docs/guides/database/sql-to-api
+
+supabaseのtsクライアント
+
+https://supabase.com/docs/reference/javascript
+
+nextからsupabase
+
+https://supabase.com/docs/guides/getting-started/quickstarts/nextjs

@@ -1,5 +1,34 @@
+/**
+ * navbarのアイコンを非表示にするパス
+ */
 export const ICON_EXCLUDE_URL = ['/profile', '/game']
 
+/**
+ * string[4][]のキー配列
+ * shiftを押していない場合
+ */
+export const KEYBOARD_CHARS_UNSHIFT = [
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '^', '¥'],
+    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '@', '['],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', ':', ']'],
+    ['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', '\\', ' ']
+]
+
+/**
+ * string[4][]のキー配列
+ * shiftを押している場合
+ */
+export const KEYBOARD_CHARS_SHIFT = [
+    ['!', '"', '#', '$', '%', '&', `'`, '(', ')', ' ', '=', '~', '|'],
+    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '`', '{'],
+    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '+', '*', '}'],
+    ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '_', ' ']
+]
+
+/**
+ * キーからidxへのmap
+ * shift + 0にはs0を割り当てている
+ */
 export const KEY_TO_IDX = new Map<string, number>([
     ['1', 0],
     ['2', 1],
@@ -58,7 +87,7 @@ export const KEY_TO_IDX = new Map<string, number>([
     [`'`, 54],
     ['(', 55],
     [')', 56],
-    [' ', 57],
+    ['s0', 57],
     ['=', 58],
     ['~', 59],
     ['|', 60],
@@ -96,9 +125,14 @@ export const KEY_TO_IDX = new Map<string, number>([
     ['<', 92],
     ['>', 93],
     ['?', 94],
-    ['_', 95]
+    ['_', 95],
+    [' ', 96]
 ])
 
+/**
+ * idxからキーへのmap
+ * shift + 0にはs0を割り当てている
+ */
 export const IDX_TO_KEY = new Map<number, string>([
     [0, '1'],
     [1, '2'],
@@ -157,7 +191,7 @@ export const IDX_TO_KEY = new Map<number, string>([
     [54, `'`],
     [55, '('],
     [56, ')'],
-    [57, ' '],
+    [57, 's0'],
     [58, '='],
     [59, '~'],
     [60, '|'],
@@ -195,5 +229,36 @@ export const IDX_TO_KEY = new Map<number, string>([
     [92, '<'],
     [93, '>'],
     [94, '?'],
-    [95, '_']
+    [95, '_'],
+    [96, ' ']
 ])
+
+/**
+ * number[4][]のキー配列 (キーに対応するidx)
+ * shiftを押している場合
+ */
+export const KEYBOARD_IDXS_SHIFT = KEYBOARD_CHARS_SHIFT.map((keyListChars) => {
+    return keyListChars.map((val) => {
+        const idx = KEY_TO_IDX.get(val)
+        if (idx != null) {
+            return idx
+        } else {
+            return 100
+        }
+    })
+})
+
+/**
+ * number[4][]のキー配列 (キーに対応するidx)
+ * shiftを押していない場合
+ */
+export const KEYBOARD_IDXS_UNSHIFT = KEYBOARD_CHARS_UNSHIFT.map((keyListChars) => {
+    return keyListChars.map((val) => {
+        const idx = KEY_TO_IDX.get(val)
+        if (idx != null) {
+            return idx
+        } else {
+            return -1
+        }
+    })
+})

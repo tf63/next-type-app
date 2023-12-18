@@ -1,11 +1,19 @@
 import Caret from './Caret'
 import styles from '../styles/TypeLine.module.css'
 
-export const TypeLineWithCaret: React.FC<{ text: string; prefix: string; indexCaret: number }> = ({
-    text,
-    indexCaret,
-    prefix
-}) => {
+type TypeLineProps = {
+    text: string
+    prefix: string
+}
+
+/**
+ * TypeBoardで現在ターゲットしている行
+ * @param param0 text 行内の文
+ * @param param0 prefix 行のプレフィックス
+ * @param param0 indexCaret Caretの位置
+ * @returns
+ */
+export const TypeLineWithCaret: React.FC<TypeLineProps & { indexCaret: number }> = ({ text, indexCaret, prefix }) => {
     return (
         <div>
             <span style={{ whiteSpace: 'pre' }}>{prefix}</span>
@@ -15,7 +23,16 @@ export const TypeLineWithCaret: React.FC<{ text: string; prefix: string; indexCa
         </div>
     )
 }
-export const TypeLine: React.FC<{ text: string; prefix: string; isTyped: boolean }> = ({ text, prefix, isTyped }) => {
+
+/**
+ * TypeBoardで現在ターゲットしていない行
+ * @param param0 text 行内の文
+ * @param param0 prefix 行のプレフィックス
+ * @param param0 isTyped タイプ済みの行か
+ * @returns
+ */
+export const TypeLine: React.FC<TypeLineProps & { isTyped: boolean }> = ({ text, prefix, isTyped }) => {
+    // タイプ済みかどうかでクラスを設定する
     const typeLineClass = isTyped ? styles.typed : styles.untyped
 
     return (

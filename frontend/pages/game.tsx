@@ -1,147 +1,87 @@
-import type { NextPage } from 'next'
 import React from 'react'
 import TypeSystem from '@/components/TypeSystem'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { Category, ProblemState, ResultState } from '@/types/types'
-import axios from 'axios'
-import {
-    AlgorithmCodeAPIRequest,
-    AlgorithmCodeAPIResponse,
-    FrameworkCodeAPIRequest,
-    FrameworkCodeAPIResponse,
-    LanguageCodeAPIRequest,
-    LanguageCodeAPIResponse,
-    PatternCodeAPIRequest,
-    PatternCodeAPIResponse
-} from '@/interfaces/interfaces'
-import TypeContext from '@/contexts/TypeContext'
-import GameContext from '@/contexts/GameContext'
+import { useEffect } from 'react'
+import { Category, GameData, SelectData } from '@/types/types'
 import { CustomNextPage } from '@/types/custom-next-page'
-import { KEY_TO_IDX } from '@/lib/const'
+import TypeBoard from '@/components/TypeBoard'
+import { useGameStore } from '@/states/Game'
+import { useSession } from 'next-auth/react'
+import { getMissPerType } from '@/lib/format'
 
 const Game: CustomNextPage = () => {
     const router = useRouter()
-    const [content, setContent] = useState('')
-    const [problemId, setProblemId] = useState(0)
-    const [category, setCategory] = useState('language')
+    const { data, status } = useSession()
 
-    // TypeContext
-    const [indexText, setIndexText] = useState(0)
-    const [indexLine, setIndexLine] = useState(0)
-    const [typeList, setTypeList] = useState<string[]>([])
-    const [prefixList, setPrefixList] = useState<string[]>([])
-
-    // GameContext
-    const [correct, setCorrect] = useState(0)
-    const [miss, setMiss] = useState(0)
-    const [timer, setTimer] = useState(0)
-    const [missPerType, setMissPerType] = useState<number[]>(Array.from({ length: 96 }, () => 0))
-
-    const correctEvent = (key: string) => {
-        console.log(`correct key ${key}!!`)
-        setCorrect(correct + 1)
-    }
-
-    const missEvent = (key: string) => {
-        console.log(`incorrect key ${key}!!`)
-        const idx = KEY_TO_IDX.get(key)
-
-        // 存在しないキーだったらundefined
-        if (idx != null) {
-            setMissPerType((prev) => {
-                const _missPerType = prev
-                _missPerType[idx] += 1
-                return _missPerType
-            })
-        }
-
-        setMiss(miss + 1)
-    }
+    const problemId = useGameStore((state) => state.problemId)
+    const category = useGameStore((state) => state.category)
+    const setContent = useGameStore((state) => state.setContent)
+    const correct = useGameStore((state) => state.correct)
+    const miss = useGameStore((state) => state.miss)
+    const time = useGameStore((state) => state.time)
+    const correctTypes = useGameStore((state) => state.correctTypes)
+    const missTypes = useGameStore((state) => state.missTypes)
+    const incrementTime = useGameStore((state) => state.incrementTime)
+    const postMonthLog = useGameStore((status) => status.postMonthLog)
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (router.query.state == null) {
-                return
-            }
-
-            const problemState: ProblemState = JSON.parse(router.query.state as string)
-            const commonData = {
-                language_id: problemState.language.id,
-                size: problemState.size.name
-            }
-
-            let endpoint: string
-            let requestData: any
-
-            switch (problemState.category.name) {
-                case 'language':
-                    endpoint = '/api/language/code'
-                    requestData = { ...commonData }
-                    break
-                case 'framework':
-                    endpoint = '/api/framework/code'
-                    requestData = { tool_id: problemState.tag.id, ...commonData }
-                    break
-                case 'algorithm':
-                    endpoint = '/api/algorithm/code'
-                    requestData = { algorithm_id: problemState.tag.id, ...commonData }
-                    break
-                case 'pattern':
-                    endpoint = '/api/pattern/code'
-                    requestData = { pattern_id: problemState.tag.id, ...commonData }
-                    break
-                default:
-                    return
-            }
-
-            const response = await axios.post(endpoint, requestData)
-            const result = await response.data
-            setProblemId(result.id)
-            setContent(result.content)
-            setCategory(problemState.category.name)
+        if (router.query.state == null) {
+            return
         }
 
-        fetchData()
+        const selectData: SelectData = JSON.parse(router.query.state as string)
+        const category = selectData.category
+        let requestBody: any
+        switch (selectData.category) {
+            case 'language':
+                requestBody = { language_id: selectData.languageId, size: selectData.size }
+                break
+            case 'framework':
+                requestBody = { framework_id: selectData.frameworkId, size: selectData.size }
+                break
+            case 'algorithm':
+                requestBody = {
+                    language_id: selectData.languageId,
+                    algorithm_id: selectData.algorithmId,
+                    size: selectData.size
+                }
+                break
+            case 'pattern':
+                requestBody = {
+                    language_id: selectData.languageId,
+                    pattern_id: selectData.patternId,
+                    size: selectData.size
+                }
+                break
+            default:
+                return
+        }
+
+        setContent(category as Category, requestBody)
     }, [])
 
     useEffect(() => {
         const timerId = setInterval(() => {
-            setTimer((prev) => prev + 1)
+            incrementTime()
         }, 1000)
 
         return () => clearInterval(timerId)
-    }, [timer])
+    }, [time])
 
-    useEffect(() => {
-        const decomposeContent = (content: string) => {
-            const splitContent = content.split(/\r?\n/)
-            const _typeList: string[] = []
-            const _prefixList: string[] = []
-            for (let s of splitContent) {
-                const result = s.match(/^(\s*)(.*)/)
-                if (result != null) {
-                    _prefixList.push(result[1])
-                    _typeList.push(result[2])
-                }
-            }
-
-            setTypeList(_typeList)
-            setPrefixList(_prefixList)
+    const navigateEvent = () => {
+        if (status === 'authenticated') {
+            postMonthLog(data?.user?.name!)
         }
 
-        decomposeContent(content)
-    }, [content])
+        const resultState: GameData = {
+            category: category as Category,
+            problemId: problemId,
+            correct: correct,
+            miss: miss,
+            timer: time,
+            missPerType: getMissPerType(correctTypes, missTypes)
+        }
 
-    const resultState: ResultState = {
-        category: category as Category,
-        problemId: problemId,
-        correct: correct,
-        miss: miss,
-        timer: timer,
-        missPerType: missPerType
-    }
-    const navigateEvent = () => {
         router.push({
             pathname: '/result',
             query: { state: JSON.stringify(resultState) }
@@ -150,23 +90,10 @@ const Game: CustomNextPage = () => {
 
     return (
         <main>
-            <GameContext.Provider
-                value={{ correctEvent: correctEvent, missEvent: missEvent, navigateEvent: navigateEvent }}
-            >
-                <TypeContext.Provider
-                    value={{
-                        indexText: indexText,
-                        setIndexText: setIndexText,
-                        indexLine: indexLine,
-                        setIndexLine: setIndexLine,
-                        typeList: typeList,
-                        prefixList: prefixList
-                    }}
-                >
-                    <TypeSystem />
-                </TypeContext.Provider>
-            </GameContext.Provider>
-            {`correct: ${correct}, miss: ${miss}, time: ${timer}`}
+            <TypeSystem navigateEvent={navigateEvent}>
+                <TypeBoard />
+            </TypeSystem>
+            {`correct: ${correct}, miss: ${miss}, time: ${time}`}
         </main>
     )
 }

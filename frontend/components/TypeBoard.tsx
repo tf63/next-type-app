@@ -1,54 +1,52 @@
 import React from 'react'
-import { useEffect, useRef } from 'react'
 import { TypeLine, TypeLineWithCaret } from './TypeLine'
 import Card from './Card'
 import styles from '../styles/TypeBoard.module.css'
-import { useTypeContext } from '@/contexts/TypeContext'
+import { useGameStore } from '@/states/Game'
 
-type TypeBoardProps = {
-    handleKeyDown: (event: React.KeyboardEvent) => false | undefined
-}
-
-const TypeBoard: React.FC<TypeBoardProps> = ({ handleKeyDown }) => {
-    const divRef = useRef<HTMLDivElement>(null)
-    useEffect(() => {
-        if (divRef.current != null) {
-            divRef.current.focus()
-        }
-    }, [])
-
-    const ctx = useTypeContext()
-
-    const typeItemList = []
-    for (const [i, typeText] of ctx.typeList.entries()) {
-        if (i < ctx.indexLine) {
-            const typeLine = <TypeLine text={typeText} prefix={ctx.prefixList[i]} isTyped={true} />
-            typeItemList.push(
-                <li key={i} className={styles.type_board_item}>
-                    {typeLine}
-                </li>
-            )
-        } else if (i == ctx.indexLine) {
-            const typeLine = <TypeLineWithCaret text={typeText} indexCaret={ctx.indexText} prefix={ctx.prefixList[i]} />
-            typeItemList.push(
-                <li key={i} className={styles.type_board_item}>
-                    {typeLine}
-                </li>
-            )
-        } else {
-            const typeLine = <TypeLine text={typeText} prefix={ctx.prefixList[i]} isTyped={false} />
-            typeItemList.push(
-                <li key={i} className={styles.type_board_item}>
-                    {typeLine}
-                </li>
-            )
-        }
-    }
+/**
+ * タイピングの問題文を表示するボード
+ * @returns
+ */
+const TypeBoard: React.FC = () => {
+    const typeList = useGameStore((state) => state.typeList)
+    const indexLine = useGameStore((state) => state.indexLine)
+    const indexText = useGameStore((state) => state.indexText)
+    const prefixList = useGameStore((state) => state.prefixList)
 
     return (
-        <div className={styles.type_board} tabIndex={0} onKeyDown={handleKeyDown} ref={divRef}>
+        <div className={styles.type_board}>
             <Card>
-                <ul>{typeItemList}</ul>
+                <ul>
+                    {typeList.map((typeText, index) => {
+                        if (index < indexLine) {
+                            // タイプ済みの行
+                            return (
+                                <li key={index} className={styles.type_board_item}>
+                                    <TypeLine text={typeText} prefix={prefixList[index]} isTyped={true} />
+                                </li>
+                            )
+                        } else if (index === indexLine) {
+                            // 現在ターゲットにしている行
+                            return (
+                                <li key={index} className={styles.type_board_item}>
+                                    <TypeLineWithCaret
+                                        text={typeText}
+                                        indexCaret={indexText}
+                                        prefix={prefixList[index]}
+                                    />
+                                </li>
+                            )
+                        } else {
+                            // タイプしていない行
+                            return (
+                                <li key={index} className={styles.type_board_item}>
+                                    <TypeLine text={typeText} prefix={prefixList[index]} isTyped={false} />
+                                </li>
+                            )
+                        }
+                    })}
+                </ul>
             </Card>
         </div>
     )

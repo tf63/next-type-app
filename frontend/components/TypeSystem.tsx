@@ -1,63 +1,94 @@
-import { useEffect, useState } from 'react'
-import React from 'react'
-import TypeBoard from './TypeBoard'
-import { ProblemState } from '@/types/types'
-import { useTypeContext } from '@/contexts/TypeContext'
-import { useGameContext } from '@/contexts/GameContext'
+import React, { ReactNode } from 'react'
+import { wrapKey } from '@/lib/format'
+import KeyRef from './KeyRef'
+import { useGameStore } from '@/states/Game'
 
-const TypeSystem: React.FC = () => {
-    const typeCtx = useTypeContext()
-    const gameCtx = useGameContext()
+type TypeSystemProps = {
+    children: ReactNode
+    navigateEvent: () => void
+}
 
+/**
+ * ラップした要素にタイピングゲームのKeyEventを割り当てる
+ * @param param0 children
+ * @returns
+ */
+const TypeSystem: React.FC<TypeSystemProps> = ({ children, navigateEvent }) => {
+    const typeList = useGameStore((state) => state.typeList)
+    const indexLine = useGameStore((state) => state.indexLine)
+    const indexText = useGameStore((state) => state.indexText)
+    const resetIndexText = useGameStore((state) => state.resetIndexText)
+    const incrementIndexLine = useGameStore((state) => state.incrementIndexLine)
+    const incrementIndexText = useGameStore((state) => state.incrementIndexText)
+    const correctEvent = useGameStore((state) => state.correctEvent)
+    const missEvent = useGameStore((state) => state.missEvent)
+
+    // キーイベントのハンドラ
     const handleKeyDown = (event: React.KeyboardEvent) => {
-        const key = event.key
-        const text = typeCtx.typeList[typeCtx.indexLine]
-        const indexText = typeCtx.indexText
+        // 押されたキーをラップしてから取得
+        const key = wrapKey(event.key, event.shiftKey)
+        // 行内のテキスト
+        const text = typeList[indexLine]
 
         // ブラウザの動作があるキーを無効化する
         if (key === 'Tab' || key === ' ') {
             event.preventDefault()
-            console.log('prevent default')
         }
 
         // 一部のキーはエスケープする
         if (key === 'Shift' || key === 'Control' || key === 'CapsLock' || key === 'Meta' || key === 'Alt') {
-            console.log('disable key')
             return false
         }
 
         // 正誤判定
         if (indexText !== text.length) {
-            // まだ行末に達していなかったら
+            // まだ行末に達していない場合
             if (key === text[indexText]) {
-                // 入力が合っていたら
-                typeCtx.setIndexText(typeCtx.indexText + 1)
-                gameCtx.correctEvent(key)
+                // 入力が正解のとき
+
+                // indexを加算
+                incrementIndexText()
+                // 正解時のイベント
+                correctEvent(key)
             } else {
-                // 入力が間違っていたら
-                gameCtx.missEvent(key)
+                // 入力が不正解のとき
+                const prevKey = indexText == 0 ? '' : text[indexText - 1]
+
+                // 不正解時のイベント
+                missEvent(key, text[indexText], prevKey)
             }
         } else {
-            // 行末に達していたら
+            // 行末に達している場合
             if (key === 'Enter') {
-                // Enterが押されたら次の行へ移動
-                typeCtx.setIndexText(0)
-                typeCtx.setIndexLine(typeCtx.indexLine + 1)
-                gameCtx.correctEvent(key)
+                // Enterキーが押されたら正解
 
-                if (typeCtx.indexLine === typeCtx.typeList.length - 1) {
-                    gameCtx.navigateEvent()
+                // Enterが押されたら次の行へ移動
+                resetIndexText()
+                incrementIndexLine()
+
+                // 正解時のイベント
+                correctEvent(key)
+
+                // 最後の行だったらゲーム終了
+                if (indexLine === typeList.length - 1) {
+                    // ベージ遷移
+                    navigateEvent()
                 }
             } else {
-                // Enter以外のキーが押されたらミスとする
-                gameCtx.missEvent(key)
+                // Enter以外のキーが押されたら不正解とする
+                const prevKey = indexText == 0 ? '' : text[indexText - 1]
+
+                // 不正解時のイベント
+                missEvent(key, text[indexText], prevKey)
             }
         }
-
-        console.log(key, typeCtx.indexText)
     }
 
-    return <TypeBoard handleKeyDown={handleKeyDown} />
+    return (
+        <div onKeyDown={handleKeyDown}>
+            <KeyRef>{children}</KeyRef>
+        </div>
+    )
 }
 
 export default TypeSystem

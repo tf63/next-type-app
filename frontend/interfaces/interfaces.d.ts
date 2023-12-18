@@ -57,6 +57,11 @@ export interface GameFinishAPIRequest {
     missPerType: number[]
 }
 
+export interface GameMonthAPIRequest {
+    userId: string
+    missPrevPerType: number[]
+}
+
 export interface ProfileLogAPIRequest {
     userId: string
     offset: number
@@ -72,13 +77,25 @@ export interface ProfileLogAPIResponse {
     speed?: number
 }
 
-export interface ProfileSumAPIRequest {
+export interface ProfileSummaryAPIRequest {
     userId: string
 }
 
-export interface ProfileSumAPIResponse {
+export interface ProfileSummaryAPIResponse {
     month: string
     correct: number
     miss: number
     speed: number
+    miss_prev_per_type: number[]
+}
+
+export interface ProfileMonthAPIRequest {
+    userId: string
+    offset: number
+    num: number
+}
+
+export interface ProfileMonthAPIResponse {
+    month: string
+    miss_prev_per_type: number[]
 }
